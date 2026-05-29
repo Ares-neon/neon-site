@@ -1032,7 +1032,6 @@ footer {
 .no-anim #hero [data-hero-fade] { opacity: 1 !important; transform: none !important; }
 .no-anim #preloader { display: none !important; }
 .no-anim .hero-aura, .no-anim .scanline { animation: none !important; }
-.no-anim .cursor-ring, .no-anim .cursor-dot { display: none !important; }
 .no-anim body { cursor: auto; }
 
 /* ============================================================
@@ -1650,7 +1649,6 @@ footer {
 
   /* ---------- Custom cursor + spotlight ---------- */
   function cursor() {
-    if (!fine) return;
     const ring = document.querySelector(".cursor-ring");
     const dot = document.querySelector(".cursor-dot");
     const spot = document.querySelector(".spotlight");
