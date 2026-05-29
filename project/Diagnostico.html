@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEON — Agendar diagnóstico</title>
+  <meta name="description" content="Agende seu diagnóstico gratuito com a NEON. Vamos analisar sua marca e desenhar o caminho de crescimento." />
+  <link rel="icon" type="image/png" href="assets/neon-symbol.png" />
+
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Cursor + spotlight -->
+  <div class="spotlight"></div>
+  <div class="cursor-ring"></div>
+  <div class="cursor-dot"></div>
+
+  <!-- Scroll progress -->
+  <div id="progress"></div>
+
+  <!-- Header -->
+  <header id="header">
+    <nav class="wrap nav">
+      <a class="brand" href="NEON.html" aria-label="NEON">
+        <img src="assets/neon-symbol.png" alt="" />
+        <b>NEON</b>
+      </a>
+      <div class="nav-links">
+        <a href="NEON.html#servicos">Serviços</a>
+        <a href="NEON.html#metodo">Método</a>
+        <a href="NEON.html#porque">Por que NEON</a>
+      </div>
+      <a href="NEON.html" class="btn btn--ghost btn--sm magnetic" data-strength="0.35">
+        <span class="sweep"></span>
+        ← Voltar ao site
+      </a>
+    </nav>
+  </header>
+
+  <!-- Form -->
+  <main class="diag-page" data-screen-label="Diagnóstico">
+    <div class="diag-aura"></div>
+    <div class="wrap diag-grid">
+
+      <!-- Aside -->
+      <div class="diag-aside reveal">
+        <a class="back" href="NEON.html">← Voltar</a>
+        <span class="eyebrow">Diagnóstico gratuito</span>
+        <h1>Vamos colocar sua marca <span class="neon-text">em evidência</span>.</h1>
+        <p class="lead">Preencha os dados abaixo. Nossa equipe analisa seu cenário e retorna com um plano de crescimento — sem compromisso.</p>
+
+        <div class="diag-trust">
+          <div class="ti">
+            <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>Resposta em até 24 horas úteis.</span>
+          </div>
+          <div class="ti">
+            <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>Análise feita por especialistas, não por robôs.</span>
+          </div>
+          <div class="ti">
+            <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>100% gratuito e sem qualquer obrigação.</span>
+          </div>
+        </div>
+
+        <div class="diag-symbol-row">
+          <img src="assets/neon-symbol.png" alt="NEON" />
+          <span>+120 marcas escaladas · R$38M+ em mídia gerenciada</span>
+        </div>
+      </div>
+
+      <!-- Form card -->
+      <div class="form-card reveal" id="form-card" data-delay="120">
+        <div class="form-body">
+          <div class="fc-head">
+            <h2>Agendar diagnóstico</h2>
+            <p>Leva menos de um minuto.</p>
+          </div>
+
+          <form id="diag-form" novalidate>
+            <div class="field">
+              <label for="f-nome">Nome <span class="req">*</span></label>
+              <div class="input-shell">
+                <span class="prefix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+                <input id="f-nome" name="nome" type="text" autocomplete="name" placeholder="Seu nome completo" />
+              </div>
+              <div class="err">Informe seu nome completo.</div>
+            </div>
+
+            <div class="field">
+              <label for="f-celular">Celular <span class="req">*</span></label>
+              <div class="input-shell">
+                <span class="prefix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></span>
+                <input id="f-celular" name="celular" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(11) 99999-9999" />
+              </div>
+              <div class="err">Informe um celular válido com DDD.</div>
+            </div>
+
+            <div class="field">
+              <label for="f-email">E-mail <span class="req">*</span></label>
+              <div class="input-shell">
+                <span class="prefix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg></span>
+                <input id="f-email" name="email" type="email" autocomplete="email" placeholder="voce@suamarca.com" />
+              </div>
+              <div class="err">Informe um e-mail válido.</div>
+            </div>
+
+            <div class="field">
+              <label for="f-instagram">Instagram da marca <span class="req">*</span></label>
+              <div class="input-shell">
+                <span class="prefix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+                <input id="f-instagram" name="instagram" type="text" autocomplete="off" placeholder="@suamarca" />
+              </div>
+              <div class="err">Informe o @ da sua marca.</div>
+            </div>
+
+            <button type="submit" class="btn btn--primary magnetic" data-strength="0.22">
+              <span class="sweep"></span>
+              Agendar diagnóstico gratuito
+              <span class="btn-arrow">→</span>
+            </button>
+            <p class="form-note">Seus dados estão seguros e não serão compartilhados.</p>
+          </form>
+        </div>
+
+        <!-- Success -->
+        <div class="form-success">
+          <img class="succ-mark" src="assets/neon-symbol.png" alt="NEON" />
+          <h2>Pedido recebido! ⚡</h2>
+          <p>Recebemos sua solicitação. Nossa equipe vai analisar sua marca e entrar em contato em até 24 horas úteis.</p>
+          <div class="summary">
+            <div class="row"><span>Nome</span><b id="sum-nome">—</b></div>
+            <div class="row"><span>Celular</span><b id="sum-celular">—</b></div>
+            <div class="row"><span>E-mail</span><b id="sum-email">—</b></div>
+            <div class="row"><span>Instagram</span><b id="sum-instagram">—</b></div>
+          </div>
+          <p class="succ-prompt">Quer adiantar? Fale agora com um especialista.</p>
+          <a href="#" id="wa-cta" target="_blank" rel="noopener" class="btn btn--primary magnetic" data-strength="0.22">
+            <span class="sweep"></span>
+            <svg class="wa-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 0 1-1-4A8.38 8.38 0 0 1 11.5 2a8.38 8.38 0 0 1 8.5 8.5z"/></svg>
+            Falar agora no WhatsApp
+          </a>
+          <a href="NEON.html" class="btn btn--ghost magnetic" data-strength="0.22" style="margin-top:12px;">
+            <span class="sweep"></span>
+            Voltar ao site
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Thumbnail for self-contained bundle -->
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" fill="#0A0A0A"/>
+      <path d="M50 24 L68 36 L68 64 L50 76 L32 64 L32 36 Z" fill="none" stroke="#36F547" stroke-width="3"/>
+      <path d="M52 38 L44 52 L50 52 L48 62 L56 48 L50 48 Z" fill="#fff"/>
+    </svg>
+  </template>
+
+  <script src="app.js"></script>
+  <script src="diag.js"></script>
+</body>
+</html>
