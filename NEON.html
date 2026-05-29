@@ -1164,6 +1164,36 @@ footer {
   .foot-grid { grid-template-columns: 1fr; }
 }
 
+
+/* Orbit dots */
+.od1, .od2 {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.od1 {
+  inset: 0;
+  animation: orbit-cw 7s linear infinite;
+}
+.od2 {
+  inset: 14%;
+  animation: orbit-ccw 5s linear infinite;
+}
+.od1::after, .od2::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 11px; height: 11px;
+  background: var(--neon);
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px var(--neon), 0 0 22px 6px var(--neon-glow);
+}
+.od2::after {
+  width: 8px; height: 8px;
+}
+@keyframes orbit-cw  { to { transform: rotate(360deg); } }
+@keyframes orbit-ccw { to { transform: rotate(-360deg); } }
   </style>
 </head>
 <body>
@@ -1239,6 +1269,8 @@ footer {
       </div>
 
       <div class="hero-visual" data-hero-fade>
+        <div class="od1"></div>
+        <div class="od2"></div>
         <div class="ring r1"></div>
         <div class="ring r2"></div>
         <div class="ring r3"></div>
