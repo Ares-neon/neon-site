@@ -1198,6 +1198,44 @@ footer {
 }
 @keyframes orbit-cw  { to { transform: rotate(360deg); } }
 @keyframes orbit-ccw { to { transform: rotate(-360deg); } }
+
+/* ============================================================
+   GPU acceleration — tudo fluido, zero travada
+   ============================================================ */
+.hero-aura,
+.hero-symbol,
+.ring,
+.od1, .od2,
+.scanline,
+.marquee-track,
+.cursor-ring,
+.cursor-dot,
+.spotlight,
+.pre-mark,
+.wa-float,
+#progress,
+.btn,
+.card,
+.tcard,
+.step .node,
+.reveal,
+.line-mask > span,
+[data-hero-fade] {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.hero-aura,
+.scanline,
+.marquee-track,
+.pre-mark,
+.ring.r3 {
+  transform: translateZ(0);
+}
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
   </style>
 </head>
 <body>
