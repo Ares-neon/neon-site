@@ -10,13 +10,13 @@ e **9:16 (1080×1920)**, 30 fps, editado numa grade de **120 BPM** (1 batida = 1
 
 ## Entregas (`entregas/`)
 
+Escopo de entrega: **somente 9:16** (a composição 16:9 continua no projeto, mas não é renderizada por padrão).
+
 | Arquivo | Conteúdo |
 |---|---|
-| `NEON_Filme_15s_16x9_SFX.mp4` | Master 16:9 com sound design |
-| `NEON_Filme_15s_16x9_SemAudio.mp4` | 16:9 sem áudio |
-| `NEON_Filme_15s_9x16_SFX.mp4` | Vertical 9:16 recomposto, com sound design |
+| `NEON_Filme_15s_9x16_SFX.mp4` | Vertical 9:16 (1080×1920), com sound design |
 | `NEON_Filme_15s_9x16_SemAudio.mp4` | Vertical 9:16 sem áudio |
-| `NEON_ContactSheet_16x9.png` / `_9x16.png` | 1 quadro por batida, com frame/timecode/seção |
+| `NEON_ContactSheet_9x16.png` | 1 quadro por batida, com frame/timecode/seção |
 | `NEON_SFX_Master_-14LUFS_-1dBTP_48k24.wav` | Master de áudio (−14 LUFS integrado, true peak ≤ −1 dBTP, 15,000 s) |
 
 Vídeo: H.264 High, yuv420p, BT.709 (faixa limitada), CRF 14. Áudio: AAC 320 kbps, 48 kHz.
@@ -52,9 +52,8 @@ npm install
 bash scripts/fetch-fonts.sh         # baixa a Switzer (não versionada por licença)
 npx remotion studio                 # pré-visualização (sem motion blur) — composições NEON-Film-16x9 / NEON-Film-9x16
 node scripts/stills.mjs 16x9 0-449:30 0.5   # folha de quadros (com motion blur) em work/stills
-node scripts/render-film.mjs 16x9   # render final: sub-quadros → média em float → work/frames-16x9
-node scripts/render-film.mjs 9x16
-bash scripts/deliver.sh             # MP4 com/sem áudio + contact sheets em entregas/
+node scripts/render-film.mjs 9x16   # render final: sub-quadros → média em float → work/frames-9x16
+bash scripts/deliver.sh             # MP4 9:16 com/sem áudio + contact sheet em entregas/ (16:9: bash scripts/deliver.sh 16x9)
 ```
 
 Áudio:

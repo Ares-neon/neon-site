@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Controle de qualidade técnico das entregas.
 set -uo pipefail
-cd "$(dirname "$0")/../entregas"
+cd "${OUT:-$(dirname "$0")/../entregas}"
 for f in NEON_Filme_15s_*.mp4; do
   echo "== $f"
   ffprobe -v error -select_streams v:0 -count_frames \
