@@ -90,7 +90,9 @@ export const Flight: React.FC = () => {
     const q = corners.map((p) => proj(cam, p));
     if (q.some((p) => p.z < NEAR * 2)) continue;
     if (q.every((p) => p.x < -200) || q.every((p) => p.x > W + 200) || q.every((p) => p.y < -200) || q.every((p) => p.y > H + 200)) continue;
-    const o = prog(d, 12500, 8000) * prog(d, 150, 520) * (t < FLY_T1 ? prog(t, FLY_T1 - 6, FLY_T1) : 1);
+    // cards dos cliques desaparecem antes de encostar na câmera (não podem sombrear a palavra na micropausa)
+    const nearFade = c.hit !== undefined ? prog(d, 320, 820) : prog(d, 150, 520);
+    const o = prog(d, 12500, 8000) * nearFade * (t < FLY_T1 ? prog(t, FLY_T1 - 6, FLY_T1) : 1);
     const dim = 0.7 * prog(d, 2600, 9000);
     let border: string | undefined;
     if (c.hit !== undefined) {
@@ -156,13 +158,15 @@ export const Flight: React.FC = () => {
   let segI = anchors.length - 2;
   for (let i = 0; i < anchors.length - 1; i++) if (t < anchors[i + 1].t) { segI = i; break; }
   const uCur = t <= anchors[0].t ? 0 : easeSeg(segI, prog(t, anchors[segI].t, anchors[segI + 1].t));
-  const head = posAt(segI, uCur);
+  // na micropausa o pixel fica cravado no ponto final de TRÁFEGO. (sem overshoot da spline)
+  const head = t >= 160 && t < 177 ? Wp : posAt(segI, uCur);
   const lineOn = t >= 121;
   type Seg = {a: P2; b: P2; w: number; o: number; d: number};
   const segs: Seg[] = [];
   if (lineOn) {
     const N = 16;
     for (let i = 0; i <= segI; i++) {
+      if (anchors[i].p === anchors[i + 1].p) continue; // trecho de pausa: o pixel não se move
       const uMax = i < segI ? 1 : uCur;
       let prev = posAt(i, 0);
       for (let k = 1; k <= N; k++) {
