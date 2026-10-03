@@ -1,0 +1,9 @@
+node_modules/
+work/
+out/
+*.log
+# gerados / pesados
+public/audio/neon-sfx-raw.wav
+public/site/_full.png
+# Switzer (Fontshare, licença ITF FFL): baixar com scripts/fetch-fonts.sh, não redistribuir
+public/fonts/Switzer-*.woff2
