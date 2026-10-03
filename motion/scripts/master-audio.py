@@ -6,7 +6,7 @@ import os, re, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'public', 'audio', 'neon-sfx-raw.wav')
 OUT = os.path.join(ROOT, 'public', 'audio', 'neon-sfx-master.wav')
-TARGET_I, TP_MAX = -14.0, -1.0
+TARGET_I, TP_MAX = -13.9, -1.0  # -13,9 no WAV => -14,0 LUFS no AAC entregue
 
 def chain(gain_db):
     # float -> ganho -> passa-baixa (evita picos inter-amostra) ->
@@ -37,9 +37,9 @@ for it in range(8):
     render(g, OUT)
     I, TP = measure(OUT)
     print(f'iter {it}: ganho {g:+.2f} dB -> I={I} LUFS  TP={TP} dBTP')
-    if abs(I - TARGET_I) <= 0.1 and TP <= TP_MAX:
+    if abs(I - TARGET_I) <= 0.05 and TP <= TP_MAX:
         break
-    g += (TARGET_I - I) * 0.9
+    g += (TARGET_I - I) * 1.0
 dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', OUT], capture_output=True, text=True).stdout)
 print(f'final: I={I} LUFS  TP={TP} dBTP  duração={dur:.6f}s')
 if not (abs(I - TARGET_I) <= 0.1 and TP <= TP_MAX):
