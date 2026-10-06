@@ -1,0 +1,1355 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CORTTA Lançamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=block">
+<style>
+/* Layout: palco fixo 1920×1080 (16:9), escalado para caber em qualquer tela. */
+:root{
+  --ink:#0B0B0B;        /* preto carvão */
+  --graphite:#171717;   /* grafite */
+  --paper:#F2F0EB;      /* off-white */
+  --acid:#C8FF00;       /* verde ácido */
+  --steel:#737373;      /* cinza */
+  --card:#131313;
+  --hair:rgba(242,240,235,.075);
+  --hair-2:rgba(242,240,235,.15);
+  --paper-82:rgba(242,240,235,.82);
+  --paper-55:rgba(242,240,235,.55);
+  --paper-12:rgba(242,240,235,.12);
+  --paper-06:rgba(242,240,235,.06);
+  --acid-08:rgba(200,255,0,.08);
+  --letterbox:#000;
+  --f-display:'Sora','Inter',system-ui,sans-serif;
+  --f-ui:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--letterbox);color:var(--paper);font-family:var(--f-ui);overflow:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+#viewport{position:fixed;inset:0;overflow:hidden;background:var(--letterbox)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--ink);overflow:hidden;isolation:isolate;user-select:none;-webkit-user-select:none}
+.scene,.layer{position:absolute;inset:0}
+.scene{visibility:hidden}
+#stage svg{overflow:visible}
+.ico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+
+/* atmosfera */
+#grid{position:absolute;inset:-80px;opacity:0;background-image:radial-gradient(circle,rgba(242,240,235,.16) 1px,transparent 1.5px);background-size:40px 40px;-webkit-mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,#000 10%,transparent 78%);mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,#000 10%,transparent 78%)}
+#ambient{position:absolute;left:410px;top:130px;width:1100px;height:820px;border-radius:50%;background:radial-gradient(closest-side,rgba(200,255,0,.075),rgba(200,255,0,.025) 45%,transparent 78%);opacity:0}
+#vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 82% 78% at 50% 50%,transparent 55%,rgba(0,0,0,.5) 100%)}
+#grain{position:absolute;inset:-64px;pointer-events:none;opacity:.05;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.6 -.45'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+/* headlines */
+.hl{position:absolute;margin:0;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:-.04em;line-height:.9;color:var(--paper);white-space:nowrap;font-size:var(--fs,104px)}
+.hl .ln{display:block;overflow:hidden;padding:.18em .12em .1em;margin:-.18em -.12em -.1em}
+.hl .w{display:inline-block;will-change:transform,opacity,filter}
+.hl .p{color:var(--acid)}
+.hl .acc{color:var(--acid)}
+
+/* base de interface */
+.panel{position:absolute}
+.pbg{position:absolute;inset:0;border-radius:26px;background:linear-gradient(180deg,#121212,#0D0D0D 62%);border:1px solid var(--hair);box-shadow:0 50px 120px -24px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.04)}
+.card{position:relative;background:var(--card);border:1px solid var(--hair);border-radius:18px}
+.cap{font:600 11px/1 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+.lbl{font:500 13px/1.2 var(--f-ui);color:var(--steel)}
+.chip{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 9px 0 7px;border-radius:99px;background:var(--acid-08);color:var(--acid);font:600 12px/1 var(--f-ui);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip .ico{width:12px;height:12px;stroke-width:2.3}
+.av{width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;background:#1C1C1C;border:1px solid var(--hair);font:600 13px/1 var(--f-ui);color:var(--paper-82);letter-spacing:.02em}
+
+/* cena 2 · dashboard */
+#h2{left:120px;top:322px;--fs:104px}
+#dash{left:860px;top:190px;width:940px;height:700px;transform-origin:0% 50%}
+#dash .pin{position:absolute;inset:0;display:flex;border-radius:26px;overflow:hidden}
+.side{width:196px;flex:none;border-right:1px solid var(--hair);padding:30px 14px 22px;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:10px;height:26px;padding:0 10px;margin-bottom:28px}
+.brand .bs{width:30px;height:24.3px}
+.brand .bw{width:82px;height:11.23px}
+.nav{display:flex;align-items:center;gap:12px;height:40px;padding:0 12px;border-radius:12px;font:500 14px/1 var(--f-ui);color:var(--paper-55)}
+.nav+.nav{margin-top:4px}
+.nav.on{background:var(--paper-06);color:var(--paper)}
+.nav.on .ico{color:var(--acid)}
+.side .grow{flex:1}
+.dmain{flex:1;min-width:0;padding:30px 30px 26px;display:flex;flex-direction:column}
+.dhead{display:flex;justify-content:space-between;align-items:flex-start}
+.dhead .t{font:600 25px/1.15 var(--f-ui);letter-spacing:-.02em}
+.dhead .s{font:400 14px/1 var(--f-ui);color:var(--steel);margin-top:9px}
+.acts{display:flex;gap:10px}
+.ibtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--hair);display:grid;place-items:center;color:var(--paper-55)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+.kpi{height:128px}
+.kin{position:absolute;inset:0;padding:18px 18px 16px;display:flex;flex-direction:column}
+.kin .num{font:600 31px/1 var(--f-ui);letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-top:12px;color:var(--paper);transform-origin:0 70%}
+.kin .chip{margin-top:auto;align-self:flex-start}
+.drow{display:grid;grid-template-columns:1fr 218px;gap:14px;margin-top:14px}
+.cc{height:270px;padding:18px 18px 14px;display:flex;flex-direction:column}
+.cc .top{display:flex;justify-content:space-between;align-items:center}
+.tt{font:600 14px/1 var(--f-ui);color:var(--paper)}
+.pill-s{height:26px;padding:0 10px;border-radius:99px;border:1px solid var(--hair);font:500 11.5px/24px var(--f-ui);color:var(--steel)}
+.dbars{flex:1;display:flex;align-items:flex-end;gap:12px;margin-top:14px}
+.dbar{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:9px}
+.dbar i{display:block;width:100%;border-radius:7px 7px 3px 3px;background:rgba(242,240,235,.12);transform-origin:50% 100%}
+.dbar.now i{background:var(--acid)}
+.dbar span{font:600 10px/1 var(--f-ui);letter-spacing:.12em;color:var(--steel)}
+.dbar.now span{color:var(--paper)}
+.ringc{align-items:center}
+.ringc .tt{align-self:flex-start}
+.ring{position:relative;width:136px;height:136px;margin-top:22px}
+.ring svg{width:136px;height:136px;transform:rotate(-90deg)}
+.ring .rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .rv b{font:600 28px/1 var(--f-ui);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.ring .rv span{font:500 11px/1 var(--f-ui);color:var(--steel);margin-top:7px}
+.next{margin-top:20px}
+.nh{display:flex;justify-content:space-between;align-items:center;font:600 14px/1 var(--f-ui)}
+.nh span:last-child{font-weight:500;color:var(--steel);font-size:13px}
+.nrow{height:62px;margin-top:12px}
+.nin{position:absolute;inset:0;display:flex;align-items:center;gap:14px;padding:0 16px}
+.nin .tm{font:600 15px/1 var(--f-ui);font-variant-numeric:tabular-nums;width:44px}
+.nin .av{width:34px;height:34px;font-size:12px}
+.nin .who{flex:1;font:600 14px/1 var(--f-ui)}
+.nin .who span{font-weight:400;color:var(--steel);margin-left:10px}
+
+/* blocos de transição */
+.blk{position:absolute;left:0;top:0;background:var(--card);border:1px solid var(--hair);border-radius:18px;opacity:0;will-change:left,top,width,height}
+
+/* cena 3 · agenda */
+#agenda{left:120px;top:190px;width:860px;height:700px}
+.agc{position:absolute;inset:0}
+.ag-head{position:absolute;left:30px;right:28px;top:30px;display:flex;justify-content:space-between;align-items:center}
+.ag-head .t{font:600 26px/1.1 var(--f-ui);letter-spacing:-.02em}
+.ag-head .s{font:400 14px/1 var(--f-ui);color:var(--steel);margin-top:9px}
+#btnNew{position:relative;height:46px;padding:0 18px 0 14px;border-radius:13px;border:1px solid var(--hair-2);display:flex;align-items:center;gap:10px;font:600 12.5px/1 var(--f-ui);letter-spacing:.09em;color:var(--paper);background:rgba(200,255,0,0)}
+#btnNew .ico{width:17px;height:17px;stroke-width:2}
+.days{position:absolute;left:28px;right:28px;top:110px;display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.day{position:relative;height:64px;border-radius:14px;border:1px solid var(--hair);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.day span{font:600 10.5px/1 var(--f-ui);letter-spacing:.16em;color:var(--steel)}
+.day b{font:600 18px/1 var(--f-ui);color:var(--paper-82);font-variant-numeric:tabular-nums}
+.day.on{background:var(--paper-06);border-color:var(--hair-2)}
+.day.on b{color:var(--paper)}
+.day.on::after{content:'';position:absolute;bottom:6px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--acid)}
+.ag-stats{position:absolute;left:30px;right:28px;top:198px;height:16px;display:flex;align-items:center;justify-content:space-between;font:500 13px/16px var(--f-ui);color:var(--steel)}
+.ag-stats b{color:var(--paper);font-weight:600}
+.cnt{display:inline-block;position:relative;overflow:hidden;height:16px;width:9px;vertical-align:top}
+.cnt b{position:absolute;left:0;top:0}
+.occ{display:flex;align-items:center;gap:12px}
+.occ .tr{width:200px;height:3px;border-radius:2px;background:var(--paper-12);position:relative;overflow:hidden}
+.occ .tr i{position:absolute;inset:0;background:var(--paper);transform-origin:0 50%;transform:scaleX(.78)}
+.nowline{position:absolute;left:28px;right:28px;top:318px;height:1px}
+.nowline i{position:absolute;left:4px;right:0;top:0;height:1px;background:linear-gradient(90deg,var(--acid),rgba(200,255,0,.08));transform-origin:0 50%}
+.nowline b{position:absolute;left:0;top:-3.5px;width:8px;height:8px;border-radius:50%;background:var(--acid)}
+.row{position:absolute;left:28px;width:804px;height:76px;border-radius:16px;background:var(--card);border:1px solid var(--hair)}
+.rin{position:absolute;inset:0;display:flex;align-items:center;gap:18px;padding:0 16px 0 22px}
+.rin .tm{width:60px}
+.rin .tm b{display:block;font:600 19px/1 var(--f-ui);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.rin .tm span{display:block;font:500 12px/1 var(--f-ui);color:var(--steel);margin-top:8px}
+.rin .sep{width:1px;height:36px;background:var(--hair)}
+.rin .who{flex:1;min-width:0}
+.rin .who b{display:block;font:600 16.5px/1.1 var(--f-ui)}
+.rin .who span{display:block;font:400 13.5px/1 var(--f-ui);color:var(--steel);margin-top:7px}
+.stw{position:relative;width:132px;height:30px}
+.st{position:absolute;right:0;top:0;height:30px;padding:0 12px 0 10px;border-radius:99px;display:flex;align-items:center;gap:7px;font:600 12.5px/1 var(--f-ui);white-space:nowrap}
+.st.ok{background:var(--acid-08);color:var(--acid)}
+.st.wait{background:var(--paper-06);color:var(--steel)}
+.st .ico{width:14px;height:14px;stroke-width:2.4}
+.st .o{width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor}
+.st .spin{width:12px;height:12px;border-radius:50%;border:1.6px solid rgba(200,255,0,.25);border-top-color:var(--acid)}
+.rin .more{color:var(--steel);display:flex}
+#h3{left:1070px;top:378px;--fs:118px}
+#cursor{position:absolute;left:0;top:0;width:28px;height:28px;opacity:0;filter:drop-shadow(0 6px 10px rgba(0,0,0,.55));will-change:transform}
+#ripple{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;border:1.5px solid var(--acid);opacity:0}
+
+/* cena 4 · equipe */
+#s4w{position:absolute;inset:0}
+#h4{left:120px;top:112px;--fs:100px}
+.team{position:absolute;left:120px;top:362px;width:1680px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.tmc{height:300px;padding:24px 26px 24px;display:flex;flex-direction:column}
+.tm-top{display:flex;align-items:center;gap:14px}
+.tm-top .av{width:48px;height:48px;font:600 17px/1 var(--f-display);color:var(--paper)}
+.tm-id b{display:block;font:600 19px/1 var(--f-display);letter-spacing:.12em}
+.tm-id span{display:block;font:400 13px/1 var(--f-ui);color:var(--steel);margin-top:8px}
+.tm-st{margin-left:auto;display:flex;align-items:center;gap:8px;font:500 12.5px/1 var(--f-ui);color:var(--steel)}
+.tm-st i{width:7px;height:7px;border-radius:50%;background:var(--acid)}
+.tm-st.off i{background:var(--steel)}
+.tm-mx{display:flex;align-items:flex-end;gap:40px;margin-top:30px}
+.mx b{display:block;font:600 56px/1 var(--f-ui);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.mx.sm b{font-size:34px;letter-spacing:-.035em}
+.mx span{display:block;font:500 13px/1 var(--f-ui);color:var(--steel);margin-top:11px}
+.tm-bt{margin-top:auto}
+.tm-row{display:flex;justify-content:space-between;font:500 13px/1 var(--f-ui);color:var(--steel)}
+.tm-row b{color:var(--paper);font-weight:600;font-variant-numeric:tabular-nums}
+.tbar{position:relative;height:2px;margin:14px 0 12px;background:var(--paper-12);border-radius:2px}
+.tbar i{position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:2px;background:var(--paper-82);transform-origin:0 50%}
+.tbar em{position:absolute;left:0;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:var(--acid);box-shadow:0 0 0 4px rgba(200,255,0,.12)}
+.c4l{position:absolute;left:120px;top:724px;display:flex;gap:14px;align-items:baseline;font:600 14px/1 var(--f-ui)}
+.c4l span{font-weight:500;color:var(--steel);font-size:13px}
+.c4c{position:absolute;right:120px;top:718px}
+.gl{position:absolute;left:120px;width:1680px;height:1px;background:rgba(242,240,235,.08);opacity:0}
+#tChart{position:absolute;left:0;top:0;width:1920px;height:1080px}
+
+/* cena 5 · financeiro */
+#h5{left:120px;top:108px;--fs:92px}
+.tiles{position:absolute;left:120px;top:360px;width:770px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tile{height:292px}
+.tin{position:absolute;inset:0;padding:28px 28px 26px;display:flex;flex-direction:column}
+.tin .num{font:600 60px/1 var(--f-ui);letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin-top:auto;color:var(--paper)}
+.tin .sub{display:flex;align-items:center;gap:10px;height:24px;margin-top:22px;font:500 13px/1 var(--f-ui);color:var(--steel)}
+.tb{position:relative;height:3px;flex:1;background:var(--paper-12);border-radius:2px}
+.tb i{position:absolute;inset:0;background:var(--paper-82);border-radius:2px;transform-origin:0 50%}
+.tb em{position:absolute;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:var(--acid)}
+#fin{left:906px;top:360px;width:894px;height:600px}
+.fin-c{position:absolute;inset:0;border-radius:18px;background:var(--card);border:1px solid var(--hair)}
+.fin-h{position:absolute;left:30px;right:30px;top:28px;display:flex;justify-content:space-between;align-items:flex-start}
+.fin-h .t{font:600 20px/1.1 var(--f-ui)}
+.fin-h .s{font:400 13.5px/1 var(--f-ui);color:var(--steel);margin-top:9px}
+.plot{position:absolute;left:30px;top:130px;width:834px;height:404px}
+.yl{position:absolute;left:0;font:500 11px/1 var(--f-ui);color:var(--steel);font-variant-numeric:tabular-nums;transform:translateY(-50%)}
+.g5{position:absolute;left:56px;right:0;height:1px;background:rgba(242,240,235,.07);transform-origin:0 50%}
+.avg{position:absolute;left:56px;right:0;height:0;border-top:1px dashed rgba(242,240,235,.3);transform-origin:0 50%}
+.avgl{position:absolute;left:64px;font:500 11.5px/1 var(--f-ui);color:var(--paper-55);font-variant-numeric:tabular-nums}
+.fbar{position:absolute;bottom:0;width:96px;border-radius:10px 10px 4px 4px;background:rgba(242,240,235,.13);transform-origin:50% 100%}
+.fbar.g{background:var(--acid)}
+.fval{position:absolute;font:600 13px/1 var(--f-ui);color:var(--paper-82);font-variant-numeric:tabular-nums;transform:translateX(-50%);white-space:nowrap}
+.fval.g{color:var(--acid);font-size:15px}
+.fday{position:absolute;top:422px;font:600 11px/1 var(--f-ui);letter-spacing:.16em;color:var(--steel);transform:translateX(-50%)}
+.fday.g{color:var(--paper)}
+.scan{position:absolute;top:-14px;height:418px;width:1px;background:linear-gradient(180deg,transparent,rgba(200,255,0,.75) 25%,rgba(200,255,0,.75) 75%,transparent);opacity:0}
+.fchip{position:absolute;transform:translateX(-50%)}
+.ftip{position:absolute;padding:11px 13px;border-radius:11px;background:#1B1B1B;border:1px solid var(--hair-2);box-shadow:0 12px 30px rgba(0,0,0,.5);white-space:nowrap}
+.ftip b{display:block;font:600 12.5px/1 var(--f-ui);color:var(--paper)}
+.ftip span{display:block;font:500 12px/1 var(--f-ui);color:var(--steel);margin-top:7px}
+
+/* cena 6 */
+#h6{left:0;width:1920px;top:458px;text-align:center;--fs:92px}
+#pills .pl{position:absolute;left:0;top:0;display:flex;align-items:center;gap:12px;height:60px;padding:0 24px 0 20px;font:500 20px/1 var(--f-ui);color:var(--paper);white-space:nowrap;opacity:0}
+#pills .pl .ico{width:21px;height:21px;color:var(--paper-82)}
+#pills .pl.g .ico{color:var(--acid)}
+
+/* assinatura */
+#stage #wm{position:absolute;left:810px;top:654px;width:300px;height:41.08px;overflow:hidden}
+#tagline{position:absolute;left:0;width:1920px;top:716px;text-align:center;font:400 12.5px/1 var(--f-display);color:var(--paper-82);white-space:nowrap}
+#tagline span{display:inline-block}
+
+/* controles (fora do quadro do filme) */
+#hud{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:7px 12px 7px 8px;border-radius:14px;background:rgba(18,18,18,.86);border:1px solid rgba(242,240,235,.1);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:500 12px/1 var(--f-ui);color:var(--paper-82);opacity:0;transition:opacity .35s;z-index:10;width:min(560px,calc(100vw - 32px))}
+#hud.show{opacity:1}
+#hud button{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:9px;color:var(--paper);flex:none}
+#hud button:hover{background:rgba(242,240,235,.08)}
+#hud button:focus-visible{outline:2px solid var(--acid);outline-offset:1px}
+#hud svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#hud input{flex:1;min-width:0;accent-color:var(--acid);cursor:pointer}
+#hud .tc{font-variant-numeric:tabular-nums;min-width:96px;text-align:right;color:var(--paper-55)}
+#err{position:fixed;inset:0;display:none;place-items:center;font:500 15px/1.5 var(--f-ui);color:var(--paper-55);text-align:center;padding:0 24px}
+</style>
+</head>
+<body>
+<div id="viewport">
+ <div id="stage" role="img" aria-label="CORTTA, gestão para barbearias: filme de lançamento de 30 segundos">
+  <div id="grid"></div>
+  <div id="ambient"></div>
+
+  <!-- CENA 2 · SUA BARBEARIA. EM UM SÓ LUGAR. -->
+  <section class="scene" id="s2">
+   <h2 class="hl" id="h2">
+    <span class="ln"><span class="w">Sua</span></span>
+    <span class="ln"><span class="w">Barbearia<span class="p">.</span></span></span>
+    <span class="ln"><span class="w">Em um só</span></span>
+    <span class="ln"><span class="w">Lugar<span class="p">.</span></span></span>
+   </h2>
+   <div class="panel" id="dash">
+    <div class="pbg"></div>
+    <div class="pin">
+     <aside class="side">
+      <div class="brand"><svg class="bs" viewBox="0 0 538 436"><use href="#symMini"/></svg><svg class="bw" viewBox="0 0 443 60.67"><use href="#wmMini"/></svg></div>
+      <div class="nav on"><i data-i="home"></i>Início</div>
+      <div class="nav"><i data-i="cal"></i>Agenda</div>
+      <div class="nav"><i data-i="user"></i>Clientes</div>
+      <div class="nav"><i data-i="fin"></i>Financeiro</div>
+      <div class="nav"><i data-i="team"></i>Equipe</div>
+      <div class="nav"><i data-i="rep"></i>Relatórios</div>
+      <div class="grow"></div>
+      <div class="nav"><i data-i="cfg"></i>Configurações</div>
+     </aside>
+     <div class="dmain">
+      <div class="dhead">
+       <div><div class="t">Bom dia, Rafael</div><div class="s">Terça-feira, 06 de outubro</div></div>
+       <div class="acts"><div class="ibtn"><i data-i="search"></i></div><div class="av">RF</div></div>
+      </div>
+      <div class="kpis">
+       <div class="card kpi" id="k1"><div class="kin"><div class="lbl">Faturamento hoje</div><div class="num" id="k1v">R$ 2.840</div><span class="chip"><i data-i="up"></i>12%</span></div></div>
+       <div class="card kpi" id="k2"><div class="kin"><div class="lbl">Atendimentos</div><div class="num" id="k2v">32</div><span class="chip"><i data-i="up"></i>8%</span></div></div>
+       <div class="card kpi" id="k3"><div class="kin"><div class="lbl">Ocupação</div><div class="num" id="k3v">87%</div><span class="chip"><i data-i="up"></i>5%</span></div></div>
+      </div>
+      <div class="drow">
+       <div class="card cc" id="dChart">
+        <div class="top"><span class="tt">Faturamento semanal</span><span class="pill-s">Últimos 7 dias</span></div>
+        <div class="dbars">
+         <div class="dbar"><i style="height:62%"></i><span>QUA</span></div>
+         <div class="dbar"><i style="height:70%"></i><span>QUI</span></div>
+         <div class="dbar"><i style="height:88%"></i><span>SEX</span></div>
+         <div class="dbar"><i style="height:100%"></i><span>SÁB</span></div>
+         <div class="dbar"><i style="height:22%"></i><span>DOM</span></div>
+         <div class="dbar"><i style="height:52%"></i><span>SEG</span></div>
+         <div class="dbar now"><i style="height:80%"></i><span>HOJE</span></div>
+        </div>
+       </div>
+       <div class="card cc ringc" id="dRing">
+        <span class="tt">Ocupação</span>
+        <div class="ring">
+         <svg viewBox="0 0 136 136"><circle cx="68" cy="68" r="56" fill="none" stroke="rgba(242,240,235,.08)" stroke-width="10"/><circle id="ringArc" cx="68" cy="68" r="56" fill="none" stroke="#F2F0EB" stroke-width="10" stroke-linecap="round" stroke-dasharray="351.86" stroke-dashoffset="351.86"/></svg>
+         <div class="rv"><b id="ringV">87%</b><span>da agenda</span></div>
+        </div>
+       </div>
+      </div>
+      <div class="next">
+       <div class="nh"><span>Próximos atendimentos</span><span>Ver todos</span></div>
+       <div class="card nrow" id="dNext"><div class="nin"><span class="tm">09:00</span><span class="av">JS</span><span class="who">João Silva<span>Corte</span></span><span class="chip"><i data-i="check"></i>Confirmado</span></div></div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- CENA 3 · AGENDE. ORGANIZE. CRESÇA. -->
+  <section class="scene" id="s3">
+   <div class="panel" id="agenda">
+    <div class="pbg"></div>
+    <div class="agc">
+     <div class="ag-head">
+      <div><div class="t">Agenda</div><div class="s">Terça-feira, 06 de outubro</div></div>
+      <div id="btnNew"><i data-i="plus"></i>NOVO ATENDIMENTO</div>
+     </div>
+     <div class="days">
+      <div class="day"><span>SEG</span><b>05</b></div>
+      <div class="day on"><span>TER</span><b>06</b></div>
+      <div class="day"><span>QUA</span><b>07</b></div>
+      <div class="day"><span>QUI</span><b>08</b></div>
+      <div class="day"><span>SEX</span><b>09</b></div>
+      <div class="day"><span>SÁB</span><b>10</b></div>
+      <div class="day"><span>DOM</span><b>11</b></div>
+     </div>
+     <div class="ag-stats">
+      <span><span class="cnt"><b id="cnt4">4</b><b id="cnt5">5</b></span> <b>atendimentos</b> · 3 barbeiros</span>
+      <span class="occ">Ocupação<span class="tr"><i id="occBar"></i></span></span>
+     </div>
+     <div class="nowline"><i></i><b></b></div>
+    </div>
+    <div class="row" data-slot="0"><div class="rin"><div class="tm"><b>09:00</b><span>45 min</span></div><div class="sep"></div><div class="av">JS</div><div class="who"><b>João Silva</b><span>Corte</span></div><div class="stw"><div class="st ok"><i data-i="check"></i>Confirmado</div></div><div class="more"><i data-i="more"></i></div></div></div>
+    <div class="row" data-slot="1"><div class="rin"><div class="tm"><b>09:45</b><span>60 min</span></div><div class="sep"></div><div class="av">PS</div><div class="who"><b>Pedro Santos</b><span>Corte + Barba</span></div><div class="stw"><div class="st ok"><i data-i="check"></i>Confirmado</div></div><div class="more"><i data-i="more"></i></div></div></div>
+    <div class="row" data-slot="2" id="rowLucas"><div class="rin"><div class="tm"><b>10:30</b><span>30 min</span></div><div class="sep"></div><div class="av">LO</div><div class="who"><b>Lucas Oliveira</b><span>Barba</span></div><div class="stw"><div class="st wait"><span class="o"></span>Pendente</div><div class="st ok"><svg class="ico" viewBox="0 0 24 24"><path class="ck" d="M5 12.5l4.2 4.2L19 7"/></svg>Confirmado</div></div><div class="more"><i data-i="more"></i></div></div></div>
+    <div class="row" data-slot="3"><div class="rin"><div class="tm"><b>11:15</b><span>45 min</span></div><div class="sep"></div><div class="av">RC</div><div class="who"><b>Rafael Costa</b><span>Corte</span></div><div class="stw"><div class="st ok"><i data-i="check"></i>Confirmado</div></div><div class="more"><i data-i="more"></i></div></div></div>
+    <div class="row" id="rowNew"><div class="rin"><div class="tm"><b>10:00</b><span>45 min</span></div><div class="sep"></div><div class="av">GS</div><div class="who"><b>Gabriel Souza</b><span>Corte</span></div><div class="stw"><div class="st ok" id="stNewA"><span class="spin"></span>Agendando</div><div class="st ok" id="stNewB"><svg class="ico" viewBox="0 0 24 24"><path class="ck" d="M5 12.5l4.2 4.2L19 7"/></svg>Confirmado</div></div><div class="more"><i data-i="more"></i></div></div></div>
+   </div>
+   <h2 class="hl" id="h3">
+    <span class="ln"><span class="w">Agende<span class="p">.</span></span></span>
+    <span class="ln"><span class="w">Organize<span class="p">.</span></span></span>
+    <span class="ln"><span class="w acc">Cresça.</span></span>
+   </h2>
+   <div id="ripple"></div>
+   <svg id="cursor" viewBox="0 0 28 28" aria-hidden="true"><path d="M3.2 2.4 3.4 22.6c0 .7.8 1 1.3.5l4.6-4.7 3.4 7.3c.2.5.8.7 1.3.5l2.6-1.2c.5-.2.7-.8.5-1.3l-3.4-7.2 6.5-.4c.7 0 1-.9.5-1.4L4.6 1.8c-.5-.5-1.4-.1-1.4.6z" fill="#F2F0EB" stroke="#0B0B0B" stroke-width="1.3" stroke-linejoin="round"/></svg>
+  </section>
+
+  <!-- CENA 4 · SEU TIME. SOB CONTROLE. -->
+  <section class="scene" id="s4">
+   <div id="s4w">
+    <h2 class="hl" id="h4">
+     <span class="ln"><span class="w">Seu time<span class="p">.</span></span></span>
+     <span class="ln"><span class="w">Sob controle<span class="p">.</span></span></span>
+    </h2>
+    <div class="team">
+     <div class="card tmc" data-a="24" data-f="1840" data-c="736" data-p="96">
+      <div class="tm-top"><div class="av">J</div><div class="tm-id"><b>JOÃO</b><span>Barbeiro sênior</span></div><div class="tm-st"><i></i>Em atendimento</div></div>
+      <div class="tm-mx"><div class="mx"><b class="va">24</b><span>atendimentos</span></div><div class="mx sm"><b class="vf">R$ 1.840</b><span>faturamento</span></div></div>
+      <div class="tm-bt"><div class="tm-row"><span>Comissão · 40%</span><b class="vc">R$ 736</b></div><div class="tbar"><i></i><em></em></div><div class="tm-row"><span>Meta do mês</span><b class="vp">96%</b></div></div>
+     </div>
+     <div class="card tmc" data-a="21" data-f="1620" data-c="648" data-p="84">
+      <div class="tm-top"><div class="av">P</div><div class="tm-id"><b>PEDRO</b><span>Barbeiro</span></div><div class="tm-st off"><i></i>Livre</div></div>
+      <div class="tm-mx"><div class="mx"><b class="va">21</b><span>atendimentos</span></div><div class="mx sm"><b class="vf">R$ 1.620</b><span>faturamento</span></div></div>
+      <div class="tm-bt"><div class="tm-row"><span>Comissão · 40%</span><b class="vc">R$ 648</b></div><div class="tbar"><i></i><em></em></div><div class="tm-row"><span>Meta do mês</span><b class="vp">84%</b></div></div>
+     </div>
+     <div class="card tmc" data-a="18" data-f="1390" data-c="556" data-p="72">
+      <div class="tm-top"><div class="av">L</div><div class="tm-id"><b>LUCAS</b><span>Barbeiro</span></div><div class="tm-st"><i></i>Em atendimento</div></div>
+      <div class="tm-mx"><div class="mx"><b class="va">18</b><span>atendimentos</span></div><div class="mx sm"><b class="vf">R$ 1.390</b><span>faturamento</span></div></div>
+      <div class="tm-bt"><div class="tm-row"><span>Comissão · 40%</span><b class="vc">R$ 556</b></div><div class="tbar"><i></i><em></em></div><div class="tm-row"><span>Meta do mês</span><b class="vp">72%</b></div></div>
+     </div>
+    </div>
+    <div class="c4l">Atendimentos da equipe<span>Últimos 14 dias</span></div>
+    <div class="c4c"><span class="chip"><i data-i="up"></i>18%</span></div>
+    <div class="gl" style="top:772px"></div><div class="gl" style="top:812px"></div><div class="gl" style="top:852px"></div><div class="gl" style="top:892px"></div><div class="gl" style="top:932px"></div>
+    <svg id="tChart" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+   </div>
+  </section>
+
+  <!-- CENA 5 · DECISÕES BASEADAS EM DADOS. -->
+  <section class="scene" id="s5">
+   <h2 class="hl" id="h5">
+    <span class="ln"><span class="w">Decisões</span></span>
+    <span class="ln"><span class="w">Baseadas em dados<span class="p">.</span></span></span>
+   </h2>
+   <div class="tiles">
+    <div class="card tile"><div class="tin"><span class="cap">Faturamento</span><span class="num" id="t1">R$ 18.420</span><div class="sub"><span class="chip"><i data-i="up"></i>24%</span>esta semana</div></div></div>
+    <div class="card tile"><div class="tin"><span class="cap">Crescimento</span><span class="num" id="t2">+24%</span><div class="sub">vs. semana anterior</div></div></div>
+    <div class="card tile"><div class="tin"><span class="cap">Ticket médio</span><span class="num" id="t3">R$ 67</span><div class="sub"><span class="chip"><i data-i="up"></i>R$ 4</span>vs. setembro</div></div></div>
+    <div class="card tile"><div class="tin"><span class="cap">Ocupação</span><span class="num" id="t4">87%</span><div class="sub"><span class="tb"><i id="t4b"></i><em id="t4d"></em></span></div></div></div>
+   </div>
+   <div class="panel" id="fin">
+    <div class="fin-c"></div>
+    <div class="fin-h"><div><div class="t">Faturamento semanal</div><div class="s">06 – 10 de outubro</div></div><span class="pill-s">Esta semana</span></div>
+    <div class="plot" id="plot"></div>
+   </div>
+  </section>
+
+  <!-- CENA 6 · MENOS GESTÃO MANUAL. MAIS BARBEARIA. -->
+  <section class="scene" id="s6">
+   <h2 class="hl" id="h6">
+    <span class="ln" id="h6a"><span class="w">Menos</span> <span class="w">gestão manual.</span></span>
+    <span class="ln"><span class="w acc">Mais</span> <span class="w">barbearia<span class="p">.</span></span></span>
+   </h2>
+  </section>
+
+  <svg id="fx" class="layer" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+  <svg id="logo" class="layer" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+  <div id="pills" class="layer"></div>
+  <svg id="wm" viewBox="0 0 443 60.67" aria-hidden="true"></svg>
+  <div id="tagline" aria-hidden="true">GESTÃO PARA BARBEARIAS</div>
+  <div id="blocks" class="layer"></div>
+  <div id="vignette"></div>
+  <div id="grain"></div>
+ </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="sprite"></defs></svg>
+
+<div id="hud" role="group" aria-label="Controles do filme">
+ <button id="hudPlay" type="button" aria-label="Pausar"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button>
+ <button id="hudRestart" type="button" aria-label="Reiniciar"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg></button>
+ <input id="hudScrub" type="range" min="0" max="30" step="0.01" value="0" aria-label="Posição no filme">
+ <span class="tc" id="hudTime">00:00.0 / 00:30.0</span>
+ <button id="hudFull" type="button" aria-label="Tela cheia"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</div>
+<div id="err">Não foi possível carregar a animação (GSAP). Verifique a conexão e recarregue a página.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomEase.min.js"></script>
+<script>
+(function () {
+'use strict';
+
+/* Vetores extraídos das imagens enviadas: símbolo (ícone do app) e wordmark (brand kit). */
+const A = {"symbol":{"w":538.0,"h":436.0,"upper":"M1.25,210.78C1.25,210.64 1.69,209.83 2.24,208.99C2.78,208.15 3.46,207 3.75,206.42C4.04,205.85 4.37,205.21 4.5,205C4.62,204.79 7.55,199.67 11,193.62C14.46,187.58 17.85,181.67 18.54,180.5C19.24,179.33 20.32,177.42 20.95,176.25C21.57,175.08 22.4,173.62 22.78,173C23.16,172.38 23.87,171.2 24.37,170.38C24.87,169.55 25.6,168.37 26,167.75C26.77,166.55 29.8,161.38 30.1,160.75C30.19,160.54 30.52,159.96 30.82,159.46C31.13,158.96 31.81,157.78 32.35,156.84C32.89,155.9 33.91,154.23 34.62,153.12C35.33,152.02 37.47,148.54 39.36,145.38C41.25,142.21 43.06,139.23 43.36,138.75C43.67,138.27 44.93,136.21 46.15,134.17C47.37,132.14 48.85,129.72 49.43,128.8C50,127.88 50.71,126.73 51,126.25C51.28,125.77 51.73,125.04 52,124.62C52.27,124.21 52.74,123.44 53.06,122.9C53.8,121.63 53.86,121.54 56.45,117.5C58.03,115.04 58.42,114.43 60.36,111.38C63.81,105.93 65,104.08 65.51,103.38C65.8,102.96 66.4,102.07 66.83,101.4C67.27,100.72 67.82,99.88 68.06,99.52C68.29,99.17 68.74,98.44 69.06,97.9C69.98,96.32 70.81,95.07 72.38,92.88C72.87,92.19 74.22,90.22 75.38,88.5C77.98,84.65 78.9,83.34 79.66,82.38C80.44,81.4 80.49,81.32 81.38,80.01C81.79,79.4 83.02,77.75 84.12,76.35C85.23,74.94 86.35,73.48 86.62,73.1C87.37,72.07 93.2,64.81 93.7,64.29C94.07,63.9 97.48,60.19 99.36,58.12C102.73,54.43 109.67,47.62 113,44.75C113.87,43.99 114.77,43.2 114.98,42.98C115.2,42.77 116.61,41.59 118.12,40.37C119.64,39.14 121.1,37.95 121.38,37.71C123.42,35.94 129.79,31.24 133.37,28.87C135.88,27.21 135.99,27.13 137.5,26.25C138.77,25.5 138.97,25.39 140.79,24.2C144.93,21.52 153.92,16.72 160.12,13.88C163.06,12.53 168.53,10.25 168.82,10.25C168.93,10.25 169.5,10.03 170.08,9.77C170.67,9.5 171.47,9.2 171.87,9.1C172.27,9 172.88,8.77 173.23,8.59C173.59,8.4 174.02,8.25 174.2,8.25C174.38,8.25 175.06,8.04 175.7,7.77C177.24,7.15 181.83,5.78 185.75,4.77C186.92,4.47 188.46,4.06 189.18,3.85C189.9,3.65 191.42,3.31 192.56,3.11C193.69,2.91 195.81,2.53 197.25,2.26C198.69,1.99 201.28,1.59 203,1.38C204.72,1.16 206.69,0.88 207.38,0.75C211.19,0.02 221.01,-0.02 331.75,0.25C453.35,0.53 537.38,0.89 537.76,1.13C538.22,1.41 537.99,2.06 537.04,3.22C536.51,3.85 535.53,5.16 534.87,6.12C534.21,7.09 532.47,9.39 531.01,11.25C529.56,13.11 527.35,15.98 526.12,17.62C524.89,19.27 523.04,21.7 522,23.02C520.97,24.34 519.88,25.75 519.57,26.15C519.27,26.55 518.85,27.1 518.63,27.38C518.42,27.65 517.32,29.08 516.19,30.55C512.28,35.62 506.86,42.58 503,47.49C500.87,50.2 498.84,52.8 498.5,53.26C498.16,53.72 496.77,55.5 495.43,57.23C494.08,58.96 492.28,61.27 491.43,62.38C489.86,64.41 481.62,74.81 480.17,76.61C479.73,77.14 478.76,78.38 478.01,79.36C477.27,80.33 476.44,81.35 476.18,81.62C475.92,81.9 475.11,82.91 474.38,83.88C473.65,84.84 472.85,85.87 472.59,86.17C471.93,86.94 471.53,87.44 470.15,89.26C469.47,90.15 468.8,90.99 468.65,91.12C468.5,91.26 467.56,92.34 466.57,93.52C464.44,96.05 459.84,100.56 457.38,102.53C453.55,105.58 450.26,107.58 446.21,109.34C441.53,111.36 437.83,112.37 431.62,113.3C430.12,113.52 406.94,113.63 337.5,113.76C271.21,113.87 244.72,114 243.05,114.2C236.55,115 231.74,115.85 228.62,116.77C220.21,119.26 217.01,120.51 211.73,123.41C206.23,126.43 206.64,126.18 203.75,128.18C203.2,128.56 199.97,130.98 198.65,132C195.31,134.6 189.69,140.31 186.78,144.09C185.73,145.45 184.16,147.46 183.29,148.56C182.42,149.66 181.21,151.28 180.6,152.16C180,153.03 178.99,154.48 178.38,155.37C177.76,156.27 175.64,159.67 173.66,162.94C171.69,166.2 168.77,171.01 167.16,173.62C165.56,176.24 163.6,179.54 162.81,180.95C157.47,190.55 156.36,192.37 155.75,192.56C155.41,192.67 120.93,196.81 79.12,201.76C37.32,206.71 2.7,210.82 2.19,210.9C1.61,210.99 1.25,210.94 1.25,210.78Z","lower":"M219.38,435.74C218,435.64 213.95,435.43 210.38,435.27C206.8,435.11 202.58,434.82 201,434.63C199.42,434.44 196.94,434.21 195.5,434.12C194.06,434.04 192.26,433.81 191.5,433.63C190.74,433.45 189.23,433.22 188.12,433.13C187.02,433.04 185.56,432.81 184.88,432.62C184.19,432.43 182.84,432.2 181.88,432.11C180.91,432.01 179.85,431.83 179.51,431.7C179.17,431.58 177.99,431.36 176.89,431.22C175.78,431.09 174.31,430.82 173.62,430.63C172.94,430.44 171.76,430.21 171,430.11C170.24,430.02 169.34,429.83 169,429.7C168.66,429.57 167.65,429.31 166.75,429.13C165.28,428.83 162.98,428.19 158.25,426.78C157.36,426.51 155.84,426.06 154.88,425.78C151.78,424.88 146.42,423.2 145,422.69C142.1,421.64 138.85,420.32 137.7,419.73C137.19,419.46 136.63,419.25 136.45,419.24C136.27,419.24 135.68,419.02 135.12,418.75C134.57,418.48 134.05,418.26 133.95,418.26C133.86,418.25 132.68,417.73 131.33,417.09C129.98,416.46 128.37,415.72 127.75,415.44C127.13,415.17 124.02,413.66 120.84,412.08C115.7,409.53 113.45,408.28 111.2,406.72C110.83,406.46 110.45,406.25 110.37,406.25C110.29,406.25 109.55,405.8 108.72,405.25C107.89,404.7 107.13,404.25 107.02,404.25C106.91,404.25 106.62,404.02 106.38,403.75C106.13,403.48 105.83,403.25 105.72,403.25C105.61,403.25 105.14,403 104.66,402.69C104.19,402.38 103.05,401.67 102.13,401.12C101.21,400.58 100.33,400.01 100.17,399.88C100.01,399.74 99.26,399.21 98.5,398.7C94.17,395.78 87.37,390.46 80.88,384.9C75.9,380.63 75.38,380.15 67.83,372.57C60.62,365.34 58.37,362.88 53.37,356.77C53.1,356.44 52.48,355.71 51.99,355.15C51.04,354.04 48.8,351.36 48.33,350.75C48.17,350.54 47.15,349.24 46.05,347.86C43.85,345.06 38.84,338.31 36.79,335.38C36.41,334.83 35.66,333.76 35.13,333C34.18,331.65 30.41,326.04 29.83,325.11C29.09,323.92 27.38,321.25 26.5,319.88C25.69,318.63 24.7,317.03 22.23,313C22.1,312.79 21.88,312.34 21.74,312C21.6,311.66 21.22,310.92 20.9,310.38C20.58,309.83 19.93,308.66 19.47,307.79C19.01,306.92 18.49,306.09 18.31,305.95C18.14,305.81 18,305.55 18,305.38C18,305.21 17.78,304.79 17.52,304.46C16.72,303.44 12.96,295.82 11.37,292C11,291.11 10.61,290.26 10.51,290.12C10.4,289.99 9.73,288.52 9.02,286.88C8.31,285.23 7.63,283.7 7.51,283.48C6.81,282.18 2.82,270.28 1.65,266C0.78,262.79 -0,258.88 0,257.72C0,256.65 0.47,256.25 1.7,256.25C2.11,256.25 2.89,256.09 3.43,255.9C3.98,255.71 5.2,255.46 6.15,255.36C7.1,255.26 8.61,254.97 9.5,254.71C10.39,254.46 11.53,254.25 12.02,254.25C12.52,254.25 13.47,254.08 14.15,253.87C14.82,253.66 16.27,253.37 17.35,253.23C18.44,253.09 19.53,252.87 19.76,252.74C20,252.61 20.86,252.45 21.66,252.37C22.47,252.29 23.97,252.01 25,251.75C26.03,251.49 27.55,251.17 28.38,251.03C30.53,250.67 32.55,250.28 35.12,249.74C37.78,249.18 39.61,248.81 41.5,248.47C42.26,248.33 43.89,248 45.12,247.74C47.41,247.26 48.53,247.04 52.12,246.37C53.23,246.17 54.86,245.83 55.75,245.63C56.64,245.42 58.05,245.15 58.88,245.02C59.7,244.89 60.88,244.67 61.5,244.53C62.12,244.4 63.36,244.17 64.25,244.02C66.67,243.62 68.44,243.27 70.25,242.83C71.14,242.62 72.55,242.34 73.38,242.22C74.2,242.1 75.21,241.88 75.62,241.73C76.04,241.59 77.27,241.31 78.38,241.11C81.24,240.59 82.9,240.26 84.75,239.83C85.64,239.62 87.27,239.3 88.38,239.12C89.48,238.94 90.77,238.67 91.25,238.52C91.73,238.37 92.46,238.25 92.88,238.25C93.3,238.25 94.32,238.07 95.13,237.85C95.95,237.62 97.52,237.3 98.62,237.12C99.73,236.95 100.94,236.68 101.33,236.53C101.72,236.37 102.4,236.25 102.84,236.25C103.28,236.25 104.32,236.07 105.13,235.84C105.95,235.62 107.36,235.29 108.25,235.11C110.22,234.71 112.97,234.09 114.5,233.72C116.93,233.12 119.98,232.48 122.07,232.14C123.27,231.94 124.37,231.7 124.51,231.62C124.65,231.53 125.69,231.3 126.82,231.11C127.95,230.91 129.49,230.58 130.24,230.38C130.99,230.17 131.87,230 132.19,230C132.51,230 133.18,229.82 133.7,229.59C134.21,229.37 138.08,228.49 142.31,227.63L150,226.07L150,226.66C150,227.04 149.43,227.82 148.34,228.93C145.86,231.46 141.59,237.19 140,240.13C137.07,245.51 135.99,248.53 134.99,254.12C133.93,260.01 134.12,266.18 135.53,271.88C137.06,278.08 140.45,284.86 144.58,290C147.27,293.35 152.45,298.21 156.16,300.87C157.81,302.05 162.38,304.81 164.17,305.7C167.07,307.14 174.03,309.72 176.75,310.37C177.51,310.55 178.8,310.87 179.62,311.08C184.29,312.26 185.59,312.47 191.88,313.02C195.5,313.34 273.68,313.22 379.56,312.72C412.66,312.57 440.02,312.51 440.36,312.6C440.8,312.71 442.4,314.52 445.52,318.44C448.02,321.57 450.19,324.24 450.34,324.38C450.5,324.51 451.24,325.41 451.99,326.38C452.74,327.34 453.45,328.24 453.56,328.38C454.52,329.54 458.29,334.25 459.47,335.75C460.28,336.78 461.24,337.96 461.61,338.38C461.97,338.79 462.74,339.74 463.32,340.5C463.9,341.26 464.51,342.02 464.68,342.2C464.85,342.38 466.2,344.01 467.68,345.82C469.15,347.64 470.48,349.25 470.62,349.4C470.76,349.55 471.16,350.05 471.5,350.51C473.15,352.72 482.6,364.54 483.3,365.28C483.48,365.47 484.7,367.03 486,368.75C487.3,370.47 488.67,372.22 489.05,372.64C489.43,373.06 490.38,374.24 491.15,375.27C491.92,376.29 492.98,377.63 493.5,378.25C494.76,379.75 496.81,382.32 499.17,385.38C500.74,387.41 503.47,390.9 504.45,392.12C504.56,392.26 505.27,393.17 506.01,394.14C506.76,395.12 507.74,396.36 508.18,396.89C509.43,398.43 514.96,405.55 516.62,407.77C517.45,408.87 518.24,409.91 518.38,410.07C518.51,410.24 519.1,410.99 519.67,411.75C520.25,412.51 520.98,413.4 521.3,413.74C522.2,414.7 527.03,420.83 528,422.25C528.48,422.95 530.1,425.07 531.59,426.95C533.08,428.83 534.91,431.22 535.65,432.25C536.4,433.28 537.24,434.42 537.53,434.79C537.82,435.15 537.98,435.57 537.89,435.73C537.77,435.92 494.4,435.99 379.8,435.96C292.94,435.94 220.75,435.84 219.38,435.74Z","topArm":"M252.91,113.44C253.22,112.94 343.74,1.44 344.38,0.78L344.95,0.19L429.54,0.5C476.06,0.67 519.47,0.88 526,0.96C539.5,1.15 538.86,1.02 537.06,3.19C536.52,3.84 535.53,5.16 534.87,6.12C534.21,7.09 532.47,9.39 531.01,11.25C529.56,13.11 527.35,15.98 526.12,17.62C524.89,19.27 523.04,21.7 522,23.02C520.97,24.34 519.88,25.75 519.57,26.15C519.27,26.55 518.85,27.1 518.63,27.38C518.42,27.65 517.32,29.08 516.19,30.55C512.28,35.62 506.86,42.58 503,47.49C500.87,50.2 498.84,52.8 498.5,53.26C498.16,53.72 496.77,55.5 495.43,57.23C494.08,58.96 492.28,61.27 491.43,62.38C489.86,64.41 481.62,74.81 480.17,76.61C479.73,77.14 478.76,78.38 478.01,79.36C477.27,80.33 476.44,81.35 476.18,81.62C475.92,81.9 475.11,82.91 474.38,83.88C473.65,84.84 472.85,85.87 472.59,86.17C471.93,86.94 471.53,87.44 470.15,89.26C469.47,90.15 468.8,90.99 468.65,91.12C468.5,91.26 467.56,92.34 466.57,93.52C464.44,96.05 459.84,100.56 457.38,102.53C453.55,105.58 450.26,107.58 446.21,109.34C441.54,111.36 437.87,112.36 431.62,113.3C428.61,113.75 252.63,113.9 252.91,113.44Z","upperCurve":"M1.25,210.78C1.25,210.64 1.69,209.83 2.24,208.99C2.78,208.15 3.46,207 3.75,206.42C4.04,205.85 4.37,205.21 4.5,205C4.62,204.79 7.55,199.67 11,193.62C14.46,187.58 17.85,181.67 18.54,180.5C19.24,179.33 20.32,177.42 20.95,176.25C21.57,175.08 22.4,173.62 22.78,173C23.16,172.38 23.87,171.2 24.37,170.38C24.87,169.55 25.6,168.37 26,167.75C26.77,166.55 29.8,161.38 30.1,160.75C30.19,160.54 30.52,159.96 30.82,159.46C31.13,158.96 31.81,157.78 32.35,156.84C32.89,155.9 33.91,154.23 34.62,153.12C35.33,152.02 37.47,148.54 39.36,145.38C41.25,142.21 43.06,139.23 43.36,138.75C43.67,138.27 44.93,136.21 46.15,134.17C47.37,132.14 48.85,129.72 49.43,128.8C50,127.88 50.71,126.73 51,126.25C51.28,125.77 51.73,125.04 52,124.62C52.27,124.21 52.74,123.44 53.06,122.9C53.8,121.63 53.86,121.54 56.45,117.5C58.03,115.04 58.42,114.43 60.36,111.38C63.81,105.93 65,104.08 65.51,103.38C65.8,102.96 66.4,102.07 66.83,101.4C67.27,100.72 67.82,99.88 68.06,99.52C68.29,99.17 68.74,98.44 69.06,97.9C69.98,96.32 70.81,95.07 72.38,92.88C72.87,92.19 74.22,90.22 75.38,88.5C77.98,84.65 78.9,83.34 79.66,82.38C80.44,81.4 80.49,81.32 81.38,80.01C81.79,79.4 83.02,77.75 84.12,76.35C85.23,74.94 86.35,73.48 86.62,73.1C87.37,72.07 93.2,64.81 93.7,64.29C94.07,63.9 97.48,60.19 99.36,58.12C102.73,54.43 109.67,47.62 113,44.75C113.87,43.99 114.77,43.2 114.98,42.98C115.2,42.77 116.61,41.59 118.12,40.37C119.64,39.14 121.1,37.95 121.38,37.71C123.42,35.94 129.79,31.24 133.37,28.87C135.88,27.21 135.99,27.13 137.5,26.25C138.77,25.5 138.97,25.39 140.79,24.2C144.93,21.52 153.92,16.72 160.12,13.88C163.06,12.53 168.53,10.25 168.82,10.25C168.93,10.25 169.5,10.03 170.08,9.77C170.67,9.5 171.47,9.2 171.87,9.1C172.27,9 172.88,8.77 173.23,8.59C173.59,8.4 174.02,8.25 174.2,8.25C174.38,8.25 175.06,8.04 175.7,7.77C177.24,7.15 181.83,5.78 185.75,4.77C186.92,4.47 188.46,4.06 189.18,3.85C189.9,3.65 191.42,3.31 192.56,3.11C193.69,2.91 195.81,2.53 197.25,2.26C198.69,1.99 201.28,1.59 203,1.38C204.72,1.17 206.66,0.88 207.31,0.75C210.8,0.03 223.13,-0.06 283.64,0.15L344.66,0.38L298.68,57L252.7,113.62L247.79,113.93C240.43,114.38 233.01,115.48 228.62,116.77C220.21,119.26 217.01,120.51 211.73,123.41C206.23,126.43 206.64,126.18 203.75,128.18C203.2,128.56 199.97,130.98 198.65,132C195.31,134.6 189.69,140.31 186.78,144.09C185.73,145.45 184.16,147.46 183.29,148.56C182.42,149.66 181.21,151.28 180.6,152.16C180,153.03 178.99,154.48 178.38,155.37C177.76,156.27 175.64,159.67 173.66,162.94C171.69,166.2 168.77,171.01 167.16,173.62C165.56,176.24 163.6,179.54 162.81,180.95C157.47,190.55 156.36,192.37 155.75,192.56C155.41,192.67 120.93,196.81 79.12,201.76C37.32,206.71 2.7,210.82 2.19,210.9C1.61,210.99 1.25,210.94 1.25,210.78Z","bottomArm":"M287.18,374.69L238.5,313.38L267.31,313.21C334.59,312.82 440.16,312.48 440.58,312.64C440.83,312.74 443.07,315.36 445.55,318.47C448.03,321.58 450.19,324.24 450.34,324.38C450.5,324.51 451.24,325.41 451.99,326.38C452.74,327.34 453.45,328.24 453.56,328.38C454.52,329.54 458.29,334.25 459.47,335.75C460.28,336.78 461.24,337.96 461.61,338.38C461.97,338.79 462.74,339.74 463.32,340.5C463.9,341.26 464.51,342.02 464.68,342.2C464.85,342.38 466.2,344.01 467.68,345.82C469.15,347.64 470.48,349.25 470.62,349.4C470.76,349.55 471.16,350.05 471.5,350.51C473.15,352.72 482.6,364.54 483.3,365.28C483.48,365.47 484.7,367.03 486,368.75C487.3,370.47 488.67,372.22 489.05,372.64C489.43,373.06 490.38,374.24 491.15,375.27C491.92,376.29 492.98,377.63 493.5,378.25C494.76,379.75 496.81,382.32 499.17,385.38C500.74,387.41 503.47,390.9 504.45,392.12C504.56,392.26 505.27,393.17 506.01,394.14C506.76,395.12 507.74,396.36 508.18,396.89C509.43,398.43 514.96,405.55 516.62,407.77C517.45,408.87 518.24,409.91 518.38,410.07C518.51,410.24 519.1,410.99 519.67,411.75C520.25,412.51 520.98,413.4 521.3,413.74C522.2,414.7 527.03,420.83 528,422.25C528.48,422.95 530.1,425.07 531.59,426.95C533.08,428.83 534.91,431.22 535.65,432.25C536.4,433.28 537.24,434.42 537.53,434.79C537.82,435.15 537.98,435.57 537.89,435.73C537.77,435.92 509.91,436 436.79,436L335.86,436L287.18,374.69Z","lowerCurve":"M219.38,435.74C218,435.64 213.95,435.43 210.38,435.27C206.8,435.11 202.58,434.82 201,434.63C199.42,434.44 196.94,434.21 195.5,434.12C194.06,434.04 192.26,433.81 191.5,433.63C190.74,433.45 189.23,433.22 188.12,433.13C187.02,433.04 185.56,432.81 184.88,432.62C184.19,432.43 182.84,432.2 181.88,432.11C180.91,432.01 179.85,431.83 179.51,431.7C179.17,431.58 177.99,431.36 176.89,431.22C175.78,431.09 174.31,430.82 173.62,430.63C172.94,430.44 171.76,430.21 171,430.11C170.24,430.02 169.34,429.83 169,429.7C168.66,429.57 167.65,429.31 166.75,429.13C165.28,428.83 162.98,428.19 158.25,426.78C157.36,426.51 155.84,426.06 154.88,425.78C151.78,424.88 146.42,423.2 145,422.69C142.1,421.64 138.85,420.32 137.7,419.73C137.19,419.46 136.63,419.25 136.45,419.24C136.27,419.24 135.68,419.02 135.12,418.75C134.57,418.48 134.05,418.26 133.95,418.26C133.86,418.25 132.68,417.73 131.33,417.09C129.98,416.46 128.37,415.72 127.75,415.44C127.13,415.17 124.02,413.66 120.84,412.08C115.7,409.53 113.45,408.28 111.2,406.72C110.83,406.46 110.45,406.25 110.37,406.25C110.29,406.25 109.55,405.8 108.72,405.25C107.89,404.7 107.13,404.25 107.02,404.25C106.91,404.25 106.62,404.02 106.38,403.75C106.13,403.48 105.83,403.25 105.72,403.25C105.61,403.25 105.14,403 104.66,402.69C104.19,402.38 103.05,401.67 102.13,401.12C101.21,400.58 100.33,400.01 100.17,399.88C100.01,399.74 99.26,399.21 98.5,398.7C94.17,395.78 87.37,390.46 80.88,384.9C75.9,380.63 75.38,380.15 67.83,372.57C60.62,365.34 58.37,362.88 53.37,356.77C53.1,356.44 52.48,355.71 51.99,355.15C51.04,354.04 48.8,351.36 48.33,350.75C48.17,350.54 47.15,349.24 46.05,347.86C43.85,345.06 38.84,338.31 36.79,335.38C36.41,334.83 35.66,333.76 35.13,333C34.18,331.65 30.41,326.04 29.83,325.11C29.09,323.92 27.38,321.25 26.5,319.88C25.69,318.63 24.7,317.03 22.23,313C22.1,312.79 21.88,312.34 21.74,312C21.6,311.66 21.22,310.92 20.9,310.38C20.58,309.83 19.93,308.66 19.47,307.79C19.01,306.92 18.49,306.09 18.31,305.95C18.14,305.81 18,305.55 18,305.38C18,305.21 17.78,304.79 17.52,304.46C16.72,303.44 12.96,295.82 11.37,292C11,291.11 10.61,290.26 10.51,290.12C10.4,289.99 9.73,288.52 9.02,286.88C8.31,285.23 7.63,283.7 7.51,283.48C6.81,282.18 2.82,270.28 1.65,266C0.78,262.79 -0,258.88 0,257.72C0,256.65 0.47,256.25 1.7,256.25C2.11,256.25 2.89,256.09 3.43,255.9C3.98,255.71 5.2,255.46 6.15,255.36C7.1,255.26 8.61,254.97 9.5,254.71C10.39,254.46 11.53,254.25 12.02,254.25C12.52,254.25 13.47,254.08 14.15,253.87C14.82,253.66 16.27,253.37 17.35,253.23C18.44,253.09 19.53,252.87 19.76,252.74C20,252.61 20.86,252.45 21.66,252.37C22.47,252.29 23.97,252.01 25,251.75C26.03,251.49 27.55,251.17 28.38,251.03C30.53,250.67 32.55,250.28 35.12,249.74C37.78,249.18 39.61,248.81 41.5,248.47C42.26,248.33 43.89,248 45.12,247.74C47.41,247.26 48.53,247.04 52.12,246.37C53.23,246.17 54.86,245.83 55.75,245.63C56.64,245.42 58.05,245.15 58.88,245.02C59.7,244.89 60.88,244.67 61.5,244.53C62.12,244.4 63.36,244.17 64.25,244.02C66.67,243.62 68.44,243.27 70.25,242.83C71.14,242.62 72.55,242.34 73.38,242.22C74.2,242.1 75.21,241.88 75.62,241.73C76.04,241.59 77.27,241.31 78.38,241.11C81.24,240.59 82.9,240.26 84.75,239.83C85.64,239.62 87.27,239.3 88.38,239.12C89.48,238.94 90.77,238.67 91.25,238.52C91.73,238.37 92.46,238.25 92.88,238.25C93.3,238.25 94.32,238.07 95.13,237.85C95.95,237.62 97.52,237.3 98.62,237.12C99.73,236.95 100.94,236.68 101.33,236.53C101.72,236.37 102.4,236.25 102.84,236.25C103.28,236.25 104.32,236.07 105.13,235.84C105.95,235.62 107.36,235.29 108.25,235.11C110.22,234.71 112.97,234.09 114.5,233.72C116.93,233.12 119.98,232.48 122.07,232.14C123.27,231.94 124.37,231.7 124.51,231.62C124.65,231.53 125.69,231.3 126.82,231.11C127.95,230.91 129.49,230.58 130.24,230.38C130.99,230.17 131.87,230 132.19,230C132.51,230 133.18,229.82 133.7,229.59C134.21,229.37 138.08,228.49 142.31,227.63L150,226.07L150,226.66C150,227.04 149.43,227.82 148.34,228.93C145.86,231.46 141.59,237.19 140,240.13C137.07,245.51 135.99,248.53 134.99,254.12C133.93,260.01 134.12,266.18 135.53,271.88C137.06,278.08 140.45,284.86 144.58,290C147.27,293.35 152.45,298.21 156.16,300.87C157.81,302.05 162.38,304.81 164.17,305.7C167.07,307.14 174.03,309.72 176.75,310.37C177.51,310.55 178.8,310.87 179.62,311.08C184.2,312.24 185.79,312.5 191.62,313C193.14,313.13 204.28,313.24 216.39,313.25L238.4,313.25L286.76,374.16C313.36,407.66 335.27,435.28 335.45,435.54C335.77,435.99 334.26,436 278.83,435.96C247.5,435.94 220.75,435.84 219.38,435.74Z","blade":"M2,213.52L11.88,212.34L21.76,211.17L31.65,209.99L41.53,208.82L51.41,207.64L61.29,206.47L71.18,205.29L81.06,204.12L90.94,202.94L100.82,201.77L110.71,200.59L120.59,199.42L130.47,198.24L140.35,197.09L150.24,196.24L160.12,195.3L170,194.01L179.88,192.6L189.76,191.2L199.65,189.81L209.53,188.44L219.41,187.07L229.29,185.71L239.18,184.37L249.06,183.04L258.94,181.71L268.82,180.4L278.71,179.1L288.59,177.81L298.47,176.52L308.35,175.25L318.24,173.99L328.12,172.75L338,171.51L343.43,170.83L348.85,170.16L354.28,169.49L359.71,168.82L365.13,168.16L370.56,167.5L375.99,166.84L381.42,166.19L386.84,165.54L392.27,164.89L397.7,164.25L403.12,163.61L408.55,162.97L403.12,164.06L397.7,165.59L392.27,167.11L386.84,168.62L381.42,170.12L375.99,171.61L370.56,173.1L365.13,174.58L359.71,176.05L354.28,177.52L348.85,178.98L343.43,180.43L338,181.87L328.12,184.47L318.24,187.05L308.35,189.61L298.47,192.13L288.59,194.63L278.71,197.1L268.82,199.55L258.94,201.97L249.06,204.36L239.18,206.72L229.29,209.06L219.41,211.36L209.53,213.64L199.65,215.89L189.76,218.11L179.88,220.09L170,222.07L160.12,224.05L150.24,226.03L140.35,228.01L130.47,229.99L120.59,231.97L110.71,233.96L100.82,235.94L90.94,237.92L81.06,239.9L71.18,241.88L61.29,243.86L51.41,245.85L41.53,247.83L31.65,249.81L21.76,251.79L11.88,253.77L2,255.76Z","bladeTop":[[2.0,213.52],[11.88,212.34],[21.76,211.17],[31.65,209.99],[41.53,208.82],[51.41,207.64],[61.29,206.47],[71.18,205.29],[81.06,204.12],[90.94,202.94],[100.82,201.77],[110.71,200.59],[120.59,199.42],[130.47,198.24],[140.35,197.09],[150.24,196.24],[160.12,195.3],[170.0,194.01],[179.88,192.6],[189.76,191.2],[199.65,189.81],[209.53,188.44],[219.41,187.07],[229.29,185.71],[239.18,184.37],[249.06,183.04],[258.94,181.71],[268.82,180.4],[278.71,179.1],[288.59,177.81],[298.47,176.52],[308.35,175.25],[318.24,173.99],[328.12,172.75],[338.0,171.51],[343.43,170.83],[348.85,170.16],[354.28,169.49],[359.71,168.82],[365.13,168.16],[370.56,167.5],[375.99,166.84],[381.42,166.19],[386.84,165.54],[392.27,164.89],[397.7,164.25],[403.12,163.61],[408.55,162.97]],"bladeBottom":[[403.12,164.06],[397.7,165.59],[392.27,167.11],[386.84,168.62],[381.42,170.12],[375.99,171.61],[370.56,173.1],[365.13,174.58],[359.71,176.05],[354.28,177.52],[348.85,178.98],[343.43,180.43],[338.0,181.87],[328.12,184.47],[318.24,187.05],[308.35,189.61],[298.47,192.13],[288.59,194.63],[278.71,197.1],[268.82,199.55],[258.94,201.97],[249.06,204.36],[239.18,206.72],[229.29,209.06],[219.41,211.36],[209.53,213.64],[199.65,215.89],[189.76,218.11],[179.88,220.09],[170.0,222.07],[160.12,224.05],[150.24,226.03],[140.35,228.01],[130.47,229.99],[120.59,231.97],[110.71,233.96],[100.82,235.94],[90.94,237.92],[81.06,239.9],[71.18,241.88],[61.29,243.86],[51.41,245.85],[41.53,247.83],[31.65,249.81],[21.76,251.79],[11.88,253.77],[2.0,255.76]],"tip":[408.55,162.97],"baseTop":[2.0,213.52],"baseBottom":[2.0,255.76],"grad":{"x1":152.71,"y1":44.68,"x2":279.5,"y2":154.9,"stops":[[0.0,0.044],[0.067,0.053],[0.15,0.061],[0.234,0.087],[0.318,0.118],[0.402,0.184],[0.486,0.315],[0.528,0.39],[0.57,0.479],[0.612,0.597],[0.654,0.7],[0.696,0.773],[0.738,0.844],[0.78,0.906],[0.822,0.947],[0.864,0.973],[0.906,0.986],[1.0,1.0]]},"origin_src":[362.0,402.75]},"wordmark":{"w":443.0,"h":60.67,"letters":["M25.85,60.4C24.27,60.23 23.46,60.07 23.1,59.84C22.82,59.67 22.11,59.44 21.53,59.34C20.96,59.23 20.14,58.97 19.72,58.74C19.3,58.52 18.83,58.33 18.68,58.33C18.54,58.33 18.04,58.11 17.58,57.83C17.12,57.56 16.64,57.34 16.52,57.34C16.39,57.33 16.04,57.15 15.76,56.93C15.47,56.71 14.95,56.41 14.61,56.27C14.28,56.13 14,55.93 14,55.83C14,55.73 13.79,55.56 13.54,55.45C13.14,55.27 12.42,54.76 10.77,53.46C9.38,52.36 6.49,49.23 5.79,48.07C5.63,47.8 5.21,47.17 4.84,46.67C4.48,46.18 4.09,45.54 3.98,45.26C3.86,44.98 3.6,44.54 3.39,44.28C3.17,44.02 3,43.67 3,43.51C3,43.35 2.82,42.94 2.59,42.61C2.37,42.28 2.1,41.69 2,41.3C1.9,40.9 1.64,40.17 1.41,39.66C1.19,39.15 0.96,38.29 0.9,37.74C0.84,37.2 0.64,36.38 0.46,35.92C-0.21,34.19 -0.12,26.37 0.59,24.47C0.72,24.13 0.91,23.34 1,22.72C1.1,22.1 1.32,21.37 1.49,21.09C1.66,20.81 1.88,20.19 2,19.71C2.11,19.23 2.33,18.66 2.5,18.45C2.67,18.24 2.88,17.77 2.98,17.41C3.08,17.04 3.35,16.48 3.58,16.17C3.81,15.86 4,15.48 4,15.32C4,15.17 4.23,14.76 4.5,14.42C4.77,14.07 5,13.72 5,13.64C5,13.47 5.94,12.08 6.63,11.23C7.33,10.36 10.23,7.49 11.03,6.87C12.65,5.62 13.05,5.33 13.18,5.33C13.25,5.33 13.54,5.14 13.83,4.9C14.37,4.44 15.21,3.95 16.5,3.33C16.91,3.14 17.36,2.88 17.5,2.76C17.64,2.64 18.19,2.41 18.73,2.26C19.27,2.1 19.87,1.87 20.07,1.74C20.26,1.62 20.95,1.4 21.59,1.26C22.23,1.13 23.07,0.91 23.45,0.77C23.84,0.63 25.25,0.39 26.58,0.24C28.74,-0 31.49,-0.03 52.49,0.03L75.99,0.08L76.27,0.37L76.56,0.65L76.11,1.28C75.87,1.63 75.4,2.25 75.08,2.67C74.76,3.08 74.37,3.61 74.21,3.84C73.81,4.41 73.12,5.3 71.87,6.81C71.29,7.51 70.67,8.27 70.49,8.5C70.31,8.73 69.95,9.18 69.69,9.5C69.43,9.82 69.12,10.27 69,10.5C68.88,10.73 68.64,11.07 68.47,11.25C68.29,11.43 67.65,12.18 67.03,12.92C65.63,14.59 65.09,15.13 64.25,15.7L63.58,16.16L46.42,16.16C28.71,16.17 26.1,16.25 25,16.81C24.68,16.98 24.12,17.21 23.75,17.33C23.38,17.45 22.85,17.73 22.57,17.94C22.28,18.16 21.97,18.33 21.86,18.33C21.52,18.33 18,21.73 18,22.06C18,22.15 17.81,22.47 17.57,22.78C17.34,23.08 17.07,23.58 16.96,23.88C16.86,24.17 16.64,24.6 16.48,24.83C16.31,25.06 16.06,25.93 15.93,26.75C15.79,27.58 15.6,28.51 15.51,28.83C15.28,29.59 15.29,30.77 15.52,31.2C15.62,31.39 15.81,32.33 15.93,33.29C16.08,34.4 16.27,35.18 16.47,35.47C16.64,35.72 16.87,36.17 16.97,36.47C17.37,37.64 19.01,39.89 19.77,40.3C19.99,40.41 20.17,40.58 20.17,40.66C20.17,41.12 23.94,43.11 25.58,43.52C26.32,43.7 27.18,43.92 27.5,44C27.84,44.09 35.38,44.16 45.67,44.16C57.12,44.17 63.46,44.23 63.86,44.34C64.51,44.52 65.02,45.03 67.08,47.58C67.67,48.32 68.32,49.1 68.51,49.33C68.7,49.56 69.16,50.16 69.53,50.66C69.9,51.16 70.41,51.84 70.68,52.16C72.05,53.84 72.88,54.92 73.5,55.84C73.82,56.32 74.29,56.93 74.54,57.21C74.79,57.49 75,57.76 75,57.82C75.01,57.87 75.41,58.36 75.91,58.89C76.8,59.86 76.9,60.2 76.36,60.42C76.21,60.49 65.28,60.56 52.08,60.59C32.29,60.62 27.69,60.59 25.85,60.4Z","M110.33,60.57C110.2,60.54 109.17,60.44 108.05,60.35C106.84,60.25 105.81,60.08 105.52,59.92C105.24,59.78 104.5,59.55 103.88,59.4C103.26,59.26 102.52,59 102.25,58.84C101.98,58.67 101.42,58.44 101.01,58.33C100.6,58.22 100.09,58 99.87,57.83C99.66,57.66 99.2,57.43 98.86,57.32C98.53,57.21 98.1,57 97.92,56.84C97.73,56.69 97.26,56.42 96.88,56.26C96.49,56.09 96.17,55.88 96.17,55.8C96.17,55.72 95.96,55.57 95.71,55.46C94.83,55.07 92.91,53.57 90.84,51.65C90.11,50.98 88.12,48.66 87.54,47.8C87.33,47.5 86.97,46.99 86.75,46.67C86.53,46.35 86.15,45.71 85.92,45.25C85.68,44.79 85.19,43.86 84.83,43.18C84.46,42.5 84.08,41.64 83.98,41.27C83.88,40.89 83.66,40.28 83.5,39.92C83.33,39.55 83.15,38.95 83.08,38.58C83.02,38.22 82.84,37.32 82.67,36.58C82.05,33.88 82,33.42 82,30.51L82,27.55L82.59,24.66C82.92,23.08 83.32,21.51 83.49,21.18C83.65,20.85 83.87,20.23 83.98,19.8C84.08,19.37 84.35,18.66 84.58,18.23C84.81,17.8 85,17.36 85,17.25C85,17.14 85.17,16.79 85.39,16.47C85.6,16.16 85.86,15.66 85.97,15.36C86.07,15.05 86.33,14.6 86.54,14.34C86.75,14.08 87.18,13.48 87.5,13.01C88.21,11.95 89.86,9.95 90.66,9.17C91.6,8.25 93.54,6.59 94.05,6.27C94.31,6.11 94.65,5.87 94.8,5.73C95.33,5.26 96.25,4.67 97.1,4.27C97.57,4.05 98.01,3.79 98.07,3.69C98.13,3.59 98.48,3.43 98.84,3.33C99.21,3.23 99.77,2.98 100.08,2.76C100.4,2.55 100.94,2.32 101.29,2.26C101.63,2.19 102.14,2 102.42,1.84C102.69,1.67 103.33,1.45 103.83,1.34C104.34,1.24 105.16,1.01 105.67,0.83C107.34,0.24 111.09,0 118.94,0C126.72,-0 130.29,0.23 132,0.83C132.5,1.01 133.4,1.26 134,1.39C135.53,1.72 138.61,3.07 140.67,4.3C141.08,4.55 141.68,4.9 141.99,5.08C142.3,5.27 142.72,5.57 142.91,5.77C143.09,5.96 143.41,6.2 143.61,6.3C144.01,6.52 144.21,6.68 146.1,8.3C146.83,8.94 147.81,9.93 148.26,10.5C148.71,11.07 149.29,11.79 149.54,12.08C149.79,12.38 150,12.68 150,12.75C150,12.82 150.23,13.13 150.5,13.44C150.77,13.76 151,14.11 151,14.23C151,14.36 151.17,14.67 151.38,14.92C151.58,15.18 151.9,15.68 152.08,16.03C153.6,18.91 153.98,19.75 154.09,20.37C154.15,20.76 154.34,21.31 154.5,21.58C154.67,21.86 154.93,22.8 155.09,23.67C155.25,24.54 155.49,25.66 155.64,26.17C156.08,27.63 155.99,33.59 155.51,34.8C155.32,35.28 155.1,36.27 155.02,37C154.93,37.81 154.74,38.55 154.53,38.91C154.34,39.22 154.11,39.92 154.01,40.45C153.91,40.98 153.7,41.6 153.53,41.83C153.37,42.06 153.1,42.61 152.94,43.04C152.77,43.47 152.57,43.88 152.47,43.93C152.38,43.99 152.16,44.35 151.98,44.73C150.47,47.95 145.59,53.52 143.38,54.55C143.17,54.64 143,54.78 143,54.86C143,54.93 142.62,55.2 142.16,55.46C141.69,55.71 141.01,56.08 140.64,56.28C140.26,56.49 139.84,56.76 139.69,56.89C139.54,57.02 139.12,57.22 138.75,57.33C138.38,57.45 137.96,57.65 137.81,57.78C137.66,57.91 137.07,58.16 136.51,58.33C135.94,58.5 135.31,58.75 135.11,58.88C134.91,59.01 134.48,59.17 134.16,59.24C133.84,59.3 133.06,59.53 132.42,59.75C130.22,60.5 127.66,60.67 118.72,60.65C114.24,60.64 110.47,60.6 110.33,60.57ZM127.76,44.76C128.07,44.63 128.76,44.44 129.29,44.34C130.45,44.13 132.03,43.42 133.48,42.45C134.81,41.57 136.55,39.9 137.13,38.96C137.28,38.71 137.47,38.5 137.54,38.5C137.62,38.5 137.83,38.18 138.01,37.79C138.19,37.4 138.45,36.9 138.58,36.67C139.79,34.6 140.35,31.23 139.99,28.26C139.88,27.34 139.66,26.32 139.5,26C139.33,25.68 139.11,25.08 139,24.67C138.89,24.25 138.67,23.77 138.52,23.58C138.36,23.4 138.15,23.05 138.04,22.81C137.56,21.68 135.02,18.94 133.92,18.38C133.64,18.24 133.27,18 133.08,17.83C132.9,17.67 132.45,17.45 132.08,17.33C131.72,17.22 131.23,16.99 131,16.83C130.77,16.67 130.02,16.42 129.33,16.28C128.65,16.14 127.86,15.93 127.58,15.81C127.21,15.65 125.09,15.58 118.92,15.54L110.75,15.48L109.44,15.9C108.71,16.14 107.96,16.33 107.77,16.33C107.57,16.33 106.93,16.56 106.33,16.84C105.26,17.34 105.09,17.43 104,18.08C103.7,18.27 102.86,19.02 102.13,19.75C100.3,21.59 100.17,21.74 100.17,21.93C100.17,22.02 99.9,22.5 99.58,23C99.26,23.5 99,24.02 99,24.16C99,24.3 98.82,24.76 98.59,25.18C98.15,26.02 97.56,29.8 97.73,30.73C97.79,31.02 97.9,31.94 97.99,32.77C98.1,33.84 98.27,34.55 98.57,35.14C98.81,35.61 99,36.09 99,36.22C99,36.44 99.47,37.23 100.6,38.92C101.43,40.14 103.13,41.8 104.05,42.27C104.34,42.42 104.8,42.72 105.05,42.94C105.31,43.16 105.62,43.33 105.74,43.33C105.85,43.33 106.31,43.52 106.75,43.76C107.19,43.99 108.08,44.28 108.73,44.41C109.38,44.54 110.1,44.72 110.33,44.81C110.59,44.92 113.81,44.98 118.96,44.99C125.78,45 127.28,44.96 127.76,44.76Z","M168.18,60.54C165.96,60.5 165.21,60.44 165.01,60.26C164.78,60.05 164.75,56.95 164.75,30.35L164.75,0.68L165.05,0.38L165.35,0.08L189.94,0.03C216.43,-0.02 217.93,0.02 220.02,0.84C220.48,1.02 221.2,1.25 221.62,1.34C222.04,1.44 222.58,1.65 222.82,1.82C223.05,1.99 223.44,2.18 223.67,2.25C224.83,2.6 228.14,5.22 229.33,6.73C229.75,7.26 230.29,7.93 230.54,8.24C230.79,8.54 231,8.85 231,8.92C231,8.99 231.19,9.3 231.43,9.61C231.66,9.92 231.93,10.41 232.03,10.71C232.14,11.01 232.35,11.44 232.51,11.67C232.66,11.9 232.91,12.67 233.06,13.38C233.21,14.09 233.46,14.91 233.62,15.21C233.88,15.68 233.92,16.22 233.91,19.58L233.9,23.42L233.45,24.73C233.2,25.45 233,26.13 233,26.23C233,26.33 232.82,26.79 232.59,27.25C232.37,27.71 232.06,28.35 231.92,28.67C231.19,30.29 230.37,31.4 228.71,33.05C227.12,34.63 225.66,35.73 224.33,36.34C223.92,36.53 223.46,36.8 223.31,36.94C223.16,37.08 222.56,37.3 221.99,37.43C219.94,37.91 219.98,38.3 222.38,41.25C222.6,41.53 222.88,41.94 223,42.17C223.12,42.4 223.41,42.82 223.65,43.12C223.89,43.41 224.31,43.96 224.58,44.33C224.86,44.71 225.27,45.23 225.5,45.49C225.73,45.74 226.05,46.17 226.2,46.44C226.36,46.7 226.76,47.25 227.08,47.67C227.71,48.48 228.34,49.35 229,50.33C229.23,50.68 229.62,51.26 229.87,51.63C230.12,52 230.4,52.35 230.5,52.41C230.59,52.47 230.82,52.8 231.01,53.14C231.38,53.8 231.97,54.67 232.51,55.33C233.21,56.19 233.93,57.14 234.42,57.84C234.69,58.24 235.16,58.8 235.46,59.1C236.06,59.7 236.16,60.25 235.71,60.46C235.55,60.53 231.63,60.62 227,60.65L218.58,60.7L218,60.3C217.68,60.08 217.26,59.61 217.05,59.25C216.85,58.88 216.56,58.43 216.41,58.25C216.26,58.07 215.98,57.66 215.78,57.35C215.58,57.04 215.21,56.47 214.96,56.1C214.71,55.72 214.37,55.2 214.21,54.93C214.05,54.67 213.79,54.31 213.63,54.15C213.47,53.98 213.14,53.53 212.88,53.15C212.63,52.77 212.23,52.18 212,51.83C211.77,51.49 211.37,50.88 211.1,50.48C210.83,50.08 210.55,49.72 210.47,49.69C210.39,49.66 210.17,49.34 209.99,48.98C209.81,48.63 209.59,48.33 209.5,48.33C209.41,48.33 209.23,48.12 209.09,47.85C208.95,47.58 208.74,47.26 208.61,47.14C208.49,47.01 208.2,46.61 207.97,46.24C207.73,45.88 207.42,45.48 207.27,45.35C207.12,45.23 207,45.05 207,44.95C207,44.85 206.84,44.6 206.64,44.38C206.29,44.02 206.08,43.7 205.25,42.34C204.93,41.82 204.51,41.26 203.3,39.72C203,39.34 202.58,38.95 202.37,38.85C202.1,38.72 198.71,38.67 191.25,38.67L180.52,38.67L180.26,39.04C180.03,39.36 180,40.66 180,49.75C180,55.43 179.93,60.18 179.86,60.3C179.72,60.52 174.31,60.63 168.18,60.54ZM214.76,24.44C217.83,23.78 219.66,20.18 218.27,17.52C217.6,16.23 216.88,15.6 215.42,15.01L214.14,14.5L197.44,14.5C183.39,14.5 180.68,14.54 180.41,14.73L180.09,14.97L180.11,19.56C180.12,22.99 180.18,24.23 180.33,24.41C180.62,24.77 213.14,24.79 214.76,24.44Z","M264.12,60.37L263.83,60.06L263.83,37.54C263.83,17.29 263.81,15 263.57,14.76C263.34,14.53 262.09,14.5 252.36,14.5C245.29,14.5 241.2,14.44 240.79,14.32L240.17,14.15L240.17,7.33L240.17,0.51L240.54,0.3C240.84,0.13 247.01,0.07 271.75,0.03L302.58,-0.02L302.87,0.34L303.17,0.7L303.17,7.23C303.17,12.87 303.13,13.81 302.91,14.13L302.65,14.5L290.99,14.5L279.33,14.5L279.16,14.93C279.06,15.2 279,23.6 279,37.72C279,50.02 278.94,60.17 278.87,60.28C278.78,60.42 276.8,60.5 271.57,60.58L264.4,60.68L264.12,60.37Z","M333.02,60.46C332.74,60.39 332.47,60.26 332.42,60.17C332.37,60.09 332.31,49.9 332.29,37.53C332.26,18.76 332.21,15.01 332.02,14.78L331.79,14.5L320.57,14.5C310.6,14.5 309.33,14.47 309.1,14.24C308.87,14.01 308.83,13.14 308.83,7.25L308.83,0.52L309.2,0.26C309.54,0.03 312.79,0 340.61,0L371.65,0L371.91,0.37C372.3,0.93 372.3,13.84 371.9,14.24C371.67,14.47 370.35,14.5 359.91,14.5L348.17,14.5L347.92,14.89C347.69,15.24 347.67,17.7 347.73,37.27C347.77,49.36 347.85,59.37 347.91,59.51C347.97,59.66 347.87,59.95 347.69,60.18L347.36,60.58L340.44,60.58C336.63,60.58 333.29,60.53 333.02,60.46Z","M365.85,60.51C363.42,60.43 362.92,60.37 362.78,60.14C362.57,59.8 362.85,59.07 363.52,58.22C363.79,57.89 364,57.49 364,57.33C364,57.18 364.18,56.78 364.4,56.46C364.62,56.13 364.85,55.69 364.92,55.48C364.98,55.26 365.16,54.9 365.31,54.67C365.58,54.27 366.07,53.38 366.91,51.75C367.15,51.29 367.6,50.47 367.92,49.92C368.23,49.37 368.65,48.58 368.85,48.17C369.05,47.75 369.34,47.27 369.5,47.08C369.66,46.9 369.88,46.48 369.99,46.15C370.09,45.81 370.32,45.41 370.5,45.25C370.67,45.09 370.86,44.75 370.92,44.48C370.98,44.21 371.2,43.79 371.4,43.54C371.6,43.29 371.9,42.73 372.07,42.29C372.23,41.86 372.43,41.46 372.52,41.4C372.61,41.35 372.87,40.92 373.09,40.44C373.32,39.97 373.62,39.38 373.75,39.12C373.89,38.87 374.11,38.46 374.25,38.21C374.38,37.96 374.69,37.38 374.92,36.92C375.15,36.46 375.6,35.63 375.92,35.08C376.23,34.53 376.65,33.75 376.85,33.33C377.05,32.92 377.34,32.43 377.5,32.25C377.66,32.07 377.88,31.64 377.99,31.3C378.1,30.97 378.3,30.59 378.45,30.47C378.59,30.35 378.85,29.95 379.03,29.59C379.2,29.22 379.6,28.47 379.92,27.92C380.23,27.37 380.69,26.54 380.93,26.08C381.17,25.62 381.61,24.8 381.92,24.25C382.23,23.7 382.67,22.86 382.9,22.39C383.13,21.92 383.4,21.48 383.5,21.42C383.6,21.35 383.87,20.92 384.1,20.44C384.33,19.97 384.73,19.21 385,18.75C385.27,18.29 385.68,17.54 385.92,17.08C386.16,16.62 386.61,15.8 386.92,15.25C387.23,14.7 387.71,13.79 387.98,13.23C388.25,12.67 388.55,12.16 388.64,12.1C388.73,12.04 388.9,11.72 389.01,11.37C389.12,11.03 389.39,10.54 389.61,10.28C389.82,10.02 390,9.67 390,9.51C390,9.35 390.15,9.03 390.32,8.8C390.5,8.58 390.84,7.98 391.08,7.49C391.32,6.99 391.77,6.13 392.08,5.58C392.39,5.03 392.77,4.32 392.92,4C393.07,3.68 393.33,3.27 393.49,3.08C393.65,2.9 393.87,2.49 393.98,2.18C394.08,1.87 394.28,1.49 394.42,1.35C394.55,1.2 394.84,0.86 395.07,0.58L395.47,0.08L402.54,0.04C410.57,-0.02 410.64,-0.01 411.01,1.12C411.12,1.47 411.35,1.9 411.51,2.09C411.68,2.27 411.94,2.75 412.07,3.14C412.21,3.53 412.47,4.04 412.65,4.27C412.83,4.5 413.03,4.9 413.08,5.17C413.14,5.44 413.26,5.71 413.35,5.76C413.44,5.82 413.72,6.28 413.98,6.8C414.98,8.8 415.24,9.27 415.61,9.72C415.83,9.98 416,10.33 416,10.5C416,10.67 416.18,11.02 416.39,11.28C416.61,11.54 416.95,12.09 417.15,12.5C417.35,12.91 417.77,13.7 418.08,14.25C418.39,14.8 418.8,15.56 418.99,15.94C419.18,16.31 419.43,16.71 419.56,16.81C419.69,16.92 419.92,17.34 420.08,17.75C420.23,18.16 420.42,18.5 420.5,18.5C420.58,18.5 420.77,18.86 420.93,19.29C421.09,19.73 421.35,20.23 421.5,20.42C421.65,20.6 421.91,21.11 422.07,21.54C422.23,21.98 422.42,22.33 422.5,22.33C422.58,22.33 422.77,22.69 422.93,23.12C423.1,23.56 423.4,24.12 423.6,24.37C423.8,24.62 424.02,25.05 424.08,25.32C424.14,25.59 424.3,25.91 424.44,26.02C424.59,26.14 424.88,26.61 425.11,27.08C425.33,27.54 425.73,28.29 426,28.75C426.27,29.21 426.67,29.96 426.89,30.42C427.12,30.89 427.41,31.36 427.56,31.48C427.7,31.6 427.9,31.97 428.01,32.3C428.12,32.64 428.35,33.07 428.52,33.26C428.69,33.44 428.91,33.86 429.02,34.17C429.13,34.49 429.34,34.9 429.5,35.08C429.66,35.27 429.89,35.72 430,36.08C430.11,36.45 430.34,36.9 430.5,37.08C430.66,37.27 430.87,37.66 430.97,37.96C431.07,38.26 431.33,38.74 431.56,39.04C431.78,39.34 432.02,39.76 432.08,39.98C432.15,40.19 432.38,40.63 432.6,40.96C432.82,41.28 433,41.64 433,41.75C433,41.86 433.22,42.23 433.49,42.57C433.76,42.91 434.02,43.4 434.08,43.66C434.14,43.92 434.33,44.26 434.5,44.42C434.68,44.58 434.91,44.98 435.01,45.31C435.12,45.64 435.34,46.07 435.5,46.25C435.66,46.43 435.96,46.92 436.15,47.33C436.35,47.75 436.77,48.53 437.08,49.08C437.39,49.63 437.76,50.35 437.91,50.67C438.06,50.99 438.25,51.36 438.34,51.5C438.5,51.75 439.1,52.88 439.84,54.33C440.05,54.75 440.35,55.23 440.5,55.42C440.66,55.6 440.86,55.98 440.95,56.25C441.05,56.53 441.31,57.03 441.55,57.38C441.78,57.73 442.02,58.23 442.08,58.49C442.14,58.76 442.37,59.1 442.59,59.24C443.05,59.54 443.12,60.02 442.77,60.38C442.57,60.57 441.2,60.6 434.42,60.57L426.3,60.53L425.82,60.07C425.56,59.82 425.21,59.27 425.06,58.85C424.9,58.43 424.64,57.93 424.48,57.74C424.31,57.56 424.09,57.14 423.98,56.83C423.87,56.51 423.66,56.1 423.5,55.92C423.34,55.73 423.12,55.31 423.01,54.97C422.9,54.63 422.68,54.18 422.51,53.97C422.35,53.76 422.12,53.3 422.01,52.96C421.9,52.62 421.73,52.29 421.64,52.23C421.54,52.17 421.28,51.7 421.05,51.19C420.82,50.67 420.54,50.14 420.43,50C420.31,49.86 420.13,49.51 420.03,49.21C419.86,48.69 419.11,47.56 418.75,47.29C418.56,47.14 386.58,47.18 386.35,47.32C386.28,47.38 386.05,47.72 385.85,48.08C385.65,48.45 385.38,48.94 385.26,49.17C385.13,49.4 384.94,49.77 384.84,50C384.73,50.23 384.39,50.87 384.08,51.42C383.77,51.97 383.32,52.83 383.08,53.33C382.83,53.84 382.54,54.36 382.43,54.5C382.32,54.64 382.09,55.1 381.94,55.53C381.78,55.96 381.55,56.39 381.42,56.5C381.29,56.6 381.14,56.91 381.08,57.17C381.02,57.43 380.76,57.93 380.49,58.26C380.22,58.6 380,58.98 380,59.1C380,59.61 379.58,60.17 379.02,60.39C378.37,60.64 371.88,60.7 365.85,60.51ZM411.69,34.24C411.93,34.09 411.85,33.57 411.52,33.15C411.35,32.93 411.05,32.41 410.85,32C410.66,31.59 410.39,31.06 410.25,30.83C410.12,30.6 409.9,30.19 409.76,29.92C409.17,28.74 408.45,27.35 407.93,26.42C406.96,24.69 406.48,23.78 405.98,22.8C405.72,22.28 405.44,21.81 405.35,21.76C405.26,21.71 405.1,21.38 404.99,21.04C404.88,20.7 404.61,20.21 404.41,19.96C404.2,19.71 403.98,19.3 403.92,19.05C403.79,18.45 402.7,16.96 402.46,17.04C402.36,17.08 402.22,17.21 402.15,17.34C401.91,17.79 401.51,18.58 401.11,19.42C400.88,19.89 400.59,20.36 400.45,20.47C400.31,20.59 400.15,20.88 400.09,21.13C400.03,21.38 399.85,21.77 399.7,22C399.4,22.44 398.79,23.54 398.08,24.96C397.84,25.43 397.57,25.87 397.48,25.93C397.39,25.98 397.13,26.42 396.9,26.89C396.17,28.38 395.76,29.12 395.48,29.44C395.33,29.61 395.14,29.98 395.05,30.25C394.95,30.53 394.69,31.03 394.45,31.38C394.22,31.73 393.98,32.23 393.92,32.51C393.86,32.78 393.66,33.08 393.49,33.17C393.12,33.37 393.04,34.25 393.38,34.4C393.64,34.52 411.49,34.36 411.69,34.24Z"]}};
+const SYM = A.symbol, WM = A.wordmark;
+
+const params = new URLSearchParams(location.search);
+const RENDER = params.has('render');
+const DUR = 30;
+const NS = 'http://www.w3.org/2000/svg';
+const D2R = Math.PI / 180;
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const lerp = (a, b, t) => a + (b - a) * t;
+const clamp01 = v => (v < 0 ? 0 : v > 1 ? 1 : v);
+const thousands = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const brl = n => 'R$ ' + thousands(n);
+const hash = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const svgEl = (tag, attrs, parent) => {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const stage = $('#stage');
+
+/* ---------- encaixe do palco 1920×1080 ---------- */
+function fit() {
+  const W = innerWidth, H = innerHeight;
+  const g = (!RENDER && W < 900 && !document.fullscreenElement) ? 16 : 0;
+  const s = Math.min((W - 2 * g) / 1920, (H - 2 * g) / 1080);
+  stage.style.transform = `translate(${(W - 1920 * s) / 2}px,${(H - 1080 * s) / 2}px) scale(${s})`;
+}
+fit();
+addEventListener('resize', fit);
+document.addEventListener('fullscreenchange', fit);
+
+function rectOf(el) {
+  const r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect(), k = sr.width / 1920;
+  return { x: (r.left - sr.left) / k, y: (r.top - sr.top) / k, w: r.width / k, h: r.height / k };
+}
+
+/* ---------- ícones de linha ---------- */
+const ICONS = {
+  home: '<path d="M3.5 10.2 12 3.5l8.5 6.7"/><path d="M5.5 9v10.5a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V9"/>',
+  cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  user: '<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20.5c.6-3.9 3.7-6.2 7.5-6.2s6.9 2.3 7.5 6.2"/>',
+  fin: '<path d="M4 20.5h16"/><rect x="5.5" y="11" width="3" height="6.5" rx="1"/><rect x="10.5" y="6" width="3" height="11.5" rx="1"/><rect x="15.5" y="13.5" width="3" height="4" rx="1"/>',
+  team: '<circle cx="9" cy="8.5" r="3.4"/><path d="M2.8 20c.5-3.4 3-5.6 6.2-5.6s5.7 2.2 6.2 5.6"/><path d="M15.5 5.3a3.4 3.4 0 0 1 0 6.4M17.7 14.6c2 .7 3.3 2.6 3.6 5.4"/>',
+  rep: '<path d="M14 3.5H7A2 2 0 0 0 5 5.5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M14 3.5v5h5"/><path d="M9 17v-2.5M12 17v-5M15 17v-3.5"/>',
+  cfg: '<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/>',
+  search: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/>',
+  check: '<path d="M5 12.5l4.2 4.2L19 7"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  up: '<path d="M12 19V6M6.5 11.5 12 6l5.5 5.5"/>',
+  more: '<circle cx="12" cy="5.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.3" fill="currentColor" stroke="none"/>'
+};
+const icon = name => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+$$('i[data-i]').forEach(e => { e.outerHTML = icon(e.dataset.i); });
+
+/* ---------- boot ---------- */
+if (!window.gsap || !window.CustomEase) {
+  $('#err').style.display = 'grid';
+  return;
+}
+gsap.registerPlugin(CustomEase);
+CustomEase.create('cOut', '0.16,1,0.3,1');      // desaceleração longa e macia
+CustomEase.create('cInOut', '0.76,0,0.24,1');   // in-out preciso
+CustomEase.create('cSnap', '0.87,0,0.13,1');    // in-out bem marcado
+
+const fontsReady = Promise.all([
+  '700 100px Sora', '600 20px Sora', '400 13px Sora',
+  '400 14px Inter', '500 14px Inter', '600 14px Inter', '700 14px Inter'
+].map(f => document.fonts.load(f))).catch(() => null);
+
+let booted = false;
+const bootTimer = setTimeout(boot, 4000);     // nunca trava se a fonte demorar
+fontsReady.then(() => document.fonts.ready).then(boot);
+
+function boot() {
+  if (booted) return;
+  booted = true;
+  clearTimeout(bootTimer);
+  const tl = build();
+  player(tl);
+}
+
+/* ======================================================================
+   CONSTRUÇÃO
+   ====================================================================== */
+function build() {
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'cOut', lazy: false } });
+  const T = (target, vars, at) => tl.to(target, vars, at);
+  const S = (target, vars, at) => tl.set(target, vars, at);
+
+  /* ---------- geometria do símbolo ---------- */
+  const K = 280 / SYM.w;                                  // escala do símbolo no palco
+  const LOCKUP_Y = 494;                                  // centro do símbolo com a assinatura
+  const SC = [SYM.w / 2, SYM.h / 2];
+  const symPos = (cx, cy) => ({ x: cx - SC[0] * K, y: cy - SC[1] * K });
+  const B0 = [(SYM.baseTop[0] + SYM.baseBottom[0]) / 2, (SYM.baseTop[1] + SYM.baseBottom[1]) / 2];
+  const AXV = [SYM.tip[0] - B0[0], SYM.tip[1] - B0[1]];
+  const ALEN = Math.hypot(AXV[0], AXV[1]);
+  const U = [AXV[0] / ALEN, AXV[1] / ALEN];
+  const N = [-U[1], U[0]];
+  const ANG = Math.atan2(U[1], U[0]) / D2R;               // ≈ -10°
+  const MID = [B0[0] + U[0] * ALEN / 2, B0[1] + U[1] * ALEN / 2];
+  const BLADE = SYM.bladeTop.concat(SYM.bladeBottom);
+  const NTOP = SYM.bladeTop.length;
+  const LOCAL = BLADE.map(p => {
+    const dx = p[0] - MID[0], dy = p[1] - MID[1];
+    return [dx * U[0] + dy * U[1], dx * N[0] + dy * N[1]];
+  });
+  // Lâmina: m=0 é uma barra fina (comprimento L, espessura h); m=1 é o corte diagonal do símbolo.
+  function bladeD(st) {
+    const c = Math.cos(st.rot * D2R), s = Math.sin(st.rot * D2R);
+    const e1 = [U[0] * c - U[1] * s, U[0] * s + U[1] * c];
+    const e2 = [N[0] * c - N[1] * s, N[0] * s + N[1] * c];
+    let d = '';
+    for (let i = 0; i < LOCAL.length; i++) {
+      const a = LOCAL[i][0], b = LOCAL[i][1];
+      const a0 = (a / ALEN) * st.L;
+      const b0 = (i < NTOP ? -0.5 : 0.5) * st.h;
+      const la = a0 + (a - a0) * st.m, lb = b0 + (b - b0) * st.m;
+      d += (i ? 'L' : 'M') + (st.ox + la * e1[0] + lb * e2[0]).toFixed(2) + ',' + (st.oy + la * e1[1] + lb * e2[1]).toFixed(2);
+    }
+    return d + 'Z';
+  }
+  const stops = color => SYM.grad.stops.map(([o, a]) => `<stop offset="${o}" stop-color="${color}" stop-opacity="${a}"/>`).join('');
+  const G = SYM.grad;
+  const gradAttrs = `gradientUnits="userSpaceOnUse" x1="${G.x1}" y1="${G.y1}" x2="${G.x2}" y2="${G.y2}"`;
+
+  /* sprite: símbolo e wordmark para a interface */
+  $('#sprite').innerHTML = `
+    <linearGradient id="gBladeMini" ${gradAttrs}>${stops('#C8FF00')}</linearGradient>
+    <symbol id="symMini" viewBox="0 0 ${SYM.w} ${SYM.h}"><path d="${SYM.upper}" fill="#C8FF00"/><path d="${SYM.lower}" fill="#C8FF00"/><path d="${SYM.blade}" fill="url(#gBladeMini)"/></symbol>
+    <symbol id="wmMini" viewBox="0 0 ${WM.w} ${WM.h}"><path fill="#F2F0EB" fill-rule="evenodd" d="${WM.letters.join('')}"/></symbol>`;
+
+  /* camada do logo (cenas 1, 6 e 7) */
+  const logo = $('#logo');
+  logo.innerHTML = `
+  <defs>
+    <linearGradient id="gBlade" ${gradAttrs}>${stops('#C8FF00')}</linearGradient>
+    <linearGradient id="gBladeW" ${gradAttrs}>${stops('#FFFFFF')}</linearGradient>
+    <linearGradient id="gGloss" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".62"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <g id="symFlat"><path d="${SYM.upper}" fill="#C8FF00"/><path d="${SYM.lower}" fill="#C8FF00"/><path d="${SYM.blade}" fill="url(#gBlade)"/></g>
+    <mask id="mSym" maskUnits="userSpaceOnUse" x="-200" y="-200" width="940" height="840">
+      <path d="${SYM.upper}" fill="#fff"/><path d="${SYM.lower}" fill="#fff"/><path d="${SYM.blade}" fill="url(#gBladeW)"/>
+    </mask>
+    <filter id="fGlow" x="-40%" y="-60%" width="180%" height="220%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="20" result="b"/>
+      <feFlood id="glowFlood" flood-color="#C8FF00" flood-opacity="0"/>
+      <feComposite in2="b" operator="in" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="fBU" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur id="blurU" stdDeviation="0"/></filter>
+    <filter id="fBL" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur id="blurL" stdDeviation="0"/></filter>
+    <clipPath id="cUp" clipPathUnits="userSpaceOnUse"><rect id="cUpR" x="-900" y="0" width="2400" height="0" transform="translate(${MID[0]} ${MID[1]}) rotate(${ANG})"/></clipPath>
+    <clipPath id="cDn" clipPathUnits="userSpaceOnUse"><rect id="cDnR" x="-900" y="0" width="2400" height="0" transform="translate(${MID[0]} ${MID[1]}) rotate(${ANG})"/></clipPath>
+  </defs>
+  <g id="symWrap">
+    <g id="symMain" filter="url(#fGlow)">
+      <g clip-path="url(#cUp)"><g id="gUp" filter="url(#fBU)"><path d="${SYM.upper}" fill="#C8FF00"/></g></g>
+      <g clip-path="url(#cDn)"><g id="gDn" filter="url(#fBL)"><path d="${SYM.lower}" fill="#C8FF00"/></g></g>
+      <path id="bladeS" fill="#C8FF00" d=""/>
+      <path id="bladeG" fill="url(#gBlade)" opacity="0" d=""/>
+      <g mask="url(#mSym)"><rect id="gloss" x="-420" y="-260" width="190" height="960" fill="url(#gGloss)" opacity="0" transform="rotate(18)"/></g>
+    </g>
+    <g id="strips"></g>
+    <g id="parts"></g>
+  </g>`;
+  const symWrap = $('#symWrap');
+  gsap.set(symWrap, { svgOrigin: '0 0', scale: K, ...symPos(960, 540) });
+
+  /* wordmark (letras separadas para o reveal) */
+  const wm = $('#wm');
+  wm.innerHTML = WM.letters.map(d => `<g class="lt"><path d="${d}" fill="#F2F0EB" fill-rule="evenodd"/></g>`).join('');
+  const letters = $$('.lt', wm);
+
+  /* tagline: tracking calculado para ocupar 88% da largura do wordmark */
+  const tag = $('#tagline');
+  tag.innerHTML = '<span>GESTÃO PARA BARBEARIAS</span>';
+  const tagSpan = tag.firstChild;
+  const n = tagSpan.textContent.length;
+  const natural = tagSpan.getBoundingClientRect().width / (stage.getBoundingClientRect().width / 1920);
+  const track = Math.max(0, (300 * 0.88 - natural) / (n - 1));
+  tagSpan.style.letterSpacing = track + 'px';
+  tagSpan.style.marginRight = -track + 'px';
+
+  /* ==================================================================
+     CENA 1 · 0–3s · linha → corte → símbolo → assinatura → fragmentos
+     ================================================================== */
+  const bladeS = $('#bladeS'), bladeG = $('#bladeG');
+  const L0 = { m: 0, L: 0, h: 2.6 / K, ox: SC[0], oy: SC[1], rot: -ANG };
+  const drawBlade = () => { const d = bladeD(L0); bladeS.setAttribute('d', d); bladeG.setAttribute('d', d); };
+  drawBlade();
+  const upd = { onUpdate: drawBlade };
+
+  gsap.set('#gUp', { x: N[0] * 16, y: N[1] * 16 });
+  gsap.set('#gDn', { x: -N[0] * 16, y: -N[1] * 16 });
+  gsap.set(letters, { y: 70 });
+  gsap.set(tagSpan, { opacity: 0, filter: 'blur(6px)', letterSpacing: track + 9 + 'px' });
+
+  // a faísca
+  T(L0, { L: 34 / K, duration: 0.3, ease: 'power2.out', ...upd }, 0.15);
+  T('#glowFlood', { attr: { 'flood-opacity': 0.55 }, duration: 0.6, ease: 'power2.out' }, 0.15);
+  // expansão horizontal
+  T(L0, { L: 860 / K, duration: 0.53, ease: 'cInOut', ...upd }, 0.35);
+  // transformação geométrica: gira para o ângulo do corte e afina em lâmina
+  T(L0, { rot: 0, ox: MID[0], oy: MID[1], duration: 0.54, ease: 'cInOut', ...upd }, 0.88);
+  T(L0, { L: ALEN, duration: 0.54, ease: 'cInOut', ...upd }, 0.88);
+  T(L0, { m: 1, duration: 0.48, ease: 'cInOut', ...upd }, 0.93);
+  // as duas metades se abrem a partir do corte
+  T('#cUpR', { attr: { y: -330, height: 330 }, duration: 0.8, ease: 'cOut' }, 1.18);
+  T('#cDnR', { attr: { height: 330 }, duration: 0.8, ease: 'cOut' }, 1.18);
+  T(['#gUp', '#gDn'], { x: 0, y: 0, duration: 0.8, ease: 'cOut' }, 1.18);
+  S('#blurU', { attr: { stdDeviation: 5 } }, 1.18);
+  S('#blurL', { attr: { stdDeviation: 5 } }, 1.18);
+  T(['#blurU', '#blurL'], { attr: { stdDeviation: 0 }, duration: 0.6, ease: 'power2.out' }, 1.22);
+  S(['#gUp', '#gDn'], { attr: { filter: 'none' } }, 1.9);
+  T(bladeG, { opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 1.28);
+  T(bladeS, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, 1.33);
+  T('#glowFlood', { attr: { 'flood-opacity': 0.24 }, duration: 0.8, ease: 'power2.out' }, 1.28);
+  T('#ambient', { opacity: 1, duration: 1.0, ease: 'power2.out' }, 1.24);
+  // sobe levemente e recebe a assinatura
+  T(symWrap, { ...symPos(960, LOCKUP_Y), duration: 0.62, ease: 'cInOut' }, 1.62);
+  T(letters, { y: 0, duration: 0.55, ease: 'cOut', stagger: 0.035 }, 1.72);
+  T(tagSpan, { opacity: 1, filter: 'blur(0px)', letterSpacing: track + 'px', duration: 0.72, ease: 'cOut' }, 1.88);
+
+  // fragmentação em linhas geométricas
+  const stripsG = $('#strips');
+  const ldefs = $('#logo defs');
+  const NSTR = 14, band = SYM.h / NSTR, FR = 2.72;
+  gsap.set(stripsG, { autoAlpha: 0 });
+  const strips = [];
+  for (let i = 0; i < NSTR; i++) {
+    const cp = svgEl('clipPath', { id: 'cs' + i, clipPathUnits: 'userSpaceOnUse' }, ldefs);
+    const r = svgEl('rect', { x: -4000, y: i * band - 0.3, width: 9000, height: band + 0.6 }, cp);
+    const f = svgEl('filter', { id: 'fs' + i, x: '-150%', y: '-10%', width: '400%', height: '120%', 'color-interpolation-filters': 'sRGB' }, ldefs);
+    const fb = svgEl('feGaussianBlur', { stdDeviation: '0 0' }, f);
+    const layers = [];
+    for (let k = 2; k >= 0; k--) {
+      const g = svgEl('g', { 'clip-path': `url(#cs${i})` }, stripsG);
+      if (k === 0) g.setAttribute('filter', `url(#fs${i})`);
+      svgEl('use', { href: '#symFlat' }, g);
+      layers[k] = g;
+    }
+    gsap.set([layers[1], layers[2]], { opacity: 0 });
+    strips.push({ r, fb, main: layers[0], ghosts: [layers[1], layers[2]], y: i * band });
+  }
+  T('#glowFlood', { attr: { 'flood-opacity': 0 }, duration: 0.25, ease: 'power1.in' }, FR - 0.2);
+  T('#ambient', { opacity: 0, duration: 0.5, ease: 'power2.in' }, FR - 0.1);
+  S('#symMain', { autoAlpha: 0 }, FR);
+  S(stripsG, { autoAlpha: 1 }, FR);
+  strips.forEach((s, i) => {
+    const dir = i % 2 ? 1 : -1;
+    const all = [s.main].concat(s.ghosts);
+    T(all, { x: dir * (6 + 9 * hash(i)), duration: 0.16, ease: 'power2.out' }, FR);
+    T(s.r, { attr: { y: s.y + band * 0.16, height: band * 0.68 }, duration: 0.16, ease: 'power2.out' }, FR);
+    const t0 = FR + 0.08 + Math.abs(i - (NSTR - 1) / 2) * 0.012 + hash(i + 9) * 0.035;
+    const dist = -(2500 + 1100 * hash(i + 3));
+    const dur = 0.34 + 0.07 * hash(i + 5);
+    T(s.main, { x: dist, duration: dur, ease: 'power3.in' }, t0);
+    s.ghosts.forEach((g, k) => {
+      S(g, { opacity: k ? 0.14 : 0.32 }, t0);
+      T(g, { x: dist, duration: dur, ease: 'power3.in' }, t0 + 0.04 * (k + 1));
+    });
+    T(s.r, { attr: { y: s.y + band * 0.38, height: band * 0.24 }, duration: dur, ease: 'power2.in' }, t0);
+    T(s.fb, { attr: { stdDeviation: '90 0' }, duration: dur, ease: 'power3.in' }, t0);
+  });
+  T(letters, { x: -70, opacity: 0, duration: 0.42, ease: 'power3.in', stagger: 0.025 }, FR + 0.04);
+  T(tagSpan, { x: -50, opacity: 0, filter: 'blur(6px)', duration: 0.4, ease: 'power3.in' }, FR + 0.08);
+  S(stripsG, { autoAlpha: 0 }, 3.4);
+
+  /* ==================================================================
+     CENA 2 · 3–8s · SUA BARBEARIA. EM UM SÓ LUGAR. + dashboard
+     ================================================================== */
+  S('#s2', { autoAlpha: 1 }, 2.9);
+  T('#grid', { opacity: 1, duration: 1.2, ease: 'power2.out' }, 3.0);
+  const h2w = $$('#h2 .w');
+  gsap.set(h2w, { yPercent: 115, x: 46, opacity: 0, filter: 'blur(14px)' });
+  [3.16, 3.38, 3.94, 4.16].forEach((t, i) => T(h2w[i], { yPercent: 0, x: 0, opacity: 1, filter: 'blur(0px)', duration: 1.0 }, t));
+  T('#h2', { x: -18, duration: 4.2, ease: 'none' }, 3.0);
+
+  const dash = $('#dash');
+  gsap.set(dash, { x: 560, z: -700, rotationY: 34, opacity: 0, filter: 'blur(18px)', transformPerspective: 2400 });
+  T(dash, { x: 0, z: 0, rotationY: 7, opacity: 1, filter: 'blur(0px)', duration: 1.6 }, 3.28);
+  T(dash, { x: -26, rotationY: 4, duration: 2.45, ease: 'sine.inOut' }, 4.85);
+  const dItems = [$('.brand', dash)].concat($$('.nav', dash), [$('.dhead', dash)], $$('.kpi', dash), $$('.cc', dash), [$('.nh', dash), $('#dNext')]);
+  gsap.set(dItems, { opacity: 0, y: 16 });
+  T(dItems, { opacity: 1, y: 0, duration: 0.8, stagger: 0.03 }, 3.62);
+  const dbars = $$('.dbar i', dash);
+  gsap.set(dbars, { scaleY: 0 });
+  T(dbars, { scaleY: 1, duration: 0.9, stagger: 0.06 }, 4.35);
+  const kchips = $$('.kpi .chip', dash);
+  gsap.set(kchips, { opacity: 0, scale: 0.7, transformOrigin: '0% 50%' });
+  T(kchips, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)', stagger: 0.08 }, 5.0);
+  const countUp = (el, to, fmt, at, dur, ease) => {
+    const o = { v: 0 };
+    el.textContent = fmt(0);
+    T(o, { v: to, duration: dur, ease: ease || 'expo.out', onUpdate: () => { el.textContent = fmt(o.v); } }, at);
+  };
+  countUp($('#k1v'), 2840, brl, 4.25, 1.4);
+  countUp($('#k2v'), 32, v => String(Math.round(v)), 4.33, 1.3);
+  countUp($('#k3v'), 87, v => Math.round(v) + '%', 4.41, 1.35);
+  countUp($('#ringV'), 87, v => Math.round(v) + '%', 4.55, 1.4);
+  T('#ringArc', { attr: { 'stroke-dashoffset': 351.86 * 0.13 }, duration: 1.4, ease: 'expo.out' }, 4.55);
+  // destaque do 87%
+  T('#k3v', { color: '#C8FF00', textShadow: '0 0 24px rgba(200,255,0,.35)', duration: 0.5, ease: 'power2.out' }, 5.8);
+  T('#k3v', { scale: 1.07, duration: 0.3, ease: 'power2.out' }, 5.8);
+  T('#k3v', { scale: 1, duration: 0.7, ease: 'power3.out' }, 6.1);
+  T('#k3', { borderColor: 'rgba(200,255,0,.38)', backgroundColor: '#151710', duration: 0.5, ease: 'power2.out' }, 5.8);
+  T('#ringArc', { stroke: '#C8FF00', duration: 0.5, ease: 'power2.out' }, 5.86);
+  T('#ringV', { color: '#C8FF00', duration: 0.5, ease: 'power2.out' }, 5.86);
+
+  // saída: cards viram blocos que seguem para a próxima cena
+  const SW = 7.3;
+  T(h2w, { yPercent: -115, opacity: 0, filter: 'blur(12px)', duration: 0.5, ease: 'power3.in', stagger: 0.05 }, 7.08);
+  const srcIds = ['#k1', '#k2', '#k3', '#dNext'];
+  T(srcIds.map(s => $(s).firstElementChild), { opacity: 0, duration: 0.2, ease: 'power1.in' }, SW - 0.2);
+  T('#k3', { borderColor: 'rgba(242,240,235,.075)', backgroundColor: '#131313', duration: 0.2 }, SW - 0.2);
+
+  tl.seek(SW, true);
+  const srcR = srcIds.map(s => rectOf($(s)));
+  const ROW0 = 190 + 236, ROWH = 76, ROWG = 88;
+  const blocks = $('#blocks');
+  const blkAll = [];
+  srcR.forEach((r, i) => {
+    const dst = { x: 148, y: ROW0 + i * ROWG, w: 804, h: ROWH };
+    const mid = { x: lerp(r.x, dst.x, 0.5) + 60, y: lerp(r.y + r.h / 2, dst.y + ROWH / 2, 0.55) - 12, w: 168, h: 24 };
+    const f = svgEl('filter', { id: 'fk' + i, x: '-60%', y: '-40%', width: '220%', height: '180%' }, $('#fx'));
+    const fb = svgEl('feGaussianBlur', { stdDeviation: '0 0' }, f);
+    [2, 1, 0].forEach(k => {
+      const b = document.createElement('div');
+      b.className = 'blk';
+      blocks.appendChild(b);
+      blkAll.push(b);
+      gsap.set(b, { left: r.x, top: r.y, width: r.w, height: r.h });
+      const lag = k * 0.045, t1 = SW + i * 0.035 + lag;
+      if (k === 0) b.style.filter = `url(#fk${i})`;
+      S(b, { opacity: k === 0 ? 1 : (k === 1 ? 0.3 : 0.13) }, k === 0 ? SW : t1 + 0.06);
+      T(b, { left: mid.x, top: mid.y, width: mid.w, height: mid.h, borderRadius: 12, duration: 0.36, ease: 'power2.in' }, t1);
+      T(b, { left: dst.x, top: dst.y, width: dst.w, height: dst.h, borderRadius: 16, duration: 0.66, ease: 'expo.out' }, t1 + 0.36);
+      if (k) T(b, { opacity: 0, duration: 0.3, ease: 'power1.out' }, t1 + 0.5);
+    });
+    T(fb, { attr: { stdDeviation: '22 0' }, duration: 0.36, ease: 'power2.in' }, SW + i * 0.035);
+    T(fb, { attr: { stdDeviation: '0 0' }, duration: 0.45, ease: 'power2.out' }, SW + i * 0.035 + 0.36);
+  });
+  srcIds.forEach(s => S(s, { opacity: 0 }, SW));
+  T(dash, { x: -1450, opacity: 0, filter: 'blur(10px)', duration: 0.7, ease: 'power3.in' }, SW);
+  T('#grid', { x: -24, duration: 4.5, ease: 'none' }, 3.0);
+  S('#s2', { autoAlpha: 0 }, 8.1);
+
+  /* ==================================================================
+     CENA 3 · 8–13s · AGENDE. ORGANIZE. CRESÇA. + agenda
+     ================================================================== */
+  S('#s3', { autoAlpha: 1 }, SW);
+  const agenda = $('#agenda');
+  const rows = $$('.row', agenda);           // 0..3 = horários existentes, 4 = novo
+  const rowNew = $('#rowNew');
+  const rowTop = slot => 236 + slot * ROWG;
+  rows.slice(0, 4).forEach((r, i) => gsap.set(r, { top: rowTop(i), opacity: 0 }));
+  gsap.set(rowNew, { top: rowTop(2), opacity: 0, clipPath: 'inset(50% 0% 50% 0% round 16px)' });
+  gsap.set($$('.rin', agenda), { opacity: 0 });
+  gsap.set('#agenda .pbg', { opacity: 0, scale: 0.985 });
+  const chrome = [$('.ag-head > div', agenda), $('#btnNew')].concat($$('.day', agenda), [$('.ag-stats', agenda)]);
+  gsap.set(chrome, { opacity: 0, y: 12 });
+  T('#agenda .pbg', { opacity: 1, scale: 1, duration: 0.9 }, 7.78);
+  T(chrome, { opacity: 1, y: 0, duration: 0.7, stagger: 0.03 }, 7.9);
+  rows.slice(0, 4).forEach((r, i) => {
+    const arrive = SW + i * 0.035 + 0.36 + 0.66;
+    S(r, { opacity: 1 }, arrive);
+    blkAll.filter((b, j) => Math.floor(j / 3) === i).forEach(b => S(b, { opacity: 0 }, arrive));
+    const kids = Array.from($('.rin', r).children);
+    S($('.rin', r), { opacity: 1 }, arrive);
+    gsap.set(kids, { opacity: 0, x: -16 });
+    T(kids, { opacity: 1, x: 0, duration: 0.55, stagger: 0.035 }, arrive - 0.12);
+  });
+  const h3w = $$('#h3 .w');
+  gsap.set(h3w, { yPercent: 115, x: -36, opacity: 0, filter: 'blur(14px)' });
+  [8.3, 8.56, 8.84].forEach((t, i) => T(h3w[i], { yPercent: 0, x: 0, opacity: 1, filter: 'blur(0px)', duration: 1.0 }, t));
+  T('#h3', { x: 14, duration: 3.6, ease: 'none' }, 8.3);
+
+  // indicadores de status
+  const nowI = $('.nowline i', agenda), nowB = $('.nowline b', agenda);
+  gsap.set(nowI, { scaleX: 0 });
+  gsap.set(nowB, { scale: 0 });
+  T(nowB, { scale: 1, duration: 0.4, ease: 'back.out(3)' }, 9.0);
+  T(nowI, { scaleX: 1, duration: 0.9, ease: 'cOut' }, 9.05);
+  const lucasWait = $('#rowLucas .st.wait'), lucasOk = $('#rowLucas .st.ok'), lucasCk = $('#rowLucas .ck');
+  gsap.set(lucasOk, { opacity: 0, y: 10 });
+  gsap.set(lucasCk, { strokeDasharray: 22, strokeDashoffset: 22 });
+  T(lucasWait, { opacity: 0, y: -10, duration: 0.35, ease: 'power2.in' }, 9.35);
+  T(lucasOk, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(2)' }, 9.5);
+  T(lucasCk, { strokeDashoffset: 0, duration: 0.4, ease: 'power2.out' }, 9.6);
+
+  // cursor → botão "+ NOVO ATENDIMENTO"
+  const btn = $('#btnNew');
+  const br = rectOf(btn);
+  const click = { x: br.x + br.w * 0.62, y: br.y + br.h * 0.55 };
+  const cursor = $('#cursor');
+  gsap.set(cursor, { x: 1180, y: 1000, opacity: 0 });
+  T(cursor, { opacity: 1, duration: 0.25, ease: 'power1.out' }, 9.55);
+  T(cursor, { x: click.x, duration: 0.78, ease: 'power2.inOut' }, 9.55);
+  T(cursor, { y: click.y, duration: 0.78, ease: 'power3.inOut' }, 9.55);
+  T(btn, { borderColor: 'rgba(200,255,0,.6)', color: '#C8FF00', backgroundColor: 'rgba(200,255,0,.07)', duration: 0.25, ease: 'power1.out' }, 10.18);
+  T(cursor, { scale: 0.86, duration: 0.09, ease: 'power2.out' }, 10.38);
+  T(cursor, { scale: 1, duration: 0.2, ease: 'power2.out' }, 10.47);
+  T(btn, { scale: 0.96, backgroundColor: '#C8FF00', color: '#0B0B0B', borderColor: '#C8FF00', duration: 0.1, ease: 'power2.out' }, 10.38);
+  T(btn, { scale: 1, duration: 0.35, ease: 'back.out(3)' }, 10.48);
+  gsap.set('#ripple', { left: click.x, top: click.y, scale: 0.4, opacity: 0 });
+  S('#ripple', { opacity: 0.9 }, 10.4);
+  T('#ripple', { scale: 3.2, opacity: 0, duration: 0.6, ease: 'power2.out' }, 10.4);
+  T(cursor, { x: click.x + 250, y: click.y + 60, opacity: 0, duration: 0.55, ease: 'power2.inOut' }, 10.9);
+  T(btn, { backgroundColor: 'rgba(200,255,0,.07)', color: '#C8FF00', borderColor: 'rgba(200,255,0,.45)', duration: 0.5, ease: 'power2.out' }, 10.8);
+
+  // novo atendimento entra e os horários se reorganizam
+  T(rows[2], { top: rowTop(3), duration: 0.46, ease: 'cInOut' }, 10.46);
+  T(rows[3], { top: rowTop(4), duration: 0.46, ease: 'cInOut' }, 10.5);
+  S(rowNew, { opacity: 1 }, 10.76);
+  gsap.set(rowNew, { borderColor: 'rgba(200,255,0,.55)', backgroundColor: '#151710' });
+  T(rowNew, { clipPath: 'inset(0% 0% 0% 0% round 16px)', duration: 0.5, ease: 'cOut' }, 10.76);
+  const newKids = Array.from($('.rin', rowNew).children);
+  S($('.rin', rowNew), { opacity: 1 }, 10.76);
+  gsap.set(newKids, { opacity: 0, x: -16 });
+  T(newKids, { opacity: 1, x: 0, duration: 0.5, stagger: 0.035 }, 10.84);
+  const stA = $('#stNewA'), stB = $('#stNewB'), ckN = $('.ck', stB);
+  gsap.set(stB, { opacity: 0, y: 10 });
+  gsap.set(ckN, { strokeDasharray: 22, strokeDashoffset: 22 });
+  T($('.spin', stA), { rotation: 540, duration: 0.8, ease: 'none' }, 10.75);
+  T(stA, { opacity: 0, y: -10, duration: 0.3, ease: 'power2.in' }, 11.2);
+  T(stB, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(2)' }, 11.32);
+  T(ckN, { strokeDashoffset: 0, duration: 0.4, ease: 'power2.out' }, 11.4);
+  T(rowNew, { borderColor: 'rgba(242,240,235,.075)', backgroundColor: '#131313', duration: 0.8, ease: 'power2.inOut' }, 11.6);
+  gsap.set('#cnt5', { yPercent: 100 });
+  T('#cnt4', { yPercent: -100, duration: 0.4, ease: 'cInOut' }, 11.25);
+  T('#cnt5', { yPercent: 0, duration: 0.4, ease: 'cInOut' }, 11.25);
+  T('#occBar', { scaleX: 0.87, duration: 0.7, ease: 'cInOut' }, 11.25);
+
+  // os cards se alinham e viram as linhas do gráfico da cena seguinte
+  const GY = [772, 812, 852, 892, 932];
+  const ordered = [rows[0], rows[1], rowNew, rows[2], rows[3]];
+  T('#h3 .w', { yPercent: -115, opacity: 0, filter: 'blur(12px)', duration: 0.5, ease: 'power3.in', stagger: 0.05 }, 12.0);
+  T(['#agenda .agc', '#agenda .pbg'], { opacity: 0, filter: 'blur(6px)', duration: 0.45, ease: 'power2.in' }, 12.05);
+  T(ordered.map(r => $('.rin', r)), { opacity: 0, x: -12, duration: 0.28, ease: 'power2.in', stagger: 0.025 }, 12.08);
+  ordered.forEach((r, j) => {
+    T(r, { height: 2, top: '+=37', borderRadius: 1, backgroundColor: 'rgba(242,240,235,.42)', borderColor: 'rgba(242,240,235,0)', duration: 0.34, ease: 'cInOut' }, 12.28 + j * 0.03);
+    T(r, { left: 0, width: 1680, top: GY[j] - 190, height: 1, backgroundColor: 'rgba(242,240,235,.08)', duration: 0.66, ease: 'cInOut' }, 12.52 + j * 0.045);
+  });
+  S('#s3', { autoAlpha: 0 }, 13.4);
+
+  /* ==================================================================
+     CENA 4 · 13–18s · SEU TIME. SOB CONTROLE. + equipe
+     ================================================================== */
+  S('#s4', { autoAlpha: 1 }, 12.5);
+  S('.gl', { opacity: 1 }, 13.4);
+  const h4w = $$('#h4 .w');
+  gsap.set(h4w, { yPercent: 115, opacity: 0, filter: 'blur(14px)' });
+  [12.62, 12.88].forEach((t, i) => T(h4w[i], { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.0 }, t));
+  const cards = $$('.tmc');
+  gsap.set(cards, { opacity: 0, y: 60, filter: 'blur(10px)' });
+  T(cards, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.0, stagger: 0.1 }, 12.9);
+  gsap.set(['.c4l', '.c4c'], { opacity: 0, y: 10 });
+  T(['.c4l', '.c4c'], { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, 13.25);
+  cards.forEach((c, i) => {
+    const d = c.dataset, at = 13.7 + i * 0.12;
+    countUp($('.va', c), +d.a, v => String(Math.round(v)), at, 1.6);
+    countUp($('.vf', c), +d.f, brl, at + 0.05, 1.7);
+    countUp($('.vc', c), +d.c, brl, at + 0.1, 1.7);
+    countUp($('.vp', c), +d.p, v => Math.round(v) + '%', at + 0.1, 1.7);
+    const bar = $('.tbar i', c), dot = $('.tbar em', c), p = +d.p / 100;
+    gsap.set(bar, { scaleX: 0 });
+    gsap.set(dot, { left: '0%', scale: 0 });
+    T(bar, { scaleX: p, duration: 1.7, ease: 'expo.out' }, at + 0.1);
+    T(dot, { left: p * 100 + '%', duration: 1.7, ease: 'expo.out' }, at + 0.1);
+    T(dot, { scale: 1, duration: 0.4, ease: 'back.out(3)' }, at + 0.1);
+  });
+  // paralaxe sutil: título e cards em velocidades diferentes
+  T('#h4', { x: -12, duration: 3.9, ease: 'none' }, 12.8);
+  T('.team', { x: -22, duration: 3.6, ease: 'sine.inOut' }, 13.1);
+  gsap.set('.tm-st', { opacity: 0, x: 8 });
+  T('.tm-st', { opacity: 1, x: 0, duration: 0.5, stagger: 0.1 }, 14.4);
+  T('.tm-st i', { opacity: 0.35, duration: 0.5, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 15.0);
+
+  // gráfico de linha: linha branca, pontos verde-ácido
+  const chart = $('#tChart');
+  const DATA = [41, 44, 39, 47, 52, 49, 55, 51, 58, 62, 57, 64, 68, 72];
+  const PX = DATA.map((v, i) => [120 + i * (1680 / 13), 932 - (v - 30) / 50 * 160]);
+  chart.innerHTML = `
+    <defs>
+      <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2F0EB" stop-opacity=".09"/><stop offset="1" stop-color="#F2F0EB" stop-opacity="0"/></linearGradient>
+      <clipPath id="cArea"><rect id="cAreaR" x="120" y="700" width="0" height="300"/></clipPath>
+    </defs>
+    <path id="tArea" clip-path="url(#cArea)" fill="url(#gArea)" d="M${PX.map(p => p.join(',')).join('L')}L1800,932L120,932Z"/>
+    <path id="tLine" fill="none" stroke="#F2F0EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <g id="tDots">${PX.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="#C8FF00"/>`).join('')}</g>
+    <circle id="tTip" r="6" fill="#C8FF00" opacity="0"/>`;
+  const tLine = $('#tLine'), tTip = $('#tTip');
+  const dots = $$('#tDots circle');
+  const LP = { e: 0, s: 0 };                 // e: extensão, s: alinhamento
+  const BU = [Math.cos(ANG * D2R), Math.sin(ANG * D2R)];
+  const BC = [960, 541.8];
+  const NPT = PX.length + 2;
+  const straight = Array.from({ length: NPT }, (_, i) => {
+    const s = lerp(-1030, 1030, i / (NPT - 1));
+    return [BC[0] + BU[0] * s, BC[1] + BU[1] * s];
+  });
+  const extR = [1975, PX[13][1] - 175 * Math.tan(10 * D2R)];
+  const easeIO = gsap.parseEase('cInOut');
+  function linePts() {
+    const sE = easeIO(clamp01(LP.s));
+    const pts = [];
+    for (let i = 0; i < NPT; i++) {
+      let p;
+      if (i === 0) p = PX[0];
+      else if (i === NPT - 1) p = [lerp(PX[13][0], extR[0], LP.e), lerp(PX[13][1], extR[1], LP.e)];
+      else p = PX[i - 1];
+      pts.push([lerp(p[0], straight[i][0], sE), lerp(p[1], straight[i][1], sE)]);
+    }
+    return pts;
+  }
+  const drawLine = () => {
+    const pts = linePts();
+    tLine.setAttribute('d', 'M' + pts.map(p => p[0].toFixed(2) + ',' + p[1].toFixed(2)).join('L'));
+    if (LP.s > 0) dots.forEach((c, i) => { c.setAttribute('cx', pts[i + 1][0]); c.setAttribute('cy', pts[i + 1][1]); });
+  };
+  drawLine();
+  const lenTotal = tLine.getTotalLength();
+  const cum = [0];
+  for (let i = 1; i < PX.length; i++) cum.push(cum[i - 1] + Math.hypot(PX[i][0] - PX[i - 1][0], PX[i][1] - PX[i - 1][1]));
+  const DRAW = { p: 0 };
+  const DRAW0 = 13.45, DRAWD = 2.6;
+  gsap.set(tLine, { attr: { 'stroke-dasharray': lenTotal + 2, 'stroke-dashoffset': lenTotal + 2 } });
+  gsap.set(dots, { scale: 0, transformOrigin: '50% 50%' });
+  const invIO = y => (y < 0.5 ? Math.sqrt(y / 2) : 1 - Math.sqrt((1 - y) / 2));   // inverso de power1.inOut
+  dots.forEach((c, i) => T(c, { scale: 1, duration: 0.5, ease: 'back.out(3)' }, DRAW0 + DRAWD * invIO(clamp01(cum[i] / lenTotal)) - 0.04));
+  const renderDraw = () => {
+    const l = DRAW.p * lenTotal;
+    tLine.setAttribute('stroke-dashoffset', (lenTotal + 2) - l);
+    $('#cAreaR').setAttribute('width', DRAW.p * 1680);
+    const pt = tLine.getPointAtLength(Math.min(l, lenTotal));
+    tTip.setAttribute('cx', pt.x); tTip.setAttribute('cy', pt.y);
+    tTip.setAttribute('opacity', DRAW.p > 0.002 && DRAW.p < 0.998 ? 1 : 0);
+  };
+  T(DRAW, { p: 1, duration: DRAWD, ease: 'power1.inOut', onUpdate: renderDraw }, DRAW0);
+
+  // transição: a linha continua, atravessa a tela e vira o corte diagonal do símbolo
+  const X4 = 16.72;
+  T(h4w, { yPercent: -115, opacity: 0, filter: 'blur(12px)', duration: 0.5, ease: 'power3.in', stagger: 0.05 }, X4);
+  T(cards, { opacity: 0, y: -24, filter: 'blur(10px)', duration: 0.5, ease: 'power2.in', stagger: 0.05 }, X4 + 0.05);
+  T(['.c4l', '.c4c', '#tArea'], { opacity: 0, duration: 0.4, ease: 'power2.in' }, X4 + 0.05);
+  T('.gl', { opacity: 0, duration: 0.5, ease: 'power2.in', stagger: 0.03 }, X4 + 0.1);
+  S(tLine, { attr: { 'stroke-dasharray': 'none' } }, X4);
+  T(LP, { e: 1, duration: 0.42, ease: 'power2.in', onUpdate: drawLine }, X4);
+  T(LP, { s: 1, duration: 0.62, ease: 'none', onUpdate: drawLine }, X4 + 0.3);
+  T(dots, { scale: 0, duration: 0.45, ease: 'power2.in', stagger: 0.015 }, X4 + 0.3);
+
+  const fx = $('#fx');
+  const BS = (2 * 540 / Math.cos(10 * D2R)) / ALEN;      // escala da lâmina grande
+  fx.insertAdjacentHTML('beforeend', `
+    <defs>
+      <linearGradient id="gBladeFx" ${gradAttrs}>${stops('#C8FF00')}</linearGradient>
+      <filter id="fBig" filterUnits="userSpaceOnUse" x="-600" y="-700" width="3200" height="2500"><feGaussianBlur id="bigBlur" stdDeviation="0 0"/></filter>
+    </defs>
+    <g id="bigMove" filter="url(#fBig)"><g id="bigWrap" transform="translate(${BC[0] - BS * MID[0]} ${BC[1] - BS * MID[1]}) scale(${BS})">
+      <path id="bigS" fill="#F2F0EB"/><path id="bigG" fill="url(#gBladeFx)" opacity="0"/>
+    </g></g>
+    <g id="seeds"></g>`);
+  const bigS = $('#bigS'), bigG = $('#bigG');
+  const LB = { m: 0, L: 2060 / BS, h: 2.5 / BS, ox: MID[0], oy: MID[1], rot: 0 };
+  const drawBig = () => { const d = bladeD(LB); bigS.setAttribute('d', d); bigG.setAttribute('d', d); };
+  drawBig();
+  gsap.set('#bigMove', { autoAlpha: 0 });
+  const SWB = X4 + 0.92;
+  S('#bigMove', { autoAlpha: 1 }, SWB);
+  S(tLine, { opacity: 0 }, SWB);
+  T(LB, { m: 1, L: ALEN, duration: 0.55, ease: 'cInOut', onUpdate: drawBig }, SWB);
+  T(bigS, { fill: '#C8FF00', duration: 0.25, ease: 'power2.inOut' }, SWB);
+  T(bigG, { opacity: 1, duration: 0.25, ease: 'power1.inOut' }, SWB + 0.1);
+  T(bigS, { opacity: 0, duration: 0.25, ease: 'power1.inOut' }, SWB + 0.14);
+  const CUT = SWB + 0.58;                     // ≈ 18.2s
+  T('#bigMove', { x: BU[0] * 2100, y: BU[1] * 2100, duration: 0.5, ease: 'power3.in' }, CUT);
+  T('#bigBlur', { attr: { stdDeviation: '46 8' }, duration: 0.5, ease: 'power3.in' }, CUT);
+  S('#bigMove', { autoAlpha: 0 }, CUT + 0.55);
+  S('#s4', { autoAlpha: 0 }, CUT + 0.1);
+
+  /* ==================================================================
+     CENA 5 · 18–23s · DECISÕES BASEADAS EM DADOS. + financeiro
+     ================================================================== */
+  const s5 = $('#s5');
+  const BN = [-BU[1], BU[0]];
+  const band5 = { h: 0 };
+  const bandPoly = () => {
+    const a = 1500, h = band5.h;
+    const P = (s, t) => `${(BC[0] + BU[0] * s + BN[0] * t).toFixed(1)}px ${(BC[1] + BU[1] * s + BN[1] * t).toFixed(1)}px`;
+    s5.style.clipPath = `polygon(${P(-a, -h)},${P(a, -h)},${P(a, h)},${P(-a, h)})`;
+  };
+  bandPoly();
+  S(s5, { autoAlpha: 1 }, CUT);
+  T(band5, { h: 1250, duration: 0.85, ease: 'cOut', onUpdate: bandPoly }, CUT);
+  S(s5, { clipPath: 'none' }, CUT + 0.9);
+
+  const h5w = $$('#h5 .w');
+  gsap.set(h5w, { yPercent: 115, opacity: 0, filter: 'blur(14px)' });
+  [CUT + 0.12, CUT + 0.36].forEach((t, i) => T(h5w[i], { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.0 }, t));
+  const tiles = $$('.tile');
+  gsap.set(tiles, { opacity: 0.0, y: 26 });
+  T(tiles, { opacity: 1, y: 0, duration: 0.8, stagger: 0.06 }, CUT + 0.05);
+  gsap.set('#fin', { opacity: 0, y: 26 });
+  T('#fin', { opacity: 1, y: 0, duration: 0.8 }, CUT + 0.1);
+  countUp($('#t1'), 18420, brl, CUT + 0.35, 1.5);
+  countUp($('#t2'), 24, v => '+' + Math.round(v) + '%', CUT + 0.42, 1.45);
+  countUp($('#t3'), 67, brl, CUT + 0.49, 1.4);
+  countUp($('#t4'), 87, v => Math.round(v) + '%', CUT + 0.56, 1.45);
+  gsap.set('#t4b', { scaleX: 0 });
+  gsap.set('#t4d', { left: '0%' });
+  T('#t4b', { scaleX: 0.87, duration: 1.45, ease: 'expo.out' }, CUT + 0.56);
+  T('#t4d', { left: '87%', duration: 1.45, ease: 'expo.out' }, CUT + 0.56);
+
+  // gráfico semanal: barras uma a uma, a última em verde-ácido
+  const plot = $('#plot');
+  const VALS = [2640, 2910, 3380, 4120, 5370], DAYS = ['TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+  const PH = 404, PMAX = 6000, BX0 = 56, BW = (834 - 56) / 5;
+  let ph = '';
+  [0, 2000, 4000, 6000].forEach(v => {
+    const y = PH - v / PMAX * PH;
+    ph += `<div class="g5" style="top:${y}px"></div><div class="yl" style="top:${y}px">${v ? 'R$ ' + v / 1000 + 'k' : '0'}</div>`;
+  });
+  const avg = VALS.reduce((a, b) => a + b, 0) / VALS.length;
+  ph += `<div class="avg" style="top:${PH - avg / PMAX * PH}px"></div><div class="avgl" style="top:${PH - avg / PMAX * PH - 18}px">média ${brl(avg)}</div>`;
+  VALS.forEach((v, i) => {
+    const cx = BX0 + BW * (i + 0.5), h = v / PMAX * PH, g = i === 4 ? ' g' : '';
+    ph += `<div class="fbar${g}" style="left:${cx - 48}px;height:${h}px"></div>`;
+    ph += `<div class="fval${g}" style="left:${cx}px;top:${PH - h - (g ? 26 : 22)}px">${brl(v)}</div>`;
+    ph += `<div class="fday${g}" style="left:${cx}px">${DAYS[i]}</div>`;
+  });
+  ph += `<div class="fchip" style="left:${BX0 + BW * 4.5}px;top:${PH - VALS[4] / PMAX * PH - 62}px"><span class="chip"><i data-i="up"></i>28%</span></div>`;
+  ph += `<div class="ftip" style="left:${BX0 + BW * 4.5 - 62}px;top:${PH - VALS[4] / PMAX * PH - 14}px"><b>Sábado, 10/10</b><span>80 atendimentos · R$ 67 por cliente</span></div>`;
+  ph += '<div class="scan"></div>';
+  plot.innerHTML = ph;
+  $$('i[data-i]', plot).forEach(e => { e.outerHTML = icon(e.dataset.i); });
+  const fbars = $$('.fbar', plot), fvals = $$('.fval', plot), g5 = $$('.g5', plot);
+  gsap.set(g5, { scaleX: 0 });
+  gsap.set(['.avg', '.avgl'], { opacity: 0 });
+  gsap.set('.avg', { scaleX: 0 });
+  gsap.set(fbars, { scaleY: 0 });
+  gsap.set(fvals, { opacity: 0, y: 8 });
+  gsap.set('.fchip', { opacity: 0, scale: 0.6, y: 6 });
+  T(g5, { scaleX: 1, duration: 0.7, stagger: 0.05, ease: 'cInOut' }, CUT + 0.3);
+  const BAR0 = CUT + 0.62;
+  const barAt = i => (i < 4 ? BAR0 + i * 0.2 : BAR0 + 0.98);
+  fbars.forEach((b, i) => {
+    T(b, { scaleY: 1, duration: i < 4 ? 0.6 : 0.85, ease: i < 4 ? 'expo.out' : 'power4.out' }, barAt(i));
+    const fv = fvals[i], to = VALS[i], o = { v: 0 };
+    T(fv, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, barAt(i) + 0.12);
+    T(o, { v: to, duration: i < 4 ? 0.55 : 0.8, ease: 'expo.out', onUpdate: () => { fv.textContent = brl(o.v); } }, barAt(i));
+  });
+  T('.fchip', { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'back.out(2.4)' }, barAt(4) + 0.5);
+  const scan = $('.scan', plot);
+  gsap.set(scan, { left: BX0 });
+  T(scan, { opacity: 1, duration: 0.2 }, BAR0 - 0.05);
+  T(scan, { left: BX0 + BW * 4.5 + 52, duration: 1.15, ease: 'power2.inOut' }, BAR0 - 0.05);
+  T(scan, { opacity: 0, duration: 0.4 }, BAR0 + 1.1);
+  T(['.avg', '.avgl'], { opacity: 1, duration: 0.5 }, BAR0 + 1.2);
+  // microinteração: tooltip do melhor dia
+  gsap.set('.ftip', { xPercent: -100, x: 10, opacity: 0 });
+  T('.ftip', { opacity: 1, x: 0, duration: 0.5, ease: 'cOut' }, BAR0 + 2.05);
+  T('.avg', { scaleX: 1, duration: 0.7, ease: 'cInOut' }, BAR0 + 1.2);
+  // deriva sutil (paralaxe)
+  T('#h5', { x: -10, duration: 3.8, ease: 'none' }, CUT);
+  T('.tiles', { x: -14, duration: 3.8, ease: 'none' }, CUT);
+  T('#fin', { x: -26, duration: 3.6, ease: 'sine.inOut' }, CUT + 0.6);
+
+  // transição: números somem, ficam linhas e elementos verdes, que convergem ao centro
+  const X5 = 22.0;
+  T(h5w, { yPercent: -115, opacity: 0, filter: 'blur(12px)', duration: 0.5, ease: 'power3.in', stagger: 0.05 }, X5);
+  T(tiles.map(t => t.firstElementChild), { opacity: 0, filter: 'blur(8px)', duration: 0.4, ease: 'power2.in', stagger: 0.04 }, X5 + 0.02);
+  T(tiles, { borderColor: 'rgba(242,240,235,0)', backgroundColor: 'rgba(19,19,19,0)', duration: 0.5, ease: 'power2.in' }, X5 + 0.1);
+  T(['.fin-c', '.fin-h', '.yl', '.fval', '.fday', '.avg', '.avgl', '.fchip', '.ftip', '.g5'], { opacity: 0, duration: 0.4, ease: 'power2.in' }, X5 + 0.05);
+  T(fbars, { scaleX: 0.035, borderRadius: 2, duration: 0.36, ease: 'cInOut', stagger: 0.03 }, X5 + 0.1);
+  T(fbars.slice(0, 4), { backgroundColor: 'rgba(242,240,235,.62)', duration: 0.36, ease: 'cInOut' }, X5 + 0.1);
+  T('#grid', { opacity: 0, duration: 0.7, ease: 'power2.in' }, X5 + 0.15);
+
+  // sementes verdes (dos chips) convergem ao centro
+  const seeds = $('#seeds');
+  const chipEls = $$('.tile .chip').concat([$('#t4d')]);
+  tl.seek(X5, true);
+  const seedSrc = chipEls.map(rectOf);
+  seedSrc.forEach((r, i) => {
+    const sq = svgEl('rect', { width: 8, height: 8, rx: 2, fill: '#C8FF00', x: r.x + r.w / 2 - 4, y: r.y + r.h / 2 - 4, opacity: 0 }, seeds);
+    S(sq, { opacity: 1 }, X5 + 0.12);
+    T(sq, { attr: { x: 956, y: 536 }, duration: 0.7, ease: 'power3.in' }, X5 + 0.15 + i * 0.05);
+    T(sq, { attr: { width: 2, height: 2, rx: 1 }, opacity: 0, duration: 0.25, ease: 'power2.in' }, X5 + 0.65 + i * 0.05);
+  });
+
+  /* ==================================================================
+     CENA 6 · 23–27s · MENOS GESTÃO MANUAL. MAIS BARBEARIA.
+     ================================================================== */
+  S('#s5', { autoAlpha: 0 }, X5 + 0.5);
+  S('#s6', { autoAlpha: 1 }, 22.8);
+  const h6w = $$('#h6 .w');
+  gsap.set(h6w, { yPercent: 115, opacity: 0, filter: 'blur(14px)' });
+  [23.02, 23.28, 24.12, 24.36].forEach((t, i) => T(h6w[i], { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 0.95 }, t));
+  T('#h6a', { color: '#737373', duration: 0.7, ease: 'power2.inOut' }, 24.25);
+
+  // pílulas de interface ao redor do centro
+  const PILLS = [
+    { label: 'Agenda', i: 'cal', c: [600, 262], part: 'upperCurve' },
+    { label: 'Clientes', i: 'user', c: [1330, 246], part: 'topArm' },
+    { label: 'Relatórios', i: 'rep', c: [356, 800], part: 'lowerCurve' },
+    { label: 'Equipe', i: 'team', c: [960, 872], part: 'blade' },
+    { label: 'Financeiro', i: 'fin', c: [1580, 788], part: 'bottomArm', g: true }
+  ];
+  const pillsL = $('#pills');
+  PILLS.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'pl' + (p.g ? ' g' : '');
+    el.innerHTML = icon(p.i) + p.label;
+    pillsL.appendChild(el);
+    p.el = el;
+    const r = el.getBoundingClientRect(), k = stage.getBoundingClientRect().width / 1920;
+    p.w = r.width / k; p.h = 60;
+    gsap.set(el, { x: p.c[0] - p.w / 2, y: p.c[1] - p.h / 2 });
+  });
+  // coordenadas do símbolo centralizado (as pílulas e as peças vivem no mesmo espaço)
+  const W0 = symPos(960, 540);
+  const toSym = (x, y) => [(x - W0.x) / K, (y - W0.y) / K];
+  const rectPath = (x, y, w, h, r) => {
+    const [a, b] = toSym(x, y), W = w / K, H = h / K, R = Math.min(r / K, W / 2, H / 2);
+    return `M${a + R},${b}H${a + W - R}A${R},${R} 0 0 1 ${a + W},${b + R}V${b + H - R}A${R},${R} 0 0 1 ${a + W - R},${b + H}H${a + R}A${R},${R} 0 0 1 ${a},${b + H - R}V${b + R}A${R},${R} 0 0 1 ${a + R},${b}Z`;
+  };
+  // barras → linhas finas → pílulas (interpolação geométrica: sempre um retângulo arredondado limpo)
+  const partsG = $('#parts');
+  const ldefs2 = $('#logo defs');
+  const barRects = VALS.map((v, i) => {
+    const h = v / PMAX * PH;
+    return { x: 906 - 26 + 30 + BX0 + BW * (i + 0.5) - 1.7, y: 360 + 130 + PH - h, w: 3.4, h, r: 1.7 };
+  });
+  const order = [2, 0, 3, 1, 4];             // barra i → pílula order[i] (a barra verde vira "Financeiro")
+  const blurF = id => {
+    const f = svgEl('filter', { id, filterUnits: 'userSpaceOnUse', x: -1800, y: -1000, width: 4200, height: 2400 }, ldefs2);
+    return svgEl('feGaussianBlur', { stdDeviation: 0 }, f);
+  };
+  const parts = [];
+  barRects.forEach((b, i) => {
+    const p = PILLS[order[i]];
+    p.R = { ...b };
+    p.blur = blurF('fp' + i);
+    p.path = svgEl('path', {
+      d: rectPath(b.x, b.y, b.w, b.h, b.r),
+      fill: i === 4 ? '#C8FF00' : 'rgba(242,240,235,.62)',
+      stroke: p.g ? 'rgba(200,255,0,.55)' : 'rgba(242,240,235,.15)',
+      'stroke-opacity': 0, 'stroke-width': 1, 'vector-effect': 'non-scaling-stroke', filter: `url(#fp${i})`
+    }, partsG);
+    p.draw = () => p.path.setAttribute('d', rectPath(p.R.x, p.R.y, p.R.w, p.R.h, p.R.r));
+    p.pill = { x: p.c[0] - p.w / 2, y: p.c[1] - p.h / 2, w: p.w, h: p.h, r: 30 };
+    parts.push(p);
+  });
+  // repositiona o símbolo no centro para a montagem final
+  S(symWrap, symPos(960, 540), 22.3);
+  gsap.set(partsG, { autoAlpha: 0 });
+  const SWP = X5 + 0.46;
+  S(partsG, { autoAlpha: 1 }, SWP);
+  S(fbars, { opacity: 0 }, SWP);
+  parts.forEach((p, i) => {
+    const at = SWP + 0.02 + i * 0.04;
+    // a barra recolhe até um ponto (o topo, onde está o valor) e já começa a viajar
+    const px = lerp(p.R.x + 1.7, p.c[0], 0.3), py = lerp(p.R.y, p.c[1], 0.3);
+    T(p.R, { x: px - 3, y: py - 3, w: 6, h: 6, r: 3, duration: 0.34, ease: 'power2.in', onUpdate: p.draw }, at);
+    // o ponto se expande na pílula de interface
+    T(p.R, { ...p.pill, duration: 0.6, ease: 'cOut', onUpdate: p.draw }, at + 0.34);
+    T(p.path, { fill: '#131313', duration: 0.3, ease: 'power2.out' }, at + 0.36);
+    T(p.path, { attr: { 'stroke-opacity': 1 }, duration: 0.35, ease: 'power2.out' }, at + 0.4);
+    gsap.set(p.el, { opacity: 0 });
+    T(p.el, { opacity: 1, duration: 0.45, ease: 'power2.out' }, at + 0.62);
+    // flutuação sutil (paralaxe), termina antes da convergência
+    const amp = 7 + 5 * hash(i + 21), ph0 = at + 0.85, fd = 25.2 - ph0;
+    p.floatY = p.pill.y - amp;
+    T(p.R, { y: p.floatY, duration: fd, ease: 'sine.inOut', onUpdate: p.draw }, ph0);
+    T(p.el, { y: '-=' + amp, duration: fd, ease: 'sine.inOut' }, ph0);
+  });
+
+  // peças do símbolo: cada uma nasce de uma linha fina no seu próprio eixo
+  const toStage = (x, y) => [W0.x + x * K, W0.y + y * K];
+  const pieces = {};
+  ['topArm', 'upperCurve', 'lowerCurve', 'bottomArm'].forEach(name => {
+    const g = svgEl('g', {}, partsG);
+    const path = svgEl('path', { d: SYM[name], fill: '#C8FF00', stroke: '#C8FF00', 'stroke-width': 0.9, 'vector-effect': 'non-scaling-stroke', 'stroke-linejoin': 'round' }, g);
+    const bb = path.getBBox();
+    const cy = bb.y + bb.height / 2;
+    const U2 = { s: 3 / (bb.height * K) };
+    const drawU = () => g.setAttribute('transform', `translate(0 ${cy}) scale(1 ${U2.s}) translate(0 ${-cy})`);
+    drawU();
+    gsap.set(g, { autoAlpha: 0 });
+    const [sx, sy] = toStage(bb.x, cy);
+    pieces[name] = { g, U: U2, drawU, line: { x: sx, y: sy - 1.5, w: bb.width * K, h: 3, r: 1.5 } };
+  });
+  const bladeA = svgEl('path', { fill: '#C8FF00' }, partsG);
+  const LB2 = { m: 0, L: ALEN, h: 3 / K, ox: MID[0], oy: MID[1], rot: -ANG };
+  const drawA = () => bladeA.setAttribute('d', bladeD(LB2));
+  drawA();
+  gsap.set(bladeA, { autoAlpha: 0 });
+  const [mx, my] = toStage(MID[0], MID[1]);
+  pieces.blade = { line: { x: mx - ALEN * K / 2, y: my - 1.5, w: ALEN * K, h: 3, r: 1.5 } };
+
+  // a convergência: cada pílula vira uma linha no eixo da sua peça, e a peça se abre a partir dela
+  const C6 = 25.25;
+  T(h6w, { scale: 0.92, opacity: 0, filter: 'blur(16px)', duration: 0.55, ease: 'power2.in', stagger: 0.03 }, C6 - 0.05);
+  const order6 = ['Clientes', 'Agenda', 'Financeiro', 'Relatórios', 'Equipe'];
+  const CONV = 0.85;
+  order6.forEach((name, j) => {
+    const p = PILLS.find(q => q.label === name);
+    const pc = pieces[p.part];
+    const at = C6 + 0.1 + j * 0.06, arrive = at + CONV;
+    T(p.el, { opacity: 0, filter: 'blur(4px)', duration: 0.28, ease: 'power2.in' }, at - 0.05);
+    T(p.R, { ...pc.line, duration: CONV, ease: 'cInOut', onUpdate: p.draw }, at);
+    T(p.path, { fill: '#C8FF00', duration: 0.2, ease: 'power2.in' }, at + 0.46);
+    T(p.path, { attr: { 'stroke-opacity': 0 }, duration: 0.25, ease: 'power1.in' }, at + 0.3);
+    T(p.blur, { attr: { stdDeviation: 3.2 / K }, duration: CONV / 2, ease: 'power2.in' }, at);
+    T(p.blur, { attr: { stdDeviation: 0 }, duration: CONV / 2, ease: 'power2.out' }, at + CONV / 2);
+    S(p.path, { autoAlpha: 0 }, arrive);
+    if (p.part === 'blade') {
+      S(bladeA, { autoAlpha: 1 }, arrive);
+      T(LB2, { rot: 0, m: 1, duration: 0.52, ease: 'cInOut', onUpdate: drawA }, arrive);
+    } else {
+      S(pc.g, { autoAlpha: 1 }, arrive);
+      T(pc.U, { s: 1, duration: 0.6, ease: 'cOut', onUpdate: pc.drawU }, arrive);
+    }
+  });
+  const LOCK = C6 + 0.1 + 4 * 0.06 + CONV + 0.52;   // ≈ 26.96
+
+  /* ==================================================================
+     CENA 7 · 27–30s · símbolo completo + assinatura + brilho
+     ================================================================== */
+  S('#symMain', { autoAlpha: 1 }, LOCK);
+  S(['topArm', 'upperCurve', 'lowerCurve', 'bottomArm'].map(n => pieces[n].g), { autoAlpha: 0 }, LOCK);
+  T(bladeA, { opacity: 0, duration: 0.45, ease: 'power1.inOut' }, LOCK + 0.02);
+  S(partsG, { autoAlpha: 0 }, LOCK + 0.6);
+  T('#glowFlood', { attr: { 'flood-opacity': 0.5 }, duration: 0.25, ease: 'power2.out' }, LOCK - 0.05);
+  T('#glowFlood', { attr: { 'flood-opacity': 0.22 }, duration: 0.9, ease: 'power2.inOut' }, LOCK + 0.2);
+  T('#ambient', { opacity: 1, duration: 1.2, ease: 'power2.out' }, LOCK - 0.1);
+  T(symWrap, { ...symPos(960, LOCKUP_Y), duration: 0.8, ease: 'cInOut' }, LOCK + 0.12);
+  S(letters, { x: 0, y: 70, opacity: 1 }, 26.0);
+  S(tagSpan, { x: 0, opacity: 0, filter: 'blur(6px)', letterSpacing: track + 9 + 'px' }, 26.0);
+  T(letters, { y: 0, duration: 0.75, ease: 'cOut', stagger: 0.045 }, LOCK + 0.32);
+  T(tagSpan, { opacity: 1, filter: 'blur(0px)', letterSpacing: track + 'px', duration: 0.85, ease: 'cOut' }, LOCK + 0.5);
+  // brilho atravessando o símbolo, da esquerda para a direita
+  const GL0 = LOCK + 1.05;
+  S('#gloss', { opacity: 1 }, GL0);
+  T('#gloss', { attr: { x: 640 }, duration: 0.75, ease: 'power2.inOut' }, GL0);
+  S('#gloss', { opacity: 0 }, GL0 + 0.8);
+  tl.set({}, {}, DUR);
+
+  tl.seek(0, false);
+  return tl;
+}
+
+/* ======================================================================
+   PLAYER
+   ====================================================================== */
+function player(tl) {
+  window.CORTTA = { tl, duration: DUR, seek: t => { tl.seek(t, false); }, ready: true };
+  if (RENDER) { document.documentElement.dataset.ready = '1'; return; }
+  const hud = $('#hud'), playBtn = $('#hudPlay'), scrub = $('#hudScrub'), tc = $('#hudTime');
+  const fmt = t => { const m = Math.floor(t / 60), s = t - m * 60; return String(m).padStart(2, '0') + ':' + s.toFixed(1).padStart(4, '0'); };
+  const ICON_PAUSE = '<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>';
+  const ICON_PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg>';
+  let lastPlaying = null;
+  const sync = () => {
+    const t = tl.time();
+    tc.textContent = fmt(t) + ' / ' + fmt(DUR);
+    if (document.activeElement !== scrub) scrub.value = t;
+    const playing = !tl.paused() && tl.progress() < 1;
+    if (playing !== lastPlaying) {
+      lastPlaying = playing;
+      playBtn.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
+      playBtn.setAttribute('aria-label', playing ? 'Pausar' : 'Reproduzir');
+    }
+  };
+  tl.eventCallback('onUpdate', sync);
+  tl.eventCallback('onComplete', sync);
+  const toggle = () => {
+    if (tl.progress() >= 1) tl.restart();
+    else tl.paused(!tl.paused());
+    sync();
+  };
+  playBtn.addEventListener('click', toggle);
+  $('#hudRestart').addEventListener('click', () => { tl.restart(); sync(); });
+  scrub.addEventListener('input', () => { tl.pause(); tl.seek(+scrub.value, false); sync(); });
+  $('#hudFull').addEventListener('click', () => {
+    const el = document.documentElement;
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+  });
+  let hideT;
+  const show = () => { hud.classList.add('show'); clearTimeout(hideT); hideT = setTimeout(() => { if (!hud.matches(':hover')) hud.classList.remove('show'); }, 1800); };
+  addEventListener('pointermove', show);
+  addEventListener('pointerdown', show);
+  addEventListener('keydown', e => {
+    if (e.target === scrub && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) return;
+    if (e.key === ' ' || e.key === 'k') { e.preventDefault(); toggle(); show(); }
+    else if (e.key === 'ArrowRight') { tl.seek(Math.min(DUR, tl.time() + 1), false); sync(); show(); }
+    else if (e.key === 'ArrowLeft') { tl.seek(Math.max(0, tl.time() - 1), false); sync(); show(); }
+    else if (e.key === 'r' || e.key === 'R') { tl.restart(); sync(); }
+    else if (e.key === 'f' || e.key === 'F') $('#hudFull').click();
+  });
+  sync();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { tl.seek(DUR, false); sync(); show(); return; }
+  setTimeout(() => { tl.play(0); sync(); }, 350);
+}
+})();
+</script>
+</body>
+</html>
