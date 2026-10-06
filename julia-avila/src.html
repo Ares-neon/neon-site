@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Julia Ávila Reels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=block" rel="stylesheet">
+<style>
+:root{
+  --navy:#182142;          /* medido na logo */
+  --navy-hi:#1D2850;
+  --navy-lo:#141B37;
+  --gold:#D6A073;          /* dourado champagne medido na logo */
+  --gold-soft:rgba(214,160,115,.6);
+  --gold-hair:rgba(214,160,115,.42);
+  --ivory:#F8F5EF;
+  --serif:"Cormorant Garamond","Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0d1226;overflow:hidden}
+body{font-family:var(--serif);-webkit-font-smoothing:antialiased;color:var(--ivory)}
+
+#stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;overflow:hidden;
+  transform:translate(-50%,-50%) scale(var(--s,.4));
+  background:radial-gradient(120% 70% at 50% 46%, var(--navy-hi) 0%, var(--navy) 55%, var(--navy-lo) 100%)}
+body.render{background:var(--navy)}
+body.render #stage{left:0;top:0;transform:none}
+
+.scene{position:absolute;inset:0}
+.abs{position:absolute}
+.center{left:0;width:1080px;text-align:center}
+svg.full{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+.caps{text-transform:uppercase;font-weight:500;letter-spacing:.34em;padding-left:.34em}
+.gold{color:var(--gold)}
+.it{font-style:italic;font-weight:300}
+.w{display:inline-block;will-change:transform,opacity,filter}
+
+/* logo montada a partir das peças originais (coordenadas da logo: centro 645,1077) */
+.logo{position:absolute;width:0;height:0}
+.logo>*{position:absolute;display:block}
+.logo .face{left:-145px;top:-327px;width:300px;height:412px}
+.logo .wm{left:-405px;top:43px;width:760px;height:282px}
+.logo .bs{left:-245px;top:259px;width:500px;height:62px}
+
+/* Cena 01 */
+#face1{position:absolute;left:390px;top:674px;width:300px;height:412px;transform-origin:50% 50%}
+#seed{position:absolute;left:539.25px;top:880px;width:1.5px;height:0;background:var(--gold);transform-origin:50% 0}
+#wm1{left:540px;top:878px;transform:scale(.88)}
+
+/* Cena 02 */
+.photo{position:absolute;left:240px;top:520px;width:600px;height:600px;border-radius:50%;overflow:hidden;clip-path:circle(0% at 50% 50%)}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+#s2-word{top:1236px;font-size:150px;font-weight:300;letter-spacing:.16em;padding-left:.16em;line-height:1;color:var(--gold)}
+
+/* Cena 03 */
+.s3{line-height:1}
+#s3-a{top:702px;font-size:58px}
+#s3-b{top:772px;font-size:200px;color:var(--gold);letter-spacing:.01em}
+#s3-c{top:1010px;font-size:58px}
+.hair-c{position:absolute;left:505px;width:70px;height:1px;background:var(--gold-soft);transform-origin:50% 50%}
+
+/* Cena 04 */
+.item{position:absolute;left:0;width:1080px;height:300px}
+.item svg{position:absolute;left:480px;top:-16px;width:120px;height:120px;overflow:visible}
+.item .num{position:absolute;left:0;width:1080px;top:116px;text-align:center;font-size:26px;font-style:italic;color:var(--gold);letter-spacing:.2em}
+.item .num i{display:inline-block;width:46px;height:1px;background:var(--gold-hair);vertical-align:middle;margin:0 18px;transform-origin:50% 50%}
+.item .word{position:absolute;left:0;width:1080px;top:150px;text-align:center;font-size:96px;font-weight:400;letter-spacing:.14em;padding-left:.14em;line-height:1}
+.vline{position:absolute;left:539.5px;width:1px;height:56px;background:linear-gradient(rgba(214,160,115,0),var(--gold-hair),rgba(214,160,115,0));transform-origin:50% 0}
+
+/* Cena 05/06 */
+#logoB{left:540px;top:880px}
+#hairB{position:absolute;left:480px;top:1238px;width:120px;height:1px;background:var(--gold);transform-origin:50% 50%}
+#handle{top:1076px;font-size:30px;color:var(--gold);letter-spacing:.24em;padding-left:.24em}
+#btn{position:absolute;left:375px;top:1152px;width:330px;height:92px;border:1.5px solid var(--gold);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;background:rgba(214,160,115,0);
+  font-size:30px;font-weight:600;letter-spacing:.38em;padding-left:.38em;color:var(--gold)}
+#ripple{position:absolute;left:375px;top:1152px;width:330px;height:92px;border:1px solid var(--gold);border-radius:12px;opacity:0}
+#cursor{position:absolute;left:0;top:0;width:46px;height:46px;transform-origin:0 0;opacity:0;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+
+#guides{position:absolute;inset:0;z-index:200;pointer-events:none;display:none}
+#guides .zone{position:absolute;left:120px;top:250px;width:840px;height:1250px;outline:2px dashed rgba(255,0,180,.8)}
+body.guides #guides{display:block}
+#ui{position:fixed;left:16px;bottom:16px;z-index:300;font:13px/1.4 var(--serif);color:#9aa0b8;letter-spacing:.04em}
+#ui b{color:#e6d6c6;font-weight:600}
+body.render #ui{display:none}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ===== CENA 05/06 — assinatura + CTA (camada base) ===== -->
+  <section class="scene" id="s56">
+    <div class="logo" id="logoB">
+      <canvas class="face" id="faceB" width="300" height="412"></canvas>
+      <img class="wm" src="assets/wordmark.png" alt="Julia Avila">
+      <img class="bs" src="assets/beauty-studio.png" alt="Beauty Studio">
+    </div>
+    <div id="hairB"></div>
+    <div class="abs center caps" id="handle">@JULIAAVILASBEAUTY</div>
+    <div id="ripple"></div>
+    <div id="btn">SEGUIR</div>
+  </section>
+
+  <!-- ===== CENA 04 — EXPERIÊNCIA ===== -->
+  <section class="scene" id="s4">
+    <div class="vline" style="top:640px"></div>
+    <div class="vline" style="top:980px"></div>
+    <div class="item" id="it1" style="top:372px">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#D6A073" stroke-width="1.2" stroke-linecap="round">
+        <circle class="dr" cx="50" cy="50" r="44"/>
+        <path class="dr" d="M58 14 C44 24 40 36 43 46 C37 50 37 54 42 57 C39 61 41 65 46 66 C44 72 48 80 60 86"/>
+        <circle class="dot" cx="58" cy="14" r="2.2" fill="#D6A073" stroke="none"/>
+      </svg>
+      <div class="num"><i></i><span class="cnt" data-n="1">00</span><i></i></div>
+      <div class="word"><span class="w">BELEZA</span></div>
+    </div>
+    <div class="item" id="it2" style="top:712px">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#D6A073" stroke-width="1.2" stroke-linecap="round">
+        <path class="dr" d="M50 92 C22 66 22 34 50 8 C78 34 78 66 50 92 Z"/>
+        <path class="dr" d="M50 92 C36 64 30 40 14 26"/>
+        <path class="dr" d="M50 92 C64 64 70 40 86 26"/>
+        <circle class="dot" cx="50" cy="8" r="2.2" fill="#D6A073" stroke="none"/>
+      </svg>
+      <div class="num"><i></i><span class="cnt" data-n="2">00</span><i></i></div>
+      <div class="word"><span class="w">CUIDADO</span></div>
+    </div>
+    <div class="item" id="it3" style="top:1052px">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#D6A073" stroke-width="1.2" stroke-linecap="round">
+        <circle class="dr" cx="36" cy="50" r="30"/>
+        <circle class="dr" cx="64" cy="50" r="30"/>
+        <circle class="dot" cx="50" cy="50" r="2.2" fill="#D6A073" stroke="none"/>
+      </svg>
+      <div class="num"><i></i><span class="cnt" data-n="3">00</span><i></i></div>
+      <div class="word"><span class="w">CONFIANÇA</span></div>
+    </div>
+  </section>
+
+  <!-- ===== CENA 03 — FRASE ===== -->
+  <section class="scene" id="s3">
+    <div class="hair-c" id="s3-h1" style="top:640px"></div>
+    <div class="abs center caps s3" id="s3-a"><span class="w">SUA</span></div>
+    <div class="abs center it s3" id="s3-b"><span class="w">Beleza,</span></div>
+    <div class="abs center caps s3" id="s3-c"><span class="w">DO</span> <span class="w">SEU</span> <span class="w">JEITO.</span></div>
+    <div class="hair-c" id="s3-h2" style="top:1130px"></div>
+  </section>
+
+  <!-- ===== CENA 02 — IDENTIDADE + PRESENÇA ===== -->
+  <section class="scene" id="s2">
+    <svg class="full" viewBox="0 0 1080 1920">
+      <defs><path id="orbit" d="M540,460 A360,360 0 1,1 539.99,460"/></defs>
+      <circle id="ring2" cx="540" cy="820" r="322" fill="none" stroke="#D6A073" stroke-width="1.2" opacity=".85"/>
+      <circle id="ring2b" cx="540" cy="820" r="322" fill="none" stroke="#F3D2AE" stroke-width="2"/>
+      <g id="orbit-g">
+        <text font-family="Cormorant Garamond, serif" font-size="22" font-weight="500" letter-spacing="7" fill="#D6A073">
+          <textPath href="#orbit" textLength="2250" lengthAdjust="spacing">JULIA ÁVILA • BEAUTY STUDIO • JULIA ÁVILA • BEAUTY STUDIO • JULIA ÁVILA • BEAUTY STUDIO •</textPath>
+        </text>
+      </g>
+    </svg>
+    <div class="photo" id="photo"><img src="assets/julia.jpg" alt="Julia Ávila"></div>
+    <div class="abs center" id="s2-word"><span class="w">BELEZA</span></div>
+  </section>
+
+  <!-- ===== CENA 01 — A LINHA QUE REVELA A MARCA ===== -->
+  <section class="scene" id="s1">
+    <div id="seed"></div>
+    <canvas id="face1" width="300" height="412"></canvas>
+    <svg class="full" viewBox="0 0 1080 1920">
+      <circle id="ring1" cx="540" cy="880" r="392" fill="none" stroke="#D6A073" stroke-width="1.3"/>
+    </svg>
+    <div class="logo" id="wm1">
+      <img class="wm" src="assets/wordmark.png" alt="Julia Avila" style="top:-139px">
+      <img class="bs" src="assets/beauty-studio.png" alt="Beauty Studio" style="top:77px">
+    </div>
+  </section>
+
+  <svg id="cursor" viewBox="0 0 46 46">
+    <path d="M5 3 L5 36 L13.5 28.5 L19.5 42 L25 39.5 L19 26.5 L31 26.5 Z" fill="#F8F5EF" stroke="#182142" stroke-width="1.6" stroke-linejoin="round"/>
+  </svg>
+
+  <div id="guides"><div class="zone"></div></div>
+</div>
+
+<div id="ui"><b>Espaço</b> play/pausa · <b>R</b> reinicia · <b>← →</b> ±0,5s · <b>G</b> safe area</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+  const RENDER = new URLSearchParams(location.search).has('render');
+  if (RENDER) document.body.classList.add('render');
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const GOLD = '#D6A073', NAVY = '#182142';
+
+  function fit() {
+    if (RENDER) return;
+    $('#stage').style.setProperty('--s', Math.min((innerWidth - 32) / 1080, (innerHeight - 32) / 1920));
+  }
+  addEventListener('resize', fit); fit();
+
+  /* ---------- traço do rosto: revelação pixel a pixel na ordem original do desenho ---------- */
+  const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+  const FACE = { ready: false };
+  async function prepFace() {
+    const [rgba, ord] = await Promise.all([loadImg('assets/face.png'), loadImg('assets/face-order.png')]);
+    const c = document.createElement('canvas'); c.width = 300; c.height = 412;
+    const x = c.getContext('2d', { willReadFrequently: true });
+    x.drawImage(rgba, 0, 0); FACE.px = x.getImageData(0, 0, 300, 412).data.slice();
+    x.clearRect(0, 0, 300, 412); x.drawImage(ord, 0, 0); const od = x.getImageData(0, 0, 300, 412).data;
+    FACE.idx = []; FACE.ord = [];
+    for (let i = 0; i < 300 * 412; i++) if (od[i * 4] < 255 && FACE.px[i * 4 + 3] > 0) { FACE.idx.push(i); FACE.ord.push(od[i * 4] / 254); }
+    FACE.ready = true;
+  }
+  function drawFace(canvas, p) {
+    if (!FACE.ready) return;
+    if (canvas._p === p) return; canvas._p = p;
+    const ctx = canvas.getContext('2d');
+    const img = canvas._img || (canvas._img = ctx.createImageData(300, 412));
+    const d = img.data, src = FACE.px, band = .025;
+    d.fill(0);
+    for (let k = 0; k < FACE.idx.length; k++) {
+      const t = (p * (1 + band) - FACE.ord[k]) / band;
+      if (t <= 0) continue;
+      const i = FACE.idx[k] * 4, a = t >= 1 ? 1 : t * t * (3 - 2 * t);
+      d[i] = src[i]; d[i + 1] = src[i + 1]; d[i + 2] = src[i + 2]; d[i + 3] = src[i + 3] * a;
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  const P = { f1: 0, fB: 0, c1: 0, c2: 0, c3: 0 };
+  const sync = () => {
+    drawFace($('#face1'), P.f1); drawFace($('#faceB'), P.fB);
+    $$('.cnt').forEach((el, i) => { el.textContent = String(Math.round(P['c' + (i + 1)])).padStart(2, '0'); });
+  };
+
+  /* ---------- timeline ---------- */
+  const tl = gsap.timeline({ paused: true, onUpdate: sync, defaults: { ease: 'power2.out' } });
+  const SOFT = 'sine.inOut', SILK = 'power3.out', IRIS = 'power3.inOut';
+  const strokeLen = el => el.getTotalLength ? el.getTotalLength() : 0;
+  const prepDraw = sel => $$(sel).forEach(el => { const L = strokeLen(el); el.style.strokeDasharray = `${L} ${L}`; el._L = L; });
+  const rise = (targets, t, o = {}) => tl.fromTo(targets,
+    { opacity: 0, y: o.y ?? 26, filter: `blur(${o.blur ?? 8}px)` },
+    { opacity: 1, y: 0, filter: 'blur(0px)', duration: o.d ?? 1, stagger: o.st ?? .16, ease: SILK }, t);
+
+  /* ===== CENA 01 — 0 a 2.5s ===== */
+  // a linha nasce no centro e caminha até o ponto onde o desenho começa
+  tl.fromTo('#seed', { height: 0, y: -36, opacity: 1 }, { height: 72, duration: .36, ease: 'power2.inOut' }, .05);
+  tl.to('#seed', { x: 447 - 540, y: 719 - 880, height: 0, duration: .28, ease: 'power2.inOut' }, .36);
+  tl.set('#seed', { opacity: 0 }, .65);
+  tl.fromTo(P, { f1: 0 }, { f1: 1, duration: 1.0, ease: 'sine.inOut' }, .56);
+  tl.fromTo('#face1', { scale: 1.15 }, { scale: 1.17, duration: 1.2, ease: 'none' }, .56);
+  // a linha vira círculo
+  const r1 = 2 * Math.PI * 392;
+  tl.fromTo('#ring1', { attr: { 'stroke-dasharray': `0 ${r1}` }, rotation: -90, svgOrigin: '540 880' },
+                      { attr: { 'stroke-dasharray': `${r1} ${r1}` }, rotation: 0, duration: .7, ease: IRIS }, 1.58);
+  tl.to('#face1', { opacity: 0, scale: 1.1, duration: .3, ease: 'power2.in' }, 1.68);
+  tl.fromTo('#wm1 .wm', { opacity: 0, scale: .94 }, { opacity: 1, scale: 1, duration: .7, ease: SILK }, 1.94);
+  tl.fromTo('#wm1 .bs', { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .6, ease: SILK }, 2.06);
+  // iris fecha sobre a logo
+  tl.fromTo('#s1', { clipPath: 'circle(420px at 540px 880px)' }, { clipPath: 'circle(0px at 540px 880px)', duration: .5, ease: 'power3.in' }, 2.5);
+
+  /* ===== CENA 02 — 2.5 a 5s ===== */
+  tl.fromTo('#photo', { clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(50% at 50% 50%)', duration: .9, ease: IRIS }, 2.72);
+  tl.fromTo('#photo img', { scale: 1.16 }, { scale: 1.02, duration: 2.3, ease: 'power1.out' }, 2.72);
+  const r2 = 2 * Math.PI * 322;
+  tl.fromTo('#ring2', { attr: { 'stroke-dasharray': `0 ${r2}` }, rotation: -90, svgOrigin: '540 820' },
+                      { attr: { 'stroke-dasharray': `${r2} ${r2}` }, rotation: 0, duration: 1.0, ease: IRIS }, 2.78);
+  tl.fromTo('#ring2b', { attr: { 'stroke-dasharray': `0 ${r2}` }, rotation: -60, svgOrigin: '540 820' },
+                       { attr: { 'stroke-dasharray': `${r2 * .05} ${r2}` }, rotation: 160, duration: 2.1, ease: SOFT }, 2.85);
+  tl.fromTo('#orbit-g', { rotation: 18, opacity: 0, svgOrigin: '540 820' }, { rotation: -22, duration: 2.4, ease: 'none' }, 2.62);
+  tl.to('#orbit-g', { opacity: 1, duration: .7, ease: 'power1.out' }, 3.05);
+  tl.fromTo('#s2-word .w', { opacity: 0, y: 30, letterSpacing: '.3em', filter: 'blur(8px)' },
+                           { opacity: 1, y: 0, letterSpacing: '.16em', filter: 'blur(0px)', duration: 1.0, ease: SILK }, 3.3);
+  // BELEZA sai por máscara vertical
+  tl.fromTo('#s2-word', { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 100% 0%)', duration: .55, ease: 'power2.inOut' }, 4.38);
+  tl.to('#s2-word .w', { y: -22, duration: .55, ease: 'power2.inOut' }, 4.38);
+  tl.to('#photo', { clipPath: 'circle(0% at 50% 50%)', duration: .6, ease: 'power3.in' }, 4.5);
+  tl.to(['#ring2', '#ring2b', '#orbit-g'], { opacity: 0, duration: .5, ease: 'power1.in' }, 4.55);
+
+  /* ===== CENA 03 — 5 a 7s ===== */
+  tl.fromTo(['#s3-h1', '#s3-h2'], { scaleX: 0 }, { scaleX: 1, duration: .8, ease: IRIS }, 5.0);
+  rise('#s3-a .w', 5.08);
+  rise('#s3-b .w', 5.3, { y: 34, blur: 10, d: 1.1 });
+  rise($$('#s3-c .w'), 5.72, { st: .14 });
+  tl.to('#s3', { opacity: 0, y: -14, duration: .38, ease: 'power2.in' }, 6.66);
+
+  /* ===== CENA 04 — 7 a 11s ===== */
+  $$('.item svg .dr').forEach(el => { const L = el.getTotalLength(); el.style.strokeDasharray = `${L} ${L}`; el._L = L; });
+  tl.fromTo('.vline', { scaleY: 0 }, { scaleY: 1, duration: .8, stagger: 1.12, ease: IRIS }, 7.95);
+  ['#it1', '#it2', '#it3'].forEach((id, i) => {
+    const t = 7.08 + i * 1.12;
+    tl.fromTo(`${id} .dr`, { strokeDashoffset: (k, el) => el._L }, { strokeDashoffset: 0, duration: 1.0, stagger: .14, ease: SOFT }, t);
+    tl.fromTo(`${id} .dot`, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: .5, ease: 'back.out(2)' }, t + .7);
+    tl.fromTo(`${id} .num i`, { scaleX: 0 }, { scaleX: 1, duration: .7, ease: IRIS }, t + .2);
+    tl.fromTo(`${id} .num`, { opacity: 0 }, { opacity: 1, duration: .5, ease: 'power1.out' }, t + .25);
+    tl.fromTo(P, { ['c' + (i + 1)]: 0 }, { ['c' + (i + 1)]: i + 1, duration: .6, ease: 'power1.out' }, t + .3);
+    rise(`${id} .word .w`, t + .34, { y: 22, d: 1.0 });
+  });
+  tl.to('#s4', { opacity: 0, duration: .45, ease: 'power1.in' }, 10.55);
+  tl.to('#s4 .item', { y: -12, duration: .45, stagger: .05, ease: 'power1.in' }, 10.55);
+
+  /* ===== CENA 05 — 11 a 13s ===== */
+  tl.fromTo(P, { fB: 0 }, { fB: 1, duration: 1.05, ease: 'sine.inOut' }, 11.02);
+  tl.fromTo('#logoB .wm', { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .8, ease: SILK }, 11.86);
+  tl.fromTo('#logoB .bs', { opacity: 0, scale: .97 }, { opacity: 1, scale: 1, duration: .7, ease: SILK }, 12.05);
+  tl.fromTo('#hairB', { scaleX: 0 }, { scaleX: 1, duration: .7, ease: IRIS }, 12.28);
+
+  /* ===== CENA 06 — 13 a 15s ===== */
+  tl.to('#logoB', { y: -180, duration: .7, ease: IRIS }, 12.95);
+  tl.to('#hairB', { y: -190, scaleX: .5, opacity: .7, duration: .7, ease: IRIS }, 12.95);
+  tl.fromTo('#handle', { opacity: 0, y: 14, letterSpacing: '.34em' }, { opacity: 1, y: 0, letterSpacing: '.24em', duration: .8, ease: SILK }, 13.3);
+  tl.fromTo('#btn', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .7, ease: SILK }, 13.42);
+  // cursor discreto
+  tl.fromTo('#cursor', { x: 760, y: 1440, opacity: 0 }, { opacity: 1, duration: .3, ease: 'power1.out' }, 13.58);
+  tl.to('#cursor', { x: 562, duration: .55, ease: 'power2.out' }, 13.58);
+  tl.to('#cursor', { y: 1202, duration: .55, ease: 'power2.inOut' }, 13.58);
+  const CLICK = 14.16;
+  tl.to('#cursor', { scale: .88, duration: .09, ease: 'power2.in' }, CLICK);
+  tl.to('#cursor', { scale: 1, duration: .25, ease: 'power2.out' }, CLICK + .1);
+  tl.to('#btn', { scale: .955, duration: .1, ease: 'power2.in' }, CLICK);
+  tl.to('#btn', { backgroundColor: GOLD, color: NAVY, duration: .22, ease: 'power1.out' }, CLICK + .05);
+  tl.to('#btn', { scale: 1, duration: .45, ease: 'power3.out' }, CLICK + .12);
+  tl.fromTo('#ripple', { scale: 1, opacity: .55 }, { scale: 1.28, opacity: 0, duration: .8, ease: 'power2.out', immediateRender: false }, CLICK + .08);
+  // fechamento: só a assinatura
+  tl.to('#cursor', { opacity: 0, y: '+=30', duration: .3, ease: 'power1.in' }, CLICK + .28);
+  tl.to(['#btn', '#handle'], { opacity: 0, y: 10, duration: .32, stagger: .03, ease: 'power1.in' }, 14.42);
+  tl.to('#logoB', { y: 0, duration: .5, ease: IRIS }, 14.42);
+  tl.to('#hairB', { y: 0, scaleX: 1, opacity: 1, duration: .5, ease: IRIS }, 14.42);
+  tl.to({}, { duration: .01 }, 14.99);
+
+  /* ---------- boot ---------- */
+  const fonts = Promise.all([
+    document.fonts.load('500 40px "Cormorant Garamond"'), document.fonts.load('300 40px "Cormorant Garamond"'),
+    document.fonts.load('400 40px "Cormorant Garamond"'), document.fonts.load('600 40px "Cormorant Garamond"'),
+    document.fonts.load('italic 300 40px "Cormorant Garamond"')
+  ]).then(() => document.fonts.ready);
+  const imgs = Promise.all($$('img').map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })));
+  Promise.all([fonts, imgs, prepFace()]).then(() => {
+    sync();
+    window.__seek = t => { tl.seek(t, false); sync(); };
+    window.__ready = true;
+    if (RENDER) { tl.seek(0); return; }
+    tl.eventCallback('onComplete', () => gsap.delayedCall(1.4, () => tl.restart()));
+    tl.play(0);
+  });
+
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); tl.paused(!tl.paused()); }
+    if (e.key === 'r' || e.key === 'R') tl.restart();
+    if (e.key === 'g' || e.key === 'G') document.body.classList.toggle('guides');
+    if (e.key === 'ArrowRight') tl.seek(Math.min(15, tl.time() + .5));
+    if (e.key === 'ArrowLeft') tl.seek(Math.max(0, tl.time() - .5));
+  });
+})();
+</script>
+</body>
+</html>
