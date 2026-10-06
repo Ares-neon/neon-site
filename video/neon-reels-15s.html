@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEON Reels 15s</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=block" rel="stylesheet">
+<style>
+/* Switzer — fonte display da NEON (mesma do site) */
+@font-face{font-family:"Switzer";font-weight:500;font-style:normal;font-display:block;
+  src:url("https://cdn.fontshare.com/wf/OYB4CXKJQXKTNSLJMTDQOIVUL2V5EL7S/WYO2P7DQVV5RNXGMCUO2HL4RJP4VFUAS/6XPIMU23OJVRY676OG5YVJMWEHWICATX.woff2") format("woff2")}
+@font-face{font-family:"Switzer";font-weight:600;font-style:normal;font-display:block;
+  src:url("https://cdn.fontshare.com/wf/5SZVFDB7V52TI6ULVC6J3WQZQCIZVDV5/ODYPSTCUDMKSTYIPTV4CLQ7URIK7XYBJ/YS3VPNVO4B3TOJMEXDGFZQ4TLZGGSRZC.woff2") format("woff2")}
+@font-face{font-family:"Switzer";font-weight:700;font-style:normal;font-display:block;
+  src:url("https://cdn.fontshare.com/wf/HBNTRIISA5MEXGL5WPYI7CV2HIWTDV3Q/YDPDINVT673XLXNSTMLG4JNCZZMVVNPN/Y7SCNZJOT2MW5ADSGOFLDGH4TNL4JCQY.woff2") format("woff2")}
+@font-face{font-family:"Switzer";font-weight:800;font-style:normal;font-display:block;
+  src:url("https://cdn.fontshare.com/wf/ZME55SZ3XN6FJ6WZ26BVFLFSAZ5I2VWW/YETVURK7HXO34ARWAMVG6MSPWALMBOUD/SMQAIKPHV4D6DU77XSDVYN543XEEYX6R.woff2") format("woff2")}
+
+:root{
+  --black:#000000;
+  --white:#FFFFFF;
+  --neon:#39FF14;
+  --dim:rgba(255,255,255,.56);
+  --hair:rgba(255,255,255,.22);
+  --sans:"Switzer","Inter",system-ui,sans-serif;
+  --serif:"Instrument Serif","Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#050505;overflow:hidden}
+body{font-family:var(--sans);color:var(--white);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+
+#stage{
+  position:absolute;left:50%;top:50%;
+  width:1080px;height:1920px;
+  transform:translate(-50%,-50%) scale(var(--s,.4));
+  background:var(--black);overflow:hidden;
+}
+body.render{background:#000}
+body.render #stage{left:0;top:0;transform:none}
+
+.scene{position:absolute;inset:0}
+.solid{background:var(--black)}
+.abs{position:absolute}
+svg.full{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+
+/* tipografia */
+.sans{font-family:var(--sans)}
+.serif{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--neon)}
+.neon{color:var(--neon)}
+.label{font-size:22px;font-weight:600;letter-spacing:.32em;text-transform:uppercase}
+.center{left:0;width:1080px;text-align:center}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* máscaras de kinetic typography */
+.m{display:inline-block;overflow:hidden;vertical-align:top;padding:.14em .1em;margin:-.14em -.1em}
+.c{display:inline-block;will-change:transform}
+
+/* HUD */
+#hud{position:absolute;inset:0;z-index:100;pointer-events:none}
+.hud-row{position:absolute;left:120px;width:840px;display:flex;justify-content:space-between;align-items:center;
+  font-size:18px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.roll{display:inline-block;height:1.2em;line-height:1.2em;overflow:hidden;vertical-align:top}
+.roll>span{display:block}
+#prog{position:absolute;left:120px;top:1452px;width:840px;height:1px;background:var(--hair)}
+#prog i{position:absolute;inset:0;background:var(--neon);transform-origin:0 50%;transform:scaleX(0)}
+
+/* Cena 01 */
+#s1-sub{top:1012px;font-size:30px;font-weight:600;letter-spacing:.42em;padding-left:.42em}
+
+/* Cena 02 / 05 — foto */
+.photo{position:absolute;width:560px;height:560px;border-radius:50%;overflow:hidden;background:#0c0c0c;
+  clip-path:circle(0% at 50% 50%)}
+.photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08) brightness(.95);display:block}
+.photo .fallback{display:none;position:absolute;inset:0;place-items:center;
+  background:radial-gradient(circle at 50% 38%,#1b1b1b 0%,#070707 70%)}
+.photo.nophoto img{display:none}
+.photo.nophoto .fallback{display:grid}
+.fallback span{font-family:var(--serif);font-style:italic;font-size:250px;line-height:1;color:var(--white);letter-spacing:-.04em;transform:translateY(-6px)}
+.fallback span b{font-weight:400;color:var(--neon)}
+
+#s2-word{top:1098px;font-size:150px;line-height:1;letter-spacing:-.01em}
+#s2-name{top:1262px;font-size:72px;font-weight:800;letter-spacing:-.01em;line-height:1}
+#s2-role{top:1352px;font-size:22px;color:var(--dim)}
+
+/* Cena 03 */
+.s3-line{left:120px;font-weight:800;letter-spacing:-.035em;line-height:1;white-space:nowrap}
+#s3-a{top:370px;font-size:122px}
+#s3-b{top:496px;font-size:122px}
+#s3-c{top:608px;font-size:268px;line-height:1;letter-spacing:-.02em}
+#s3-hair{left:120px;top:958px;width:840px;height:1px;background:var(--hair);transform-origin:0 50%}
+#s3-hair-tag{left:120px;top:922px;font-size:18px}
+.s3-w{left:120px;font-size:96px;font-weight:800;letter-spacing:-.03em;line-height:1;white-space:nowrap}
+.s3dot{display:inline-block}
+#s3-w1{top:1000px}#s3-w2{top:1112px}#s3-w3{top:1224px}
+
+/* Cena 04 */
+.blk{position:absolute;left:120px;width:840px;height:340px}
+.blk .hair{position:absolute;left:0;top:0;width:840px;height:1px;background:var(--hair);transform-origin:0 50%}
+.blk .idx{position:absolute;left:0;top:26px;font-size:20px;font-weight:600;letter-spacing:.25em;color:var(--neon)}
+.blk .tag{position:absolute;right:0;top:26px;font-size:18px;font-weight:600;letter-spacing:.3em;color:var(--dim);text-align:right}
+.blk .ttl{position:absolute;left:0;top:62px;font-size:64px;font-weight:800;letter-spacing:-.025em;line-height:1}
+.blk .big{position:absolute;left:-4px;font-weight:800;letter-spacing:-.045em;line-height:1;white-space:nowrap}
+.swatches{position:absolute;left:0;top:268px;display:flex;gap:26px;font-size:15px;font-weight:600;letter-spacing:.14em;color:var(--dim)}
+.sw{display:flex;align-items:center;gap:10px}
+.sw i{width:26px;height:26px;border-radius:50%;display:block}
+
+/* Cena 05 */
+#s5-name{top:1060px;font-size:84px;font-weight:800;letter-spacing:-.015em;line-height:1}
+#s5-hair{left:508px;top:1176px;width:64px;height:2px;background:var(--neon);transform-origin:50% 50%}
+#s5-sub{top:1210px;font-size:24px;color:var(--dim)}
+
+/* Cena 06 */
+#s6-handle{top:918px;font-size:40px;font-weight:700;letter-spacing:.24em;padding-left:.24em}
+#btn{position:absolute;left:350px;top:1066px;width:380px;height:112px;border-radius:56px;border:2px solid var(--white);
+  display:flex;align-items:center;justify-content:center;gap:18px;font-size:30px;font-weight:700;letter-spacing:.22em;
+  color:var(--white);background:rgba(57,255,20,0);padding-left:.22em}
+#btn .arw{display:inline-block}
+#pulse{position:absolute;left:350px;top:1066px;width:380px;height:112px;border-radius:56px;border:2px solid var(--neon);opacity:0}
+#cursor{position:absolute;left:0;top:0;width:64px;height:64px;transform-origin:0 0}
+
+/* transições */
+.wipe-h{position:absolute;left:0;width:1080px;height:2px;background:var(--neon);top:0;opacity:0;z-index:90}
+.wipe-d{position:absolute;left:0;top:-140px;width:2px;height:2200px;background:var(--neon);opacity:0;z-index:90;transform-origin:50% 50%}
+
+/* guias de safe area (tecla G) */
+#guides{position:absolute;inset:0;z-index:200;pointer-events:none;display:none}
+#guides .zone{position:absolute;left:120px;top:250px;width:840px;height:1250px;outline:2px dashed rgba(255,0,180,.8)}
+#guides .ui{position:absolute;left:0;width:1080px;background:rgba(255,0,180,.12)}
+body.guides #guides{display:block}
+
+/* controles do preview */
+#ui{position:fixed;left:16px;bottom:16px;z-index:300;font:12px/1.4 var(--sans);color:#8a8a8a;letter-spacing:.04em}
+#ui b{color:#cfcfcf;font-weight:600}
+body.render #ui{display:none}
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+  <!-- ============ CENA 06 — CTA (camada mais baixa) ============ -->
+  <section class="scene" id="s6">
+    <div class="abs center label" id="s6-handle"><span data-split="chars">@NEONCREATES</span></div>
+    <div id="pulse"></div>
+    <div id="btn"><span>SEGUIR</span><span class="arw">→</span></div>
+  </section>
+
+  <!-- camada vetorial compartilhada entre cenas 05 e 06 (anel → "O") -->
+  <svg class="full" id="fx" viewBox="0 0 1080 1920">
+    <defs>
+      <clipPath id="wm6-clip"><rect id="wm6-cliprect" x="0" y="0" width="1080" height="0"/></clipPath>
+    </defs>
+    <g id="end-group">
+      <circle id="arc2" fill="none" stroke="#39FF14" stroke-width="3"/>
+      <rect id="morph2" fill="none" stroke="#FFFFFF"/>
+      <g id="wm6" clip-path="url(#wm6-clip)"></g>
+    </g>
+  </svg>
+
+  <!-- ============ CENA 05 — ASSINATURA ============ -->
+  <section class="scene" id="s5">
+    <div class="photo" id="photo5" style="left:260px;top:420px">
+      <img alt="Mouhamed Ali" data-photo>
+      <div class="fallback"><span>M<b>.</b></span></div>
+    </div>
+    <div class="abs center" id="s5-name"><span data-split="chars">MOUHAMED ALI</span></div>
+    <div class="abs" id="s5-hair"></div>
+    <div class="abs center label" id="s5-sub">NEON BRANDING &amp; PERFORMANCE</div>
+  </section>
+
+  <!-- ============ CENA 04 — 3 PILARES ============ -->
+  <section class="scene" id="s4">
+    <!-- 01 BRANDING -->
+    <div class="blk" id="b1" style="top:330px">
+      <div class="hair"></div>
+      <div class="idx"><span class="m"><span class="c">01</span></span></div>
+      <div class="tag"><span class="m"><span class="c">IDENTIDADE</span></span></div>
+      <div class="ttl"><span data-split="chars">BRANDING</span></div>
+      <div class="big" style="top:150px;font-size:118px"><span class="m"><span class="c">Aa</span></span></div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#000;border:1.5px solid rgba(255,255,255,.6)"></i>#000</div>
+        <div class="sw"><i style="background:#fff"></i>#FFF</div>
+        <div class="sw"><i style="background:#39FF14"></i>#39FF14</div>
+      </div>
+      <svg class="abs" id="b1-svg" style="left:500px;top:40px;overflow:visible" width="340" height="300" viewBox="0 0 340 300">
+        <g stroke="rgba(255,255,255,.18)" stroke-width="1" stroke-dasharray="4 6" fill="none">
+          <line class="g1" x1="0" y1="160" x2="340" y2="160"/>
+          <line class="g1" x1="200" y1="10" x2="200" y2="300"/>
+          <line class="g1" x1="80" y1="30" x2="320" y2="290"/>
+        </g>
+        <circle class="d1" cx="200" cy="160" r="96" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+        <polygon class="d1" points="200,40 303.9,100 303.9,220 200,280 96.1,220 96.1,100" fill="none" stroke="#39FF14" stroke-width="3" stroke-linejoin="miter"/>
+        <line class="d1" x1="236" y1="44" x2="164" y2="276" stroke="#FFFFFF" stroke-width="3"/>
+        <g class="pts" fill="#FFFFFF">
+          <rect x="197" y="37" width="6" height="6"/><rect x="300.9" y="97" width="6" height="6"/>
+          <rect x="300.9" y="217" width="6" height="6"/><rect x="197" y="277" width="6" height="6"/>
+          <rect x="93.1" y="217" width="6" height="6"/><rect x="93.1" y="97" width="6" height="6"/>
+        </g>
+        <circle class="core" cx="200" cy="160" r="8" fill="#39FF14"/>
+      </svg>
+    </div>
+
+    <!-- 02 PERFORMANCE -->
+    <div class="blk" id="b2" style="top:700px">
+      <div class="hair"></div>
+      <div class="idx"><span class="m"><span class="c">02</span></span></div>
+      <div class="tag"><span class="m"><span class="c">CRESCIMENTO</span></span></div>
+      <div class="ttl"><span data-split="chars">PERFORMANCE</span></div>
+      <div class="big tnum" style="top:168px;font-size:132px"><span class="m"><span class="c"><span class="neon">+</span><span id="cnt-pct">0</span><span class="neon">%</span></span></span></div>
+      <svg class="abs" id="b2-svg" style="left:520px;top:150px;overflow:visible" width="320" height="170" viewBox="0 0 320 170">
+        <defs>
+          <linearGradient id="area-g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#39FF14" stop-opacity=".22"/>
+            <stop offset="1" stop-color="#39FF14" stop-opacity="0"/>
+          </linearGradient>
+          <clipPath id="area-clip"><rect id="area-cliprect" x="0" y="-20" width="0" height="200"/></clipPath>
+        </defs>
+        <g stroke="rgba(255,255,255,.14)" stroke-width="1">
+          <line class="gl" x1="0" y1="0" x2="320" y2="0"/>
+          <line class="gl" x1="0" y1="56" x2="320" y2="56"/>
+          <line class="gl" x1="0" y1="112" x2="320" y2="112"/>
+        </g>
+        <line class="axis" x1="0" y1="168" x2="320" y2="168" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+        <path clip-path="url(#area-clip)" d="M0,150 L48,138 L96,142 L144,112 L192,104 L240,64 L288,40 L316,8 L316,168 L0,168 Z" fill="url(#area-g)"/>
+        <path id="chart-line" d="M0,150 L48,138 L96,142 L144,112 L192,104 L240,64 L288,40 L316,8" fill="none" stroke="#39FF14" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle id="chart-ring" cx="316" cy="8" r="9" opacity="0" fill="none" stroke="#39FF14" stroke-width="2"/>
+        <circle id="chart-dot" cx="316" cy="8" r="7" fill="#FFFFFF"/>
+      </svg>
+    </div>
+
+    <!-- 03 CONVERSÃO -->
+    <div class="blk" id="b3" style="top:1070px">
+      <div class="hair"></div>
+      <div class="idx"><span class="m"><span class="c">03</span></span></div>
+      <div class="tag"><span class="m"><span class="c">FUNIL</span></span></div>
+      <div class="ttl"><span data-split="chars">CONVERSÃO</span></div>
+      <div class="big tnum" style="top:150px;font-size:170px"><span class="m"><span class="c"><span id="cnt-x">0</span><span class="serif" style="font-size:190px;letter-spacing:0;margin-left:8px">X</span></span></span></div>
+      <svg class="abs" id="b3-svg" style="left:470px;top:120px;overflow:visible" width="370" height="200" viewBox="0 0 370 200">
+        <g font-family="Switzer, sans-serif" font-size="17" font-weight="600" letter-spacing="3.6" text-anchor="middle">
+          <g class="fb" id="fb1">
+            <rect x="15" y="0" width="340" height="52" rx="26" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="185" y="32" fill="#FFFFFF">ATENÇÃO</text>
+          </g>
+          <g class="fb" id="fb2">
+            <rect x="55" y="66" width="260" height="52" rx="26" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="185" y="98" fill="#FFFFFF">INTERESSE</text>
+          </g>
+          <g class="fb" id="fb3">
+            <rect id="fb3-rect" x="95" y="132" width="180" height="52" rx="26" fill="rgba(57,255,20,0)" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text id="fb3-text" x="185" y="164" fill="#FFFFFF">AÇÃO</text>
+          </g>
+        </g>
+        <circle id="f-dot" cx="185" cy="-18" r="6" fill="#39FF14"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ CENA 03 — FRASE ============ -->
+  <section class="scene solid" id="s3">
+    <div class="abs s3-line" id="s3-a"><span data-split="words">SUA MARCA</span></div>
+    <div class="abs s3-line" id="s3-b"><span data-split="words">PODE SER</span></div>
+    <div class="abs s3-line serif" id="s3-c"><span class="m"><span class="c">MAIS.</span></span></div>
+    <div class="abs" id="s3-hair"></div>
+    <div class="abs label" id="s3-hair-tag" style="color:var(--dim)"><span class="m"><span class="c">MANIFESTO <span class="neon">—</span> 2026</span></span></div>
+    <div class="abs s3-w" id="s3-w1"><span data-split="chars">BRANDING</span><span class="neon s3dot">.</span></div>
+    <div class="abs s3-w" id="s3-w2"><span data-split="chars">PERFORMANCE</span><span class="neon s3dot">.</span></div>
+    <div class="abs s3-w" id="s3-w3"><span data-split="chars">RESULTADO</span><span class="neon s3dot">.</span></div>
+  </section>
+
+  <!-- ============ CENA 02 — APRESENTAÇÃO ============ -->
+  <section class="scene solid" id="s2">
+    <svg class="full" viewBox="0 0 1080 1920">
+      <defs>
+        <path id="ring-path" d="M540,380 A340,340 0 1,1 539.99,380"/>
+      </defs>
+      <circle id="s2-ring" cx="540" cy="720" r="300" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>
+      <circle id="s2-arc" cx="540" cy="720" r="300" fill="none" stroke="#39FF14" stroke-width="3"/>
+      <g id="s2-orbit">
+        <text font-family="Switzer, sans-serif" font-size="21" font-weight="600" letter-spacing="6.5" fill="rgba(255,255,255,.82)">
+          <textPath href="#ring-path" textLength="2130" lengthAdjust="spacing">NEON BRANDING &amp; PERFORMANCE <tspan fill="#39FF14">•</tspan> @NEONCREATES <tspan fill="#39FF14">•</tspan> NEON BRANDING &amp; PERFORMANCE <tspan fill="#39FF14">•</tspan> @NEONCREATES <tspan fill="#39FF14">•</tspan></textPath>
+        </text>
+      </g>
+    </svg>
+    <div class="photo" id="photo2" style="left:260px;top:440px">
+      <img alt="Mouhamed Ali" data-photo>
+      <div class="fallback"><span>M<b>.</b></span></div>
+    </div>
+    <div class="abs center serif" id="s2-word"><span data-split="chars">CRIATIVIDADE</span></div>
+    <div class="abs center" id="s2-name"><span data-split="chars">MOUHAMED ALI</span></div>
+    <div class="abs center label" id="s2-role">FOUNDER <span class="neon">/</span> CREATIVE DIRECTOR</div>
+  </section>
+
+  <!-- ============ CENA 01 — NASCIMENTO DO "O" ============ -->
+  <section class="scene solid" id="s1">
+    <svg class="full" viewBox="0 0 1080 1920">
+      <defs>
+        <clipPath id="wm1-clip"><rect id="wm1-cliprect" x="0" y="0" width="1080" height="0"/></clipPath>
+      </defs>
+      <g id="ticks1" stroke="#39FF14" stroke-width="3">
+        <line x1="0" y1="-212" x2="0" y2="-236"/><line x1="212" y1="0" x2="236" y2="0"/>
+        <line x1="0" y1="212" x2="0" y2="236"/><line x1="-212" y1="0" x2="-236" y2="0"/>
+      </g>
+      <circle id="arc1" fill="none" stroke="#39FF14" stroke-width="3"/>
+      <rect id="morph1" fill="none" stroke="#FFFFFF"/>
+      <circle id="eye1" r="9" fill="#39FF14"/>
+      <g id="wm1" clip-path="url(#wm1-clip)"></g>
+      <line id="s1-hair" x1="510" y1="984" x2="570" y2="984" stroke="#39FF14" stroke-width="2"/>
+    </svg>
+    <div class="abs center" id="s1-sub">BRANDING &amp; PERFORMANCE</div>
+  </section>
+
+  <!-- linhas de borda das transições -->
+  <div class="wipe-h" id="wipe1"></div>
+  <div class="wipe-d" id="wipe2"></div>
+  <div class="wipe-h" id="wipe3"></div>
+
+  <!-- cursor -->
+  <svg id="cursor" viewBox="0 0 64 64" style="opacity:0">
+    <path d="M6 4 L6 50 L18 39 L27 59 L35 55 L26 36 L43 36 Z" fill="#FFFFFF" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-row" style="top:262px">
+      <span><span class="roll" id="roll-num"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span></span><span style="opacity:.45"> / 06</span></span>
+      <span>@NEONCREATES</span>
+    </div>
+    <div id="prog"><i></i></div>
+    <div class="hud-row" style="top:1472px">
+      <span class="roll" id="roll-lbl"><span>ORIGEM</span><span>FUNDADOR</span><span>MANIFESTO</span><span>PILARES</span><span>ASSINATURA</span><span>CONECTE-SE</span></span>
+      <span>NEON<span class="neon">®</span></span>
+    </div>
+  </div>
+
+  <div id="guides">
+    <div class="ui" style="top:0;height:250px"></div>
+    <div class="ui" style="top:1500px;height:420px"></div>
+    <div class="zone"></div>
+  </div>
+</div>
+
+<div id="ui"><b>Espaço</b> play/pausa · <b>R</b> reinicia · <b>← →</b> ±0,5s · <b>G</b> safe area</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+  const RENDER = new URLSearchParams(location.search).has('render');
+  if (RENDER) document.body.classList.add('render');
+
+  // Foto do fundador: coloque "foto-mouhamed.jpg" ao lado deste HTML (ou passe ?foto=URL).
+  const PHOTO = new URLSearchParams(location.search).get('foto') || 'foto-mouhamed.jpg';
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const NEON = '#39FF14';
+
+  /* ---------- escala do preview ---------- */
+  function fit() {
+    if (RENDER) return;
+    const s = Math.min((innerWidth - 32) / 1080, (innerHeight - 32) / 1920);
+    $('#stage').style.setProperty('--s', s);
+  }
+  addEventListener('resize', fit); fit();
+
+  /* ---------- split de texto em máscaras ---------- */
+  function split(el, mode) {
+    const text = el.textContent;
+    el.setAttribute('aria-label', text);
+    el.textContent = '';
+    const out = [];
+    text.split(' ').forEach((word, wi, arr) => {
+      if (mode === 'words') {
+        const m = document.createElement('span'); m.className = 'm';
+        const c = document.createElement('span'); c.className = 'c'; c.textContent = word;
+        m.appendChild(c); el.appendChild(m); out.push(c);
+      } else {
+        const w = document.createElement('span'); w.style.whiteSpace = 'nowrap';
+        [...word].forEach(ch => {
+          const m = document.createElement('span'); m.className = 'm';
+          const c = document.createElement('span'); c.className = 'c'; c.textContent = ch;
+          m.appendChild(c); w.appendChild(m); out.push(c);
+        });
+        el.appendChild(w);
+      }
+      if (wi < arr.length - 1) el.appendChild(document.createTextNode(' '));
+    });
+    el._chars = out;
+    return out;
+  }
+  $$('[data-split]').forEach(el => split(el, el.dataset.split));
+  const chars = sel => $(sel)._chars || $$(sel + ' .c');
+
+  /* ---------- wordmark NEON geométrico (o "O" é o anel) ---------- */
+  const H = 170, S = 28, GAP = 26, WN = 150, WE = 118, OD = 176;
+  const WM_W = WN + GAP + WE + GAP + OD + GAP + WN;
+  function nPoly(x0, y0) {
+    const D = 40;
+    const t2 = (WN - S - D) / (WN - D), t1 = S / (WN - D);
+    const pts = [[0,0],[D,0],[WN - S, H * t2],[WN - S,0],[WN,0],[WN,H],[WN - D,H],[S, H * t1],[S,H],[0,H]];
+    return pts.map(([x, y]) => `${x0 + x},${y0 + y}`).join(' ');
+  }
+  function ePoly(x0, y0) {
+    const m = (H - S) / 2, w2 = WE - 12;
+    const pts = [[0,0],[WE,0],[WE,S],[S,S],[S,m],[w2,m],[w2,m + S],[S,m + S],[S,H - S],[WE,H - S],[WE,H],[0,H]];
+    return pts.map(([x, y]) => `${x0 + x},${y0 + y}`).join(' ');
+  }
+  function buildWordmark(g, clipRect, cx, cy) {
+    const x0 = cx - WM_W / 2, y0 = cy - H / 2;
+    const xs = [x0, x0 + WN + GAP, null, x0 + WN + GAP + WE + GAP + OD + GAP];
+    const letters = [];
+    [nPoly(xs[0], y0), ePoly(xs[1], y0), null, nPoly(xs[3], y0)].forEach(p => {
+      if (!p) return;
+      const poly = document.createElementNS(SVGNS, 'polygon');
+      poly.setAttribute('points', p); poly.setAttribute('fill', '#FFFFFF');
+      g.appendChild(poly); letters.push(poly);
+    });
+    clipRect.setAttribute('x', x0 - 10); clipRect.setAttribute('y', y0 - 2);
+    clipRect.setAttribute('width', WM_W + 20); clipRect.setAttribute('height', H + 4);
+    return { letters, ox: x0 + WN + GAP + WE + GAP + OD / 2, oy: cy };
+  }
+  const WM1 = buildWordmark($('#wm1'), $('#wm1-cliprect'), 540, 830);
+  const WM6 = buildWordmark($('#wm6'), $('#wm6-cliprect'), 540, 780);
+
+  /* ---------- morph line → pílula → círculo → "O" ---------- */
+  function makeMorph(rect, arc, ticks, eye) {
+    const p = { cx: 540, cy: 830, w: .01, h: 0, sw: 4, rot: 0,
+                arcR: 200, arcDraw: 0, arcRot: -90, arcOp: 1,
+                tickS: .6, tickOp: 0, eyeS: 0 };
+    p.apply = () => {
+      rect.setAttribute('x', p.cx - p.w / 2); rect.setAttribute('y', p.cy - p.h / 2);
+      rect.setAttribute('width', Math.max(p.w, .01)); rect.setAttribute('height', Math.max(p.h, .01));
+      const r = Math.min(p.w, p.h) / 2;
+      rect.setAttribute('rx', r); rect.setAttribute('ry', r);
+      rect.setAttribute('stroke-width', p.sw);
+      rect.setAttribute('transform', `rotate(${p.rot} ${p.cx} ${p.cy})`);
+      rect.style.opacity = p.h < .5 ? 0 : 1;
+      if (arc) {
+        const L = 2 * Math.PI * p.arcR;
+        arc.setAttribute('cx', p.cx); arc.setAttribute('cy', p.cy); arc.setAttribute('r', p.arcR);
+        arc.setAttribute('stroke-dasharray', `${L * p.arcDraw} ${L}`);
+        arc.setAttribute('transform', `rotate(${p.arcRot} ${p.cx} ${p.cy})`);
+        arc.style.opacity = p.arcDraw > 0 ? p.arcOp : 0;
+      }
+      if (ticks) {
+        ticks.setAttribute('transform', `translate(${p.cx} ${p.cy}) scale(${p.tickS})`);
+        ticks.style.opacity = p.tickOp;
+      }
+      if (eye) {
+        eye.setAttribute('cx', p.cx); eye.setAttribute('cy', p.cy);
+        eye.setAttribute('r', 9 * p.eyeS); eye.style.opacity = p.eyeS > .01 ? 1 : 0;
+      }
+    };
+    return p;
+  }
+  const M1 = makeMorph($('#morph1'), $('#arc1'), $('#ticks1'), $('#eye1'));
+  const M2 = makeMorph($('#morph2'), $('#arc2'), null, null);
+  M2.cy = 700; M2.arcR = 340;
+
+  /* ---------- wipe diagonal (cena 02 → 03) ---------- */
+  const DW = { k: -2 };
+  const DW_SLANT = 30; // % de inclinação
+  const DW_ANGLE = Math.atan((DW_SLANT / 100 * 1080) / 1920) * 180 / Math.PI;
+  DW.apply = () => {
+    const k = DW.k;
+    $('#s2').style.clipPath = `polygon(${k}% 0%, 100% 0%, 100% 100%, ${k - DW_SLANT}% 100%)`;
+    const x = (k - DW_SLANT / 2) / 100 * 1080;
+    $('#wipe2').style.transform = `translateX(${x}px) rotate(${DW_ANGLE}deg)`;
+  };
+
+  /* ---------- count-ups ---------- */
+  const CNT = { pct: 0, x: 0 };
+  CNT.apply = () => {
+    $('#cnt-pct').textContent = Math.round(CNT.pct);
+    $('#cnt-x').textContent = CNT.x >= 2.995 ? '3' : CNT.x.toFixed(1);
+  };
+
+  const syncAll = () => { M1.apply(); M2.apply(); DW.apply(); CNT.apply(); };
+  syncAll();
+
+  /* ---------- timeline mestre ---------- */
+  const tl = gsap.timeline({ paused: true, onUpdate: syncAll, defaults: { ease: 'power3.out' } });
+  const ROLL = (t, i) => {
+    tl.to('#roll-num>span', { yPercent: -100 * i, duration: .5, ease: 'expo.inOut' }, t);
+    tl.to('#roll-lbl>span', { yPercent: -100 * i, duration: .5, ease: 'expo.inOut' }, t + .04);
+  };
+
+  // HUD
+  tl.fromTo('#hud', { opacity: 0 }, { opacity: 1, duration: .6, ease: 'power1.out' }, .25);
+  tl.fromTo('#prog i', { scaleX: 0 }, { scaleX: 1, duration: 15, ease: 'none' }, 0);
+
+  /* ===== CENA 01 — 0s a 2.5s ===== */
+  tl.to(M1, { h: 380, duration: .42, ease: 'expo.out' }, .05);                          // linha nasce
+  tl.to(M1, { w: 150, h: 330, sw: 3, duration: .42, ease: 'power3.inOut' }, .42);       // curva → pílula
+  tl.to(M1, { rot: 90, duration: .55, ease: 'power3.inOut' }, .72);                      // pílula gira
+  tl.to(M1, { w: 330, h: 330, duration: .45, ease: 'power2.inOut' }, .84);               // expande → círculo
+  tl.to(M1, { arcDraw: .24, duration: .5, ease: 'power2.out' }, .78);
+  tl.to(M1, { arcRot: 210, duration: .9, ease: 'power2.inOut' }, .74);
+  tl.to(M1, { tickOp: 1, tickS: 1, duration: .4, ease: 'back.out(2)' }, .98);
+  // círculo → "O" da NEON
+  tl.to(M1, { cx: WM1.ox, cy: WM1.oy, w: OD - S, h: OD - S, sw: S, duration: .5, ease: 'power4.inOut' }, 1.3);
+  tl.to(M1, { arcR: 128, arcDraw: .34, arcRot: 420, duration: .5, ease: 'power4.inOut' }, 1.3);
+  tl.to(M1, { tickS: .45, tickOp: 0, duration: .35, ease: 'power2.in' }, 1.3);
+  tl.to(M1, { arcOp: 0, duration: .3, ease: 'power1.out' }, 1.72);
+  tl.fromTo(WM1.letters, { y: H + 6 }, { y: 0, duration: .55, stagger: .06, ease: 'expo.out' }, 1.58);
+  tl.to(M1, { eyeS: 1, duration: .45, ease: 'back.out(3)' }, 1.72);
+  tl.fromTo('#s1-hair', { attr: { x1: 540, x2: 540 } }, { attr: { x1: 510, x2: 570 }, duration: .4, ease: 'expo.out' }, 1.82);
+  tl.fromTo('#s1-sub', { clipPath: 'inset(0% 50% 0% 50%)', letterSpacing: '.7em', opacity: .4 },
+                       { clipPath: 'inset(0% 0% 0% 0%)', letterSpacing: '.42em', opacity: 1, duration: .6, ease: 'expo.out' }, 1.86);
+  // wipe vertical (de baixo para cima)
+  tl.fromTo('#s1', { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 100% 0%)', duration: .45, ease: 'power3.inOut' }, 2.15);
+  tl.fromTo('#wipe1', { y: 1920, opacity: 1 }, { y: -2, duration: .45, ease: 'power3.inOut' }, 2.15);
+  tl.set('#wipe1', { opacity: 0 }, 2.61);
+  ROLL(2.25, 1);
+
+  /* ===== CENA 02 — 2.5s a 5s ===== */
+  const ringLen = 2 * Math.PI * 300;
+  tl.fromTo('#s2-ring', { attr: { 'stroke-dasharray': `0 ${ringLen}` }, rotation: -90, svgOrigin: '540 720' },
+                        { attr: { 'stroke-dasharray': `${ringLen} ${ringLen}` }, duration: .8, ease: 'power3.inOut' }, 2.2);
+  tl.fromTo('#s2-arc', { attr: { 'stroke-dasharray': `0 ${ringLen}` }, rotation: -90, svgOrigin: '540 720' },
+                       { attr: { 'stroke-dasharray': `${ringLen * .09} ${ringLen}` }, rotation: 200, duration: 2.6, ease: 'power2.inOut' }, 2.35);
+  tl.fromTo('#s2-orbit', { rotation: 30, svgOrigin: '540 720' },
+                         { rotation: -70, duration: 2.9, ease: 'none' }, 2.2);
+  tl.fromTo('#s2-orbit text', { opacity: 0 }, { opacity: 1, duration: .5, ease: 'power1.out' }, 2.35);
+  // iris
+  tl.fromTo('#photo2', { clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(50% at 50% 50%)', duration: .65, ease: 'expo.inOut' }, 2.42);
+  tl.fromTo('#photo2 img, #photo2 .fallback', { scale: 1.28 }, { scale: 1, duration: 2.5, ease: 'power2.out' }, 2.42);
+  tl.fromTo(chars('#s2-name span'), { yPercent: 115 }, { yPercent: 0, duration: .55, stagger: .022, ease: 'expo.out' }, 2.95);
+  tl.fromTo('#s2-role', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' }, 3.2);
+  tl.fromTo(chars('#s2-word span'), { yPercent: 120, skewX: -14 }, { yPercent: 0, skewX: 0, duration: .7, stagger: .028, ease: 'expo.out' }, 3.42);
+  // wipe diagonal
+  tl.set('#wipe2', { opacity: 1 }, 4.68);
+  tl.to(DW, { k: 132, duration: .5, ease: 'power3.inOut' }, 4.68);
+  tl.set('#wipe2', { opacity: 0 }, 5.19);
+  ROLL(4.8, 2);
+
+  /* ===== CENA 03 — 5s a 7s ===== */
+  tl.fromTo(chars('#s3-a span').concat(chars('#s3-b span')), { yPercent: 110 },
+            { yPercent: 0, duration: .6, stagger: .07, ease: 'expo.out' }, 4.92);
+  tl.fromTo('#s3-c .c', { yPercent: 105, skewX: -12 }, { yPercent: 0, skewX: 0, duration: .75, ease: 'expo.out' }, 5.2);
+  tl.fromTo('#s3-c', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .55, ease: 'expo.inOut' }, 5.2);
+  tl.fromTo('#s3-hair', { scaleX: 0 }, { scaleX: 1, duration: .5, ease: 'expo.inOut' }, 5.6);
+  tl.fromTo('#s3-hair-tag .c', { yPercent: 110 }, { yPercent: 0, duration: .4, ease: 'expo.out' }, 5.68);
+  ['#s3-w1', '#s3-w2', '#s3-w3'].forEach((id, i) => {
+    const t = 5.78 + i * .2;
+    tl.fromTo(chars(id + ' span[data-split]'), { yPercent: 120, rotation: 6 }, { yPercent: 0, rotation: 0, duration: .45, stagger: .016, ease: 'expo.out' }, t);
+    tl.fromTo(id + ' .s3dot', { scale: 0, transformOrigin: '50% 80%' }, { scale: 1, duration: .35, ease: 'back.out(4)' }, t + .2);
+  });
+  // saída kinetic + wipe vertical (de cima para baixo)
+  tl.to(chars('#s3-a span').concat(chars('#s3-b span'), $$('#s3-c .c')), { yPercent: -110, duration: .35, stagger: .03, ease: 'power3.in' }, 6.62);
+  tl.fromTo('#s3', { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(100% 0% 0% 0%)', duration: .45, ease: 'power3.inOut' }, 6.78);
+  tl.fromTo('#wipe3', { y: -2, opacity: 1 }, { y: 1920, duration: .45, ease: 'power3.inOut' }, 6.78);
+  tl.set('#wipe3', { opacity: 0 }, 7.24);
+  ROLL(6.9, 3);
+
+  /* ===== CENA 04 — 7s a 11s ===== */
+  const block = (id, t) => {
+    tl.fromTo(id + ' .hair', { scaleX: 0 }, { scaleX: 1, duration: .6, ease: 'expo.inOut' }, t);
+    tl.fromTo([id + ' .idx .c', id + ' .tag .c'], { yPercent: 110 }, { yPercent: 0, duration: .45, ease: 'expo.out' }, t + .18);
+    tl.fromTo(chars(id + ' .ttl span'), { yPercent: 115 }, { yPercent: 0, duration: .55, stagger: .02, ease: 'expo.out' }, t + .22);
+  };
+  // 01 BRANDING — construção com linhas SVG
+  block('#b1', 6.88);
+  $$('#b1-svg .d1, #b1-svg .g1').forEach(el => {
+    const L = el.getTotalLength(); el.style.strokeDasharray = `${L} ${L}`; el._L = L;
+  });
+  tl.fromTo('#b1-svg .g1', { strokeDashoffset: (i, el) => el._L }, { strokeDashoffset: 0, duration: .6, stagger: .08, ease: 'power2.inOut' }, 7.12);
+  tl.fromTo('#b1-svg .d1', { strokeDashoffset: (i, el) => el._L }, { strokeDashoffset: 0, duration: .7, stagger: .14, ease: 'power3.inOut' }, 7.22);
+  tl.fromTo('#b1-svg .pts rect', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: .3, stagger: .04, ease: 'back.out(3)' }, 7.72);
+  tl.fromTo('#b1-svg .core', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: .4, ease: 'back.out(4)' }, 7.92);
+  tl.fromTo('#b1 .big .c', { yPercent: 110 }, { yPercent: 0, duration: .55, ease: 'expo.out' }, 7.3);
+  tl.fromTo('#b1 .sw', { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: .4, stagger: .07, ease: 'power3.out' }, 7.48);
+
+  // 02 PERFORMANCE — gráfico + count-up
+  block('#b2', 7.8);
+  const chartL = $('#chart-line').getTotalLength();
+  tl.fromTo('#b2-svg .gl, #b2-svg .axis', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: .5, stagger: .05, ease: 'expo.inOut' }, 8.0);
+  tl.fromTo('#chart-line', { strokeDasharray: `${chartL} ${chartL}`, strokeDashoffset: chartL }, { strokeDashoffset: 0, duration: 1.0, ease: 'power2.inOut' }, 8.12);
+  tl.fromTo('#chart-line', { opacity: 0 }, { opacity: 1, duration: .01 }, 8.12); // evita o ponto do round-cap antes do traço
+  tl.fromTo('#area-cliprect', { attr: { width: 0 } }, { attr: { width: 320 }, duration: 1.0, ease: 'power2.inOut' }, 8.12);
+  tl.fromTo('#chart-dot', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: .35, ease: 'back.out(3)' }, 9.05);
+  tl.fromTo('#chart-ring', { scale: 1, opacity: .9, transformOrigin: '50% 50%' }, { scale: 2.6, opacity: 0, duration: .7, ease: 'power2.out', immediateRender: false }, 9.1);
+  tl.fromTo('#b2 .big .c', { yPercent: 110 }, { yPercent: 0, duration: .5, ease: 'expo.out' }, 8.05);
+  tl.to(CNT, { pct: 127, duration: 1.05, ease: 'power2.inOut' }, 8.12);
+
+  // 03 CONVERSÃO — funil + count-up
+  block('#b3', 8.62);
+  tl.fromTo('#b3-svg .fb', { clipPath: 'inset(0% 50% 0% 50%)', opacity: 0 }, { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: .45, stagger: .14, ease: 'expo.out' }, 8.85);
+  tl.fromTo('#f-dot', { attr: { cy: -18 }, opacity: 0 }, { attr: { cy: 158 }, opacity: 1, duration: .75, ease: 'power2.in' }, 9.2);
+  tl.to('#f-dot', { scale: 0, transformOrigin: '50% 50%', duration: .15, ease: 'power2.in' }, 9.92);
+  tl.to('#fb3-rect', { fill: NEON, stroke: NEON, duration: .25, ease: 'power2.out' }, 9.95);
+  tl.to('#fb3-text', { fill: '#000000', duration: .25, ease: 'power2.out' }, 9.95);
+  tl.fromTo('#b3 .big .c', { yPercent: 110 }, { yPercent: 0, duration: .5, ease: 'expo.out' }, 8.85);
+  tl.to(CNT, { x: 3, duration: 1.05, ease: 'power2.inOut' }, 8.95);
+  // foco: o bloco ativo em evidência
+  tl.to('#b1', { opacity: .4, duration: .4 }, 7.85).to('#b1', { opacity: 1, duration: .4 }, 10.05);
+  tl.to('#b2', { opacity: .4, duration: .4 }, 8.7).to('#b2', { opacity: 1, duration: .4 }, 10.05);
+  // saída
+  tl.to('#s4 .hair', { scaleX: 0, transformOrigin: '100% 50%', duration: .4, stagger: .05, ease: 'expo.in' }, 10.62);
+  tl.to($$('#s4 .ttl .c, #s4 .idx .c, #s4 .tag .c, #s4 .big .c'), { yPercent: -115, duration: .35, stagger: .006, ease: 'power3.in' }, 10.6);
+  tl.to('#b1-svg, #b2-svg, #b3-svg, #b1 .swatches', { opacity: 0, y: -16, duration: .3, stagger: .04, ease: 'power2.in' }, 10.62);
+  ROLL(10.85, 4);
+
+  /* ===== CENA 05 — 11s a 13s ===== */
+  tl.to(M2, { h: 340, duration: .32, ease: 'expo.out' }, 10.95);
+  tl.to(M2, { w: 180, h: 360, duration: .26, ease: 'power3.inOut' }, 11.22);
+  tl.to(M2, { rot: 90, duration: .5, ease: 'power3.inOut' }, 11.3);
+  tl.to(M2, { w: 620, h: 620, sw: 2, duration: .5, ease: 'power3.inOut' }, 11.38);
+  tl.to(M2, { arcDraw: .12, arcRot: 160, duration: 1.2, ease: 'power2.inOut' }, 11.4);
+  tl.fromTo('#photo5', { clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(50% at 50% 50%)', duration: .65, ease: 'expo.inOut' }, 11.45);
+  tl.fromTo('#photo5 img, #photo5 .fallback', { scale: 1.25 }, { scale: 1.02, duration: 1.6, ease: 'power2.out' }, 11.45);
+  tl.fromTo(chars('#s5-name span'), { yPercent: 115 }, { yPercent: 0, duration: .55, stagger: .022, ease: 'expo.out' }, 11.72);
+  tl.fromTo('#s5-hair', { scaleX: 0 }, { scaleX: 1, duration: .45, ease: 'expo.out' }, 11.95);
+  tl.fromTo('#s5-sub', { clipPath: 'inset(0% 50% 0% 50%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'expo.inOut' }, 12.0);
+  // saída: iris fecha e o anel vira o "O" do CTA
+  tl.to(chars('#s5-name span'), { yPercent: -115, duration: .35, stagger: .012, ease: 'power3.in' }, 12.55);
+  tl.to('#s5-sub', { clipPath: 'inset(0% 50% 0% 50%)', duration: .35, ease: 'power3.in' }, 12.55);
+  tl.to('#s5-hair', { scaleX: 0, duration: .3, ease: 'power3.in' }, 12.55);
+  tl.to('#photo5', { clipPath: 'circle(0% at 50% 50%)', duration: .45, ease: 'expo.in' }, 12.58);
+  tl.to(M2, { arcDraw: 0, duration: .3, ease: 'power2.in' }, 12.6);
+  tl.to(M2, { cx: WM6.ox, cy: WM6.oy, w: OD - S, h: OD - S, sw: S, rot: 180, duration: .55, ease: 'power4.inOut' }, 12.7);
+  tl.to('#hud', { opacity: 0, duration: .35, ease: 'power1.in' }, 12.7);
+  ROLL(12.7, 5);
+
+  /* ===== CENA 06 — 13s a 15s ===== */
+  tl.fromTo(WM6.letters, { y: H + 6 }, { y: 0, duration: .55, stagger: .06, ease: 'expo.out' }, 12.98);
+  tl.fromTo(chars('#s6-handle span'), { yPercent: 115 }, { yPercent: 0, duration: .5, stagger: .02, ease: 'expo.out' }, 13.25);
+  tl.fromTo('#btn', { clipPath: 'inset(0% 50% 0% 50% round 56px)', scale: .96 }, { clipPath: 'inset(0% 0% 0% 0% round 56px)', scale: 1, duration: .55, ease: 'expo.inOut' }, 13.48);
+  // cursor (ponta = 0,0)
+  tl.fromTo('#cursor', { x: 860, y: 1470, opacity: 0 }, { opacity: 1, duration: .2, ease: 'none' }, 13.6);
+  tl.to('#cursor', { x: 586, duration: .5, ease: 'power2.out' }, 13.6);
+  tl.to('#cursor', { y: 1132, duration: .5, ease: 'power3.inOut' }, 13.6);
+  // clique
+  const CLICK = 14.15;
+  tl.to('#cursor', { scale: .82, duration: .08, ease: 'power2.in' }, CLICK);
+  tl.to('#cursor', { scale: 1, duration: .2, ease: 'back.out(3)' }, CLICK + .1);
+  tl.to('#btn', { scale: .93, duration: .1, ease: 'power2.in' }, CLICK);
+  tl.to('#btn', { backgroundColor: NEON, borderColor: NEON, color: '#000000', duration: .14, ease: 'power1.out' }, CLICK + .04);
+  tl.to('#btn', { scale: 1, duration: .38, ease: 'back.out(3)' }, CLICK + .12);
+  tl.fromTo('#btn .arw', { x: 0 }, { x: 10, duration: .3, ease: 'power3.out', yoyo: true, repeat: 1 }, CLICK + .1);
+  tl.fromTo('#pulse', { scale: 1, opacity: .9 }, { scale: 1.42, opacity: 0, duration: .7, ease: 'power2.out', immediateRender: false }, CLICK + .06);
+  // finalização: NEON + @NEONCREATES
+  tl.to('#cursor', { x: '+=60', y: '+=90', opacity: 0, duration: .3, ease: 'power2.in' }, CLICK + .3);
+  tl.to('#btn', { clipPath: 'inset(0% 50% 0% 50% round 56px)', opacity: 0, duration: .32, ease: 'expo.in' }, 14.42);
+  tl.to('#end-group', { y: 60, duration: .42, ease: 'power3.inOut' }, 14.42);
+  tl.to('#s6-handle', { y: 60, duration: .42, ease: 'power3.inOut' }, 14.42);
+  tl.to({}, { duration: .01 }, 14.99); // fecha em 15.00s
+
+  /* ---------- foto (com fallback de monograma) ---------- */
+  function loadPhotos() {
+    return Promise.all($$('img[data-photo]').map(img => new Promise(res => {
+      const box = img.closest('.photo');
+      img.onload = () => { box.classList.remove('nophoto'); res(); };
+      img.onerror = () => { box.classList.add('nophoto'); res(); };
+      img.src = PHOTO;
+    })));
+  }
+
+  /* ---------- boot ---------- */
+  const fontsReady = Promise.all([
+    document.fonts.load('800 100px Switzer'), document.fonts.load('700 100px Switzer'),
+    document.fonts.load('600 100px Switzer'), document.fonts.load('italic 400 100px "Instrument Serif"')
+  ]).then(() => document.fonts.ready);
+
+  Promise.all([fontsReady, loadPhotos()]).then(() => {
+    window.__tl = tl;
+    window.__seek = t => { tl.seek(t, false); syncAll(); };
+    window.__duration = 15;
+    window.__ready = true;
+    if (RENDER) { tl.seek(0); return; }
+    tl.eventCallback('onComplete', () => gsap.delayedCall(1.2, () => tl.restart()));
+    tl.play(0);
+  });
+
+  /* ---------- controles ---------- */
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); tl.paused(!tl.paused()); }
+    if (e.key === 'r' || e.key === 'R') tl.restart();
+    if (e.key === 'g' || e.key === 'G') document.body.classList.toggle('guides');
+    if (e.key === 'ArrowRight') tl.seek(Math.min(15, tl.time() + .5));
+    if (e.key === 'ArrowLeft') tl.seek(Math.max(0, tl.time() - .5));
+  });
+})();
+</script>
+</body>
+</html>
