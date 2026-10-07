@@ -75,20 +75,22 @@ Quer o mesmo pro seu negócio? Comenta DIAGNÓSTICO.
 
 ## 4. Carrossel: 5 erros que queimam sua verba (7 slides, pronto)
 
-Arquivos: `instagram/out/erros/01.png` a `07.png`. Fonte: `instagram/erros.html`.
+Arquivos: `instagram/out/erros/01.png` a `07.png` (capa A).
+Capas alternativas: `out/erros-capa-b/01.png` e `out/erros-capa-c/01.png` (troque só o slide 1).
+Fonte: `instagram/erros.html` (`?capa=a`, `b` ou `c`).
 
-**Legenda:**
+**Legenda (capa A):**
 ```
-Anúncio raramente falha sozinho. Na maioria das vezes ele está pagando por um erro que vem antes dele.
+Você não tem problema de verba. Tem problema de vazamento.
 
-Os 5 que mais queimam verba:
+Os 5 erros que mais queimam dinheiro em anúncio:
 01. Impulsionar em vez de anunciar
 02. Mexer na campanha todo dia
 03. Anunciar sem página de destino
 04. Não medir o que importa
 05. Criativo sem gancho
 
-Qual desses você está cometendo agora? Responde com o número.
+Conta quantos você comete e responde aqui com o número. Sem vergonha, todo mundo já cometeu pelo menos um.
 
 Salva pra revisar antes do próximo anúncio. E se quiser que a gente olhe sua conta, comenta DIAGNÓSTICO.
 ```

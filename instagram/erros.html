@@ -6,8 +6,30 @@
 <link rel="stylesheet" href="neon.css">
 <style>
   /* capa */
-  .cover .obj3d { width: 660px; right: -30px; top: 70px; transform: rotate(-6deg); }
-  .cover h1 { font-size: 182px; }
+  .cover h1 { font-size: 170px; }
+  .cover .obj3d.coin { width: 470px; right: -10px; top: 40px; transform: rotate(-6deg); }
+
+  /* capa A: painel de anúncio queimando dinheiro */
+  .ads { position: absolute; z-index: 1; left: 84px; top: 160px; width: 700px; padding: 36px 42px 36px; border-radius: 34px;
+    background: linear-gradient(160deg, #222 0%, var(--gray) 60%); border: 2px solid rgba(255, 255, 255, .08);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, .6), 0 0 0 1px rgba(57, 255, 20, .12), 0 0 80px rgba(57, 255, 20, .12); transform: rotate(-4deg); }
+  .ads .top { display: flex; justify-content: space-between; font: 700 20px/1 var(--label); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .ads .live { display: flex; align-items: center; gap: 12px; color: var(--neon); }
+  .ads .live::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 0 6px rgba(57, 255, 20, .2), 0 0 18px var(--neon); }
+  .ads .cols { display: grid; grid-template-columns: auto 1fr; gap: 0; margin-top: 30px; }
+  .ads .cols div:first-child { padding-right: 40px; }
+  .ads .cols div + div { border-left: 2px solid rgba(255, 255, 255, .1); padding-left: 34px; }
+  .ads .k { font: 600 22px/1 var(--body); color: var(--muted); margin-bottom: 14px; }
+  .ads .v { font: 800 104px/1 var(--display); white-space: nowrap; }
+  .ads .bar { margin-top: 30px; height: 14px; border-radius: 99px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+  .ads .bar i { display: block; width: 87%; height: 100%; background: var(--neon); box-shadow: 0 0 20px var(--neon); }
+  .ads .foot { display: flex; justify-content: space-between; margin-top: 14px; font: 600 20px/1 var(--body); color: var(--muted); }
+  .cover .obj3d.coin-a { width: 360px; right: -30px; top: 150px; transform: rotate(-10deg); }
+
+  /* capa B: botão impulsionar + cursor */
+  .boost { position: absolute; z-index: 1; left: 84px; top: 280px; padding: 40px 64px; border-radius: 26px; background: var(--gray);
+    border: 2px solid rgba(255, 255, 255, .1); font: 700 46px/1 var(--body); box-shadow: 0 40px 80px rgba(0, 0, 0, .6); transform: rotate(-3deg); }
+  .cover .obj3d.cursor-b { width: 420px; left: 560px; top: 330px; }
 
   /* erros */
   .erro .obj3d { width: 540px; right: 10px; top: 120px; }
@@ -60,15 +82,45 @@
     },
   ];
 
+  // três capas para testar: erros.html?capa=a (padrão), b ou c
+  const CAPAS = {
+    a: {
+      h: "Você não tem problema de *verba*.",
+      sub: "Tem 5 erros. Arrasta e conta quantos você comete.",
+      extra: `
+        <div class="ads">
+          <div class="top"><span class="live">Campanha ativa</span><span>Hoje</span></div>
+          <div class="cols">
+            <div><div class="k">Valor gasto</div><div class="v">R$ 312,40</div></div>
+            <div><div class="k">Vendas</div><div class="v">0</div></div>
+          </div>
+          <div class="bar"><i></i></div>
+          <div class="foot"><span>Orçamento do dia</span><span>87% usado</span></div>
+        </div>
+        <img class="obj3d coin-a" src="3d/coin.png" alt="">`,
+    },
+    b: {
+      h: "Usa o botão *Impulsionar*?",
+      sub: "Então arrasta. Esse é só o 1º dos 5 erros que queimam sua verba.",
+      extra: `<div class="boost">Impulsionar publicação</div><img class="obj3d cursor-b" src="3d/cursor.png" alt="">`,
+    },
+    c: {
+      h: "Seu anúncio paga *clique* que nunca vai comprar.",
+      sub: "5 erros que queimam sua verba. E como corrigir cada um.",
+      extra: `<img class="obj3d coin" src="3d/coin.png" alt="">`,
+    },
+  };
+  const capaAtual = CAPAS[new URLSearchParams(location.search).get("capa") || "a"];
+  const capa = () => slide(1, "cover", `
+      <h1>${title(capaAtual.h)}</h1>
+      <p class="sub">${fmt(capaAtual.sub)}</p>`, capaAtual.extra);
+
   const TOTAL = ERROS.length + 2;
   const slide = makeSlide("Tráfego pago", TOTAL);
   const temas = ["", "light", "", "light", ""];
 
   const slides = [
-    slide(1, "cover", `
-      <h1>${title("5 erros que queimam sua *verba*.")}</h1>
-      <p class="sub">É como pagar por clique que não vira venda. Salva e confere antes do próximo anúncio.</p>`,
-      `<img class="obj3d" src="3d/coin.png" alt="">`),
+    capa(),
 
     ...ERROS.map((e, i) => slide(i + 2, `erro ${temas[i]}`, `
       <div class="label">Erro ${pad2(i + 1)}</div>

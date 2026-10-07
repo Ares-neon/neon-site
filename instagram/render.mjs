@@ -2,6 +2,7 @@
 // Uso: node render.mjs erros dr julia
 //   erros    → erros.html
 //   dr/julia → case.html?c=dr (chaves de cases.js)
+//   "erros?capa=b" → erros.html?capa=b, salvo em out/erros-capa-b
 import { chromium } from "playwright";
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
@@ -12,9 +13,12 @@ const here = dirname(fileURLToPath(import.meta.url));
 const keys = process.argv.slice(2);
 if (!keys.length) keys.push("dr");
 
-const urlFor = key => existsSync(join(here, `${key}.html`))
-  ? pathToFileURL(join(here, `${key}.html`)).href
-  : pathToFileURL(join(here, "case.html")).href + `?c=${key}`;
+const urlFor = key => {
+  const [file, query] = key.split("?");
+  return existsSync(join(here, `${file}.html`))
+    ? pathToFileURL(join(here, `${file}.html`)).href + (query ? `?${query}` : "")
+    : pathToFileURL(join(here, "case.html")).href + `?c=${key}`;
+};
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1160, height: 1400 } });
@@ -22,7 +26,7 @@ const page = await browser.newPage({ viewport: { width: 1160, height: 1400 } });
 for (const key of keys) {
   await page.goto(urlFor(key), { waitUntil: "networkidle" });
   await page.evaluate(() => document.fonts.ready);
-  const out = join(here, "out", key);
+  const out = join(here, "out", key.replace(/[?=&]/g, "-"));
   await mkdir(out, { recursive: true });
   const slides = await page.$$(".slide");
   for (const [i, el] of slides.entries()) {
