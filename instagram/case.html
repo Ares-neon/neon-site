@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEON · Case</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@125,700;125,800&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --ink: #FFFFFF;
+    --neon: #36F547;
+    --muted: rgba(255, 255, 255, 0.62);
+    --hair: rgba(255, 255, 255, 0.12);
+    --paper: #EEEEE8;
+    --ph: #FFB020;
+    --display: "Anton", Impact, sans-serif;
+    --label: "Archivo", system-ui, sans-serif;
+    --body: "Inter", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1b1b1b; font-family: var(--body); display: flex; flex-direction: column; align-items: center; gap: 40px; padding: 40px 0; }
+
+  .slide {
+    position: relative; width: 1080px; height: 1350px; overflow: hidden;
+    background: var(--bg); color: var(--ink);
+    display: flex; flex-direction: column; padding: 84px 84px 76px;
+  }
+  .slide.light { --bg: var(--paper); --ink: #0A0A0A; --muted: rgba(10, 10, 10, 0.62); --hair: rgba(10, 10, 10, 0.14); }
+  .slide.green { --bg: var(--neon); --ink: #0A0A0A; --muted: rgba(10, 10, 10, 0.7); --hair: rgba(10, 10, 10, 0.22); }
+
+  /* textura e brilho */
+  .grain { position: absolute; inset: 0; pointer-events: none; opacity: .16; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .slide.light .grain, .slide.green .grain { opacity: .35; mix-blend-mode: multiply; }
+  .glow { position: absolute; width: 900px; height: 900px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(54, 245, 71, .22), transparent 62%); right: -380px; top: -320px; }
+  .slide.light .glow, .slide.green .glow { display: none; }
+
+  .tick { position: absolute; width: 22px; height: 22px; border-color: var(--hair); border-style: solid; border-width: 0; }
+  .tick.tl { top: 40px; left: 40px; border-top-width: 2px; border-left-width: 2px; }
+  .tick.tr { top: 40px; right: 40px; border-top-width: 2px; border-right-width: 2px; }
+  .tick.bl { bottom: 40px; left: 40px; border-bottom-width: 2px; border-left-width: 2px; }
+  .tick.br { bottom: 40px; right: 40px; border-bottom-width: 2px; border-right-width: 2px; }
+
+  header, footer, main { position: relative; z-index: 2; }
+  header { display: flex; justify-content: space-between; align-items: center; }
+  .brand { display: flex; align-items: center; gap: 14px; font: 800 30px/1 var(--label); font-stretch: 125%; letter-spacing: .02em; }
+  .brand img { height: 50px; }
+  .slide.light .brand img, .slide.green .brand img { filter: drop-shadow(0 0 0 #000) brightness(.35) saturate(1.4); }
+  .tag { font: 700 19px/1 var(--label); font-stretch: 125%; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .tag b { color: var(--neon); font-weight: 800; }
+  .slide.light .tag b, .slide.green .tag b { color: var(--ink); }
+
+  main { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 56px; }
+  footer { display: flex; justify-content: space-between; align-items: center; font: 700 19px/1 var(--label); font-stretch: 125%; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  footer .next { color: var(--neon); }
+  .slide.light footer .next, .slide.green footer .next { color: var(--ink); }
+
+  .label { font: 700 21px/1.2 var(--label); font-stretch: 125%; letter-spacing: .2em; text-transform: uppercase; color: var(--neon); margin-bottom: 30px; }
+  .slide.light .label, .slide.green .label { color: var(--ink); }
+  h1, h2 { font-family: var(--display); font-weight: 400; text-transform: uppercase; line-height: .94; letter-spacing: .005em; }
+  h1 { font-size: 148px; }
+  h2 { font-size: 132px; margin-bottom: 52px; }
+  .sub { font: 500 36px/1.35 var(--body); color: var(--muted); margin-top: 34px; max-width: 860px; }
+
+  em.hl { font-style: normal; color: var(--neon); text-shadow: 0 0 46px rgba(54, 245, 71, .45); }
+  .slide.light em.hl, .slide.green em.hl { color: var(--neon); background: #0A0A0A; text-shadow: none; padding: .04em .1em 0; display: inline-block; line-height: .94; }
+  .dot { color: var(--neon); }
+  .slide.light .dot, .slide.green .dot { color: inherit; }
+
+  /* placeholder: tudo que falta preencher */
+  .ph { background: var(--ph); color: #0A0A0A; text-shadow: none; padding: 0 .14em; border-radius: 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  h1 .ph, h2 .ph, .stat .v .ph { display: inline-block; line-height: .94; padding: .04em .1em 0; }
+  .slot { border: 4px dashed var(--ph); border-radius: 28px; display: flex; align-items: center; justify-content: center; text-align: center;
+    color: var(--ph); font: 700 22px/1.4 var(--label); font-stretch: 125%; letter-spacing: .14em; text-transform: uppercase; padding: 40px; background: rgba(255, 176, 32, .06); }
+  .media { border-radius: 28px; overflow: hidden; }
+  .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* 1. capa */
+  .cover .hero { position: absolute; inset: 0 0 auto 0; height: 760px; z-index: 1; }
+  .cover .hero.media { border-radius: 0; }
+  .cover .hero.media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,10,.35) 0%, rgba(10,10,10,0) 30%, rgba(10,10,10,.7) 78%, #0A0A0A 100%); }
+  .cover .hero.slot { inset: 170px 84px auto 84px; height: 420px; }
+  .cover h1 { font-size: 132px; }
+
+  /* 2. antes */
+  .rows { list-style: none; border-top: 2px solid var(--hair); }
+  .rows li { display: flex; gap: 30px; align-items: flex-start; padding: 34px 0; border-bottom: 2px solid var(--hair); font: 500 38px/1.3 var(--body); }
+  .x { flex: none; width: 46px; height: 46px; border-radius: 12px; border: 2px solid var(--muted); display: grid; place-items: center; color: var(--muted); font: 700 26px/1 var(--body); margin-top: 2px; }
+
+  /* 3. o que fizemos */
+  .steps { border-top: 2px solid var(--hair); }
+  .step { display: grid; grid-template-columns: 110px 1fr; padding: 32px 0; border-bottom: 2px solid var(--hair); }
+  .step .n { font: 400 64px/1 var(--display); }
+  .step .t { font: 700 40px/1.2 var(--body); margin-bottom: 10px; }
+  .step .d { font: 400 31px/1.4 var(--body); color: var(--muted); }
+
+  /* 4. criativo */
+  .split { display: grid; grid-template-columns: 1fr 400px; gap: 56px; align-items: end; }
+  .split h2 { font-size: 112px; margin-bottom: 40px; }
+  .split .why { font: 500 34px/1.4 var(--body); color: var(--muted); }
+  .phone { height: 712px; }
+
+  /* 5. resultado */
+  .stats { border-top: 3px solid var(--ink); }
+  .stat { display: flex; align-items: baseline; gap: 36px; padding: 26px 0 22px; border-bottom: 3px solid var(--ink); }
+  .stat .v { font: 400 150px/1 var(--display); white-space: nowrap; }
+  .stat .l { font: 600 34px/1.25 var(--body); }
+
+  /* 6. depoimento */
+  .quote-mark { font: 400 300px/.7 var(--display); color: var(--neon); text-shadow: 0 0 60px rgba(54, 245, 71, .4); margin-bottom: 30px; }
+  blockquote { font: italic 600 60px/1.22 var(--body); letter-spacing: -.01em; }
+  .who { display: flex; align-items: center; gap: 24px; margin-top: 56px; font: 600 32px/1.3 var(--body); }
+  .who::before { content: ""; width: 70px; height: 3px; background: var(--neon); }
+  .who span { color: var(--muted); font-weight: 500; }
+
+  /* 7. cta */
+  .cta .watermark { position: absolute; z-index: 1; right: -150px; top: 140px; height: 860px; opacity: .1; }
+  .cta .glow { right: -200px; top: -120px; width: 1100px; height: 1100px; }
+  .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 18px; margin-top: 56px; background: var(--neon); color: #0A0A0A;
+    font: 800 26px/1 var(--label); font-stretch: 125%; letter-spacing: .14em; text-transform: uppercase; padding: 30px 44px; border-radius: 999px; box-shadow: 0 0 60px rgba(54, 245, 71, .35); }
+</style>
+</head>
+<body>
+<div id="deck"></div>
+<script src="cases.js"></script>
+<script>
+  const LOGO = "../project/assets/neon-symbol.png";
+  const key = new URLSearchParams(location.search).get("c") || "dr";
+  const c = window.CASES[key];
+
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  // [texto] = placeholder amarelo, *texto* = destaque neon
+  const fmt = s => esc(s)
+    .replace(/\[([^\]]+)\]/g, '<span class="ph">[$1]</span>')
+    .replace(/\*([^*]+)\*/g, '<em class="hl">$1</em>');
+  // ponto final do título vira o ponto verde da marca
+  const title = s => fmt(s).replace(/\.(<\/em>)?$/, '$1<span class="dot">.</span>');
+  const img = (src, dica, cls) => src
+    ? `<div class="media ${cls}"><img src="${esc(src)}" alt=""></div>`
+    : `<div class="slot ${cls}">${esc(dica)}</div>`;
+
+  const TOTAL = 7;
+  const tagOf = i => `Case / <b>${String(i).padStart(2, "0")}</b> de ${String(TOTAL).padStart(2, "0")}`;
+  const slide = (i, theme, body, extra = "", footRight = "Arrasta →") => `
+    <section class="slide ${theme}" data-n="${i}">
+      <div class="glow"></div>${extra}<div class="grain"></div>
+      <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
+      <header><div class="brand"><img src="${LOGO}" alt="">NEON</div><div class="tag">${tagOf(i)}</div></header>
+      <main>${body}</main>
+      <footer><span>@neoncreates</span><span class="next">${footRight}</span></footer>
+    </section>`;
+
+  const slides = [
+    slide(1, "cover", `
+      <div class="label">Case real · ${fmt(c.segmento)} · ${fmt(c.cidade)}</div>
+      <h1>${title(c.capa)}</h1>
+      <p class="sub">${fmt(c.capaSub)}</p>`,
+      img(c.foto, c.fotoDica, "hero")),
+
+    slide(2, "", `
+      <div class="label">Antes da NEON</div>
+      <h2>O cenário<span class="dot">.</span></h2>
+      <ul class="rows">${c.antes.map(a => `<li><span class="x">✕</span><span>${fmt(a)}</span></li>`).join("")}</ul>`),
+
+    slide(3, "light", `
+      <div class="label">O plano</div>
+      <h2>O que a gente <em class="hl">fez</em><span class="dot">.</span></h2>
+      <div class="steps">${c.fizemos.map((f, i) => `
+        <div class="step"><div class="n">0${i + 1}</div><div><div class="t">${fmt(f.t)}</div><div class="d">${fmt(f.d)}</div></div></div>`).join("")}
+      </div>`),
+
+    slide(4, "", `
+      <div class="split">
+        <div>
+          <div class="label">Bastidor</div>
+          <h2>O criativo que mais <em class="hl">vendeu</em><span class="dot">.</span></h2>
+          <p class="why">${fmt(c.criativo.porque)}</p>
+        </div>
+        ${img(c.criativo.img, c.criativo.imgDica, "phone")}
+      </div>`),
+
+    slide(5, "green", `
+      <div class="label">Resultado · ${fmt(c.resultado.periodo)}</div>
+      <h2>Os números<span class="dot">.</span></h2>
+      <div class="stats">${c.resultado.stats.map(s => `
+        <div class="stat"><div class="v">${fmt(s.v)}</div><div class="l">${fmt(s.l)}</div></div>`).join("")}
+      </div>`),
+
+    slide(6, "", `
+      <div class="quote-mark">“</div>
+      <blockquote>${fmt(c.depoimento.texto)}</blockquote>
+      <div class="who">${fmt(c.depoimento.autor)} <span>· ${fmt(c.depoimento.cargo)}</span></div>`),
+
+    slide(7, "cta", `
+      <div class="label">Diagnóstico grátis em 24h</div>
+      <h2>Quer isso no seu <em class="hl">negócio</em>?</h2>
+      <p class="sub">A gente analisa seu Instagram e seus anúncios e mostra onde você está perdendo cliente.</p>
+      <div class="pill">Comenta “diagnóstico” ↗</div>`,
+      `<img class="watermark" src="${LOGO}" alt="">`, "Link na bio"),
+  ];
+
+  document.title = `NEON · Case ${c.cliente}`;
+  document.getElementById("deck").innerHTML = slides.join("");
+</script>
+</body>
+</html>

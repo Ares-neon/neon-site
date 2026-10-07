@@ -1,0 +1,11 @@
+{
+  "name": "neon-instagram",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs dr julia"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}
