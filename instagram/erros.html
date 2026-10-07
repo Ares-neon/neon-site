@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEON · 5 erros que queimam sua verba</title>
+<link rel="stylesheet" href="neon.css">
+<style>
+  /* capa */
+  .cover .coin { position: absolute; z-index: 1; right: 50px; top: 200px; font: 400 440px/.8 var(--display); color: transparent;
+    -webkit-text-stroke: 4px var(--neon); filter: drop-shadow(0 0 40px rgba(54, 245, 71, .45)); transform: rotate(-8deg); }
+  .cover .coin::after { content: "R$"; position: absolute; inset: 0; color: var(--neon); opacity: .07; -webkit-text-stroke: 0; }
+  .cover h1 { font-size: 172px; }
+
+  /* erros */
+  .bignum { position: absolute; z-index: 1; right: 74px; top: 176px; font: 400 350px/.8 var(--display); color: transparent;
+    -webkit-text-stroke: 4px var(--neon); opacity: .45; filter: drop-shadow(0 0 30px rgba(54, 245, 71, .35)); }
+  .slide.light .bignum { -webkit-text-stroke-color: #0A0A0A; opacity: .14; filter: none; }
+  .erro h2 { font-size: 122px; margin-bottom: 36px; }
+  .erro .body { font: 500 35px/1.4 var(--body); color: var(--muted); max-width: 880px; }
+  .fix { margin-top: 48px; border: 2px solid var(--neon); border-radius: 24px; padding: 32px 36px; background: rgba(54, 245, 71, .06); }
+  .fix .k { font: 800 19px/1 var(--label); font-stretch: 125%; letter-spacing: .2em; text-transform: uppercase; color: var(--neon); margin-bottom: 16px; }
+  .fix p { font: 600 33px/1.35 var(--body); }
+  .slide.light .fix { border-color: #0A0A0A; background: #0A0A0A; color: #fff; }
+
+  /* final verde */
+  .slide.green .pill { background: #0A0A0A; color: var(--neon); box-shadow: none; }
+  .slide.green .watermark { filter: brightness(0); opacity: .08; }
+</style>
+</head>
+<body>
+<div id="deck"></div>
+<script src="neon.js"></script>
+<script>
+  const ERROS = [
+    {
+      t: "Impulsionar em vez de *anunciar*.",
+      d: "O botão Impulsionar dá pouco controle de objetivo, público e posicionamento. Serve para alcance, não para venda.",
+      fix: "Monte a campanha no Gerenciador de Anúncios, com objetivo de mensagem ou de vendas.",
+    },
+    {
+      t: "Mexer na campanha *todo dia*.",
+      d: "Cada edição grande reinicia o aprendizado do algoritmo. Você paga a fase mais cara de novo, toda vez.",
+      fix: "Espere de 3 a 7 dias antes de julgar um anúncio. E mude uma coisa por vez.",
+    },
+    {
+      t: "Anunciar sem página de *destino*.",
+      d: "O clique custa o mesmo. Se ele cai num perfil bagunçado ou num site lento, a verba vira visita, não venda.",
+      fix: "Mande o clique para um destino feito para converter: página rápida ou WhatsApp com mensagem pronta.",
+    },
+    {
+      t: "Não medir o que *importa*.",
+      d: "Sem pixel e conversões configurados, o algoritmo otimiza no escuro e você não sabe quanto custa cada cliente.",
+      fix: "Instale o pixel, teste os eventos e acompanhe custo por contato. Curtida não paga boleto.",
+    },
+    {
+      t: "Criativo sem *gancho*.",
+      d: "Os 3 primeiros segundos decidem se a pessoa para ou rola. Anúncio que abre com logo e vinheta paga para ser pulado.",
+      fix: "Comece pelo problema do cliente ou pelo resultado. A marca entra depois.",
+    },
+  ];
+
+  const TOTAL = ERROS.length + 2;
+  const slide = makeSlide("Tráfego pago", TOTAL);
+  const temas = ["", "light", "", "light", ""];
+
+  const slides = [
+    slide(1, "cover", `
+      <h1>${title("5 erros que queimam sua *verba*.")}</h1>
+      <p class="sub">É como pagar por clique que não vira venda. Salva e confere antes do próximo anúncio.</p>`,
+      `<div class="coin">R$</div>`),
+
+    ...ERROS.map((e, i) => slide(i + 2, `erro ${temas[i]}`, `
+      <div class="label">Erro ${pad2(i + 1)}</div>
+      <h2>${title(e.t)}</h2>
+      <p class="body">${fmt(e.d)}</p>
+      <div class="fix"><div class="k">Como corrigir</div><p>${fmt(e.fix)}</p></div>`,
+      `<div class="bignum">${pad2(i + 1)}</div>`)),
+
+    slide(TOTAL, "green cta", `
+      <div class="label">Diagnóstico grátis em 24h</div>
+      <h2>A gente faz isso por <em class="hl">você</em><span class="dot">.</span></h2>
+      <p class="sub">A gente olha sua conta de anúncios e mostra onde a verba está vazando.</p>
+      <div class="pill">Comenta “diagnóstico” ↗</div>`,
+      `<img class="watermark" src="${LOGO}" alt="">`, "Link na bio"),
+  ];
+
+  document.getElementById("deck").innerHTML = slides.join("");
+</script>
+</body>
+</html>
