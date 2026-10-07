@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEON · Seu perfil tá espantando cliente</title>
+<link rel="stylesheet" href="neon.css">
+<style>
+  /* design "marcação": fundo cinza com grade, mockups de perfil e rabiscos neon */
+  .slide.mk { --bg: var(--gray); }
+  .slide.mk .glow { opacity: .55; }
+  .gridbg { position: absolute; inset: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,.045) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.045) 2px, transparent 2px);
+    background-size: 54px 54px; background-position: -2px -2px; }
+  .slide.mk main { justify-content: center; padding-top: 0; padding-bottom: 20px; }
+  .slide.mk h2 { font-size: 112px; margin-bottom: 18px; }
+  .lead { font: 500 33px/1.4 var(--body); color: var(--muted); max-width: 900px; margin-bottom: 44px; }
+  .badge { display: inline-flex; align-self: flex-start; align-items: center; gap: 14px; margin-bottom: 26px; padding: 12px 22px 12px 14px; border-radius: 99px;
+    background: rgba(57, 255, 20, .1); border: 2px solid rgba(57, 255, 20, .5); color: var(--neon); font: 800 21px/1 var(--label); letter-spacing: .18em; text-transform: uppercase; }
+  .badge b { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--neon); color: #000; letter-spacing: 0; font-size: 19px; }
+
+  /* comparação */
+  .cmp { display: flex; flex-direction: column; gap: 26px; }
+  .card { position: relative; border-radius: 30px; padding: 30px 34px; background: #000; }
+  .card.bad { border: 2px dashed rgba(255, 255, 255, .2); }
+  .card.bad > *:not(.tagc) { opacity: .62; }
+  .card.good { border: 2px solid var(--neon); box-shadow: 0 0 0 6px rgba(57, 255, 20, .08), 0 0 60px rgba(57, 255, 20, .18); }
+  .tagc { position: absolute; top: -20px; left: 28px; padding: 10px 18px; border-radius: 99px; font: 800 18px/1 var(--label); letter-spacing: .16em; text-transform: uppercase; }
+  .bad .tagc { background: #2a2a2a; color: rgba(255,255,255,.8); }
+  .good .tagc { background: var(--neon); color: #000; }
+
+  /* peças de interface genéricas */
+  .ig { font-family: var(--body); color: #fff; }
+  .row { display: flex; align-items: center; gap: 22px; }
+  .av { flex: none; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 30% 30%, #2c2c2c, #0c0c0c);
+    border: 3px solid #333; font: 800 46px/1 var(--display); color: #fff; }
+  .good .av { border-color: var(--neon); }
+  .u { font: 700 30px/1.2 var(--body); }
+  .n { font: 500 28px/1.3 var(--body); color: rgba(255,255,255,.62); }
+  .n mark, .bio mark { background: none; color: var(--neon); font-weight: 700; }
+  .search { display: flex; align-items: center; gap: 16px; padding: 18px 24px; border-radius: 18px; background: #1c1c1c; font: 500 28px/1 var(--body); color: rgba(255,255,255,.75); margin-bottom: 24px; }
+  .search svg { width: 28px; height: 28px; }
+  .note { margin-top: 20px; font: 600 24px/1.3 var(--body); color: rgba(255,255,255,.7); }
+  .good .note { color: var(--neon); }
+  .bio { font: 500 29px/1.45 var(--body); }
+  .bio .nm { font-weight: 700; }
+  .bio .lk { color: #8ab4ff; }
+  .hls { display: flex; gap: 30px; }
+  .hi { display: flex; flex-direction: column; align-items: center; gap: 12px; font: 500 22px/1 var(--body); color: rgba(255,255,255,.85); }
+  .hi i { width: 104px; height: 104px; border-radius: 50%; border: 3px solid #3a3a3a; display: grid; place-items: center; font-style: normal; font-size: 44px; background: #111; }
+  .good .hi i { border-color: var(--neon); background: radial-gradient(circle at 30% 30%, #1d3a16, #050505); font: 800 22px/1.05 var(--label); letter-spacing: .04em; color: var(--neon); text-align: center; text-transform: uppercase; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile { position: relative; height: 196px; border-radius: 12px; display: flex; align-items: flex-end; padding: 18px; background: #1a1a1a; font: 800 36px/1.05 var(--display); text-transform: uppercase; }
+  .good .tile { background: linear-gradient(160deg, #1c3a14, #050505 70%); }
+  .tile .pin { position: absolute; top: 10px; right: 12px; width: 26px; height: 26px; }
+  .links { display: flex; flex-direction: column; gap: 10px; }
+  .lnk { padding: 16px; border-radius: 14px; background: #1c1c1c; text-align: center; font: 600 22px/1 var(--body); color: rgba(255,255,255,.75); }
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .cta-btn { padding: 30px; border-radius: 20px; background: var(--neon); color: #000; text-align: center; font: 800 30px/1.2 var(--body); }
+  .msg { margin-top: 18px; padding: 18px 22px; border-radius: 18px 18px 18px 4px; background: #1c1c1c; font: 500 23px/1.35 var(--body); color: rgba(255,255,255,.8); }
+
+  /* rabisco e etiqueta */
+  .mark { position: relative; }
+  .mark svg.sc { position: absolute; inset: -22px -26px; width: calc(100% + 52px); height: calc(100% + 44px); overflow: visible; pointer-events: none; }
+  .sticker { position: absolute; z-index: 4; padding: 14px 22px; border-radius: 12px; background: var(--neon); color: #000; font: 800 24px/1.1 var(--label); letter-spacing: .06em; text-transform: uppercase;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .5); white-space: nowrap; }
+
+  /* capa */
+  .slide.cover2 main { justify-content: flex-start; padding-top: 60px; }
+  .cover2 h1 { font-size: 150px; position: relative; z-index: 3; }
+  .cover2 .sub { margin-top: 18px; position: relative; z-index: 3; }
+  .phone { position: absolute; z-index: 1; left: 230px; top: 720px; width: 700px; transform-origin: top center; padding: 34px 30px; border-radius: 64px 64px 0 0; background: #000;
+    border: 10px solid #2a2a2a; border-bottom: none; transform: rotate(-5deg) scale(.88); box-shadow: 0 0 0 2px #3c3c3c, 0 50px 120px rgba(0, 0, 0, .7); }
+  .phone .bar { display: flex; justify-content: center; margin-bottom: 26px; font: 700 26px/1 var(--body); }
+  .phone .stats { display: flex; gap: 30px; margin-left: 8px; }
+  .phone .stats div { text-align: center; font: 700 26px/1.2 var(--body); }
+  .phone .stats span { display: block; font-weight: 400; font-size: 20px; color: rgba(255,255,255,.7); }
+  .phone .bio { font-size: 25px; margin: 22px 0 18px; }
+  .phone .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 26px; }
+  .phone .btns div { padding: 14px; border-radius: 12px; background: #1c1c1c; text-align: center; font: 600 21px/1 var(--body); }
+  .phone .hi i { width: 92px; height: 92px; font-size: 38px; }
+  .cover2 .slide-foot-fade { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: 190px; background: linear-gradient(transparent, var(--gray) 75%); }
+  .s1 { left: 640px; top: 935px; transform: rotate(5deg); }
+  .s2 { left: 60px; top: 1062px; transform: rotate(-4deg); }
+
+  .slide.green .pill { background: #000; color: var(--neon); box-shadow: none; }
+  .cta .obj3d { width: 560px; right: -10px; top: 90px; }
+</style>
+</head>
+<body>
+<div id="deck"></div>
+<script src="neon.js"></script>
+<script>
+  const TOTAL = 7;
+  const slide = makeSlide("Perfil", TOTAL);
+
+  const SC = `<svg class="sc" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M10,58 C4,22 42,4 72,9 C97,14 99,48 93,72 C86,96 38,99 14,86 C1,78 3,46 24,30"
+    fill="none" stroke="#39FF14" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke" style="filter: drop-shadow(0 0 8px rgba(57,255,20,.7))"/></svg>`;
+  const mark = html => `<div class="mark">${html}${SC}</div>`;
+  const PIN = `<svg class="pin" viewBox="0 0 24 24" fill="#fff"><path d="M16 3l5 5-3 1-4 4 1 5-2 2-4-4-5 5-1-1 5-5-4-4 2-2 5 1 4-4z"/></svg>`;
+  const LUPA = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="10" cy="10" r="7"/><path d="M15 15l6 6"/></svg>`;
+  const badge = (n, t) => `<div class="badge"><b>${n}</b>${t}</div>`;
+  const card = (kind, body) => `<div class="card ${kind}"><span class="tagc">${kind === "bad" ? "✕ Assim espanta" : "✓ Assim chama"}</span>${body}</div>`;
+  const extras = `<div class="gridbg"></div>`;
+
+  const slides = [
+    // 1. capa
+    slide(1, "mk cover2", `
+      <h1>Seu perfil tá <em class="hl">espantando</em> cliente<span class="dot">.</span></h1>
+      <p class="sub">Arrasta e compara com o seu.</p>`,
+      extras + `
+      <div class="phone ig">
+        <div class="bar">navalha.barber ⌄</div>
+        <div class="row">
+          <div class="av">N</div>
+          <div class="stats"><div>48<span>posts</span></div><div>312<span>seguidores</span></div><div>290<span>seguindo</span></div></div>
+        </div>
+        ${mark(`<div class="bio"><span class="nm">Navalha ✂️</span><br>Amor pelo que faço 💈<br>Deus é fiel 🙏 Desde 2019<br><span class="lk">linktr.ee/navalhabarber</span></div>`)}
+        <div class="btns"><div>Seguir</div><div>Mensagem</div></div>
+        ${mark(`<div class="hls"><div class="hi"><i>🔥</i>🔥</div><div class="hi"><i>✨</i>✨</div><div class="hi"><i>💈</i>2023</div><div class="hi"><i>📸</i>.</div></div>`)}
+      </div>
+      <div class="slide-foot-fade"></div>
+      <div class="sticker s1">Não diz o que faz</div>
+      <div class="sticker s2">Ninguém sabe o que tem aqui</div>`),
+
+    // 2. nome
+    slide(2, "mk", `
+      ${badge(1, "Nome")}
+      <h2>O nome também é <em class="hl">busca</em><span class="dot">.</span></h2>
+      <p class="lead">O campo Nome aparece na pesquisa do Instagram. Coloque o que você faz e onde.</p>
+      <div class="cmp">
+        ${card("bad", `<div class="ig row"><div class="av">N</div><div><div class="u">navalha.barber</div><div class="n">Navalha ✂️💈</div></div></div>
+          <div class="note">Quem pesquisa "barbearia santos" não te encontra.</div>`)}
+        ${card("good", `<div class="ig"><div class="search">${LUPA}barbearia santos</div>
+          <div class="row"><div class="av">N</div><div><div class="u">navalha.barber</div><div class="n">Navalha | <mark>Barbearia</mark> em <mark>Santos</mark></div></div></div></div>`)}
+      </div>`, extras),
+
+    // 3. bio
+    slide(3, "mk", `
+      ${badge(2, "Bio")}
+      <h2>Bio não é <em class="hl">frase de efeito</em><span class="dot">.</span></h2>
+      <p class="lead">Responda em 3 linhas: o que você faz, onde, e qual o próximo passo.</p>
+      <div class="cmp">
+        ${card("bad", `<div class="ig bio">Amor pelo que faço 💈<br>Deus é fiel 🙏<br>Desde 2019</div>`)}
+        ${card("good", `<div class="ig bio"><mark>Corte e barba em 40 min</mark>, sem fila.<br>📍 Gonzaga, Santos · Seg a Sáb<br>👇 <mark>Agende pelo WhatsApp</mark></div>`)}
+      </div>`, extras),
+
+    // 4. destaques
+    slide(4, "mk", `
+      ${badge(3, "Destaques")}
+      <h2>Destaque responde <em class="hl">pergunta</em><span class="dot">.</span></h2>
+      <p class="lead">Cada bolinha deve responder uma dúvida que o cliente mandaria no direct.</p>
+      <div class="cmp">
+        ${card("bad", `<div class="ig hls"><div class="hi"><i>🔥</i>🔥</div><div class="hi"><i>✨</i>✨</div><div class="hi"><i>💈</i>2023</div><div class="hi"><i>📸</i>.</div><div class="hi"><i>❤️</i>❤️</div></div>`)}
+        ${card("good", `<div class="ig hls"><div class="hi"><i>R$</i>Preços</div><div class="hi"><i>Antes<br>Depois</i>Cortes</div><div class="hi"><i>📍</i>Onde fica</div><div class="hi"><i>⭐</i>Clientes</div><div class="hi"><i>Agenda</i>Agendar</div></div>`)}
+      </div>`, extras),
+
+    // 5. fixados
+    slide(5, "mk", `
+      ${badge(4, "Fixados")}
+      <h2>Os 3 primeiros posts são a <em class="hl">vitrine</em><span class="dot">.</span></h2>
+      <p class="lead">Fixe quem você é, uma prova de resultado e como comprar.</p>
+      <div class="cmp">
+        ${card("bad", `<div class="ig tiles"><div class="tile">Feliz Natal</div><div class="tile">Bom dia!</div><div class="tile">Sorteio 2022</div></div>`)}
+        ${card("good", `<div class="ig tiles"><div class="tile">${PIN}Quem é o Léo</div><div class="tile">${PIN}Antes e depois</div><div class="tile">${PIN}Como agendar</div></div>`)}
+      </div>`, extras),
+
+    // 6. link
+    slide(6, "mk", `
+      ${badge(5, "Link")}
+      <h2>Um link, <em class="hl">um destino</em><span class="dot">.</span></h2>
+      <p class="lead">Cada botão a mais é uma chance de o cliente desistir no caminho.</p>
+      <div class="twocol">
+        ${card("bad", `<div class="ig links">${["Instagram", "TikTok", "Facebook", "Promoções", "Cursos", "Parcerias", "Loja", "Contato"].map(t => `<div class="lnk">${t}</div>`).join("")}</div>`)}
+        ${card("good", `<div class="ig"><div class="cta-btn">Agendar no WhatsApp</div>
+          <div class="msg">"Oi! Vim pelo Instagram e quero agendar um corte."</div>
+          <div class="note">Mensagem já escrita. O cliente só aperta enviar.</div></div>`)}
+      </div>`, extras),
+
+    // 7. cta
+    slide(7, "green cta", `
+      <div class="label">Análise grátis</div>
+      <h2>Quer que a gente olhe o <em class="hl">seu</em>?</h2>
+      <p class="sub">Manda PERFIL no direct. A gente responde com os 3 ajustes que mais fazem diferença no seu.</p>
+      <div class="pill">Direct: “perfil” ↗</div>`,
+      `<img class="obj3d" src="3d/logo-dark.png" alt="">`, "Link na bio"),
+  ];
+
+  document.getElementById("deck").innerHTML = slides.join("");
+</script>
+</body>
+</html>

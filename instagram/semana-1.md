@@ -117,3 +117,30 @@ Os dados de custo por contato e de período saem do Gerenciador de Anúncios, n�
 ## Sobre "Comenta DIAGNÓSTICO"
 
 Cada comentário precisa de resposta no direct em poucas horas, senão a chamada perde credibilidade. Se o volume crescer, automatizar com ManyChat.
+
+---
+
+## Extra: Carrossel "Seu perfil tá espantando cliente" (7 slides, pronto)
+
+Arquivos: `instagram/out/perfil/01.png` a `07.png`. Fonte: `instagram/perfil.html`.
+A "Navalha Barbearia" é um perfil fictício, criado só para o exemplo.
+
+**Legenda:**
+```
+Seu perfil é a vitrine. E muita vitrine está com a porta fechada.
+
+Antes de te chamar, o cliente olha 5 coisas:
+1. Nome: você aparece quando ele pesquisa o que você faz?
+2. Bio: diz o que você faz, onde e como comprar?
+3. Destaques: respondem as dúvidas que ele mandaria no direct?
+4. Fixados: mostram quem você é, uma prova e como comprar?
+5. Link: leva direto pra conversa?
+
+Quantos dos 5 o seu perfil já tem? Responde com o número.
+
+Quer que a gente olhe o seu? Manda PERFIL no direct e a gente responde com os 3 ajustes que mais fazem diferença.
+
+(Perfil de exemplo, criado pra este post.)
+
+#instagramparanegocios #marketinglocal #[suacidade]
+```
