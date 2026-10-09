@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Opus 5.5 — Intelligence in Motion</title>
+<style>
+/* Inter / Inter Display (SIL OFL 1.1) — subsets in fonts/, see fonts/LICENSE-Inter.txt */
+@font-face { font-family: "Inter Display"; font-weight: 100; font-display: block; src: url("fonts/InterDisplay-Thin.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 200; font-display: block; src: url("fonts/InterDisplay-ExtraLight.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 300; font-display: block; src: url("fonts/InterDisplay-Light.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 400; font-display: block; src: url("fonts/InterDisplay-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Inter Text"; font-weight: 500; font-display: block; src: url("fonts/Inter-Medium.woff2") format("woff2"); }
+
+:root {
+  --black: #050505;
+  --charcoal: #101114;
+  --white: #F5F5F5;
+  --silver: #BFC5CE;
+  --amber: #D9A66C;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+body {
+  font-family: "Inter Display", system-ui, sans-serif;
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* ---------- Stage: fixed 1080 × 1920, scaled to fit in preview ---------- */
+#stage {
+  position: absolute; left: 0; top: 0;
+  width: 1080px; height: 1920px;
+  overflow: hidden;
+  background: var(--black);
+  transform-origin: 0 0;
+  isolation: isolate;
+  contain: strict;
+}
+#stage canvas { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; display: block; }
+#fg { mix-blend-mode: screen; }
+#vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(120% 78% at 50% 47%, rgba(0,0,0,0) 52%, rgba(0,0,0,.42) 82%, rgba(0,0,0,.72) 100%);
+}
+#grain { mix-blend-mode: overlay; opacity: .26; }
+#fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+
+/* ---------- Typography ---------- */
+#type { position: absolute; inset: 0; }
+.grp { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 920px; }
+.t {
+  position: absolute; left: 0; width: 1080px;
+  text-align: center; white-space: nowrap;
+  line-height: 1;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1, "case" 1;
+  color: var(--white);
+}
+.t .line { display: block; height: 1em; }
+.t .line + .line { margin-top: var(--gap, 0.02em); }
+
+/* split structure (built by film.js) */
+.ln { position: relative; display: inline-block; height: 1em; vertical-align: top; }
+.ln.mask { clip-path: inset(-0.04em -1400px -0.04em -1400px); }
+.ln.persp { perspective: 900px; }
+.ch {
+  position: absolute; top: 0;
+  white-space: pre;
+}
+
+/* materials */
+.metal .ch, .metal .sheen { -webkit-background-clip: text; background-clip: text; color: transparent; }
+.metal .ch { background-image: linear-gradient(180deg, #FFFFFF 14%, #F5F5F5 42%, #D9DDE3 66%, #AEB5BF 92%); }
+.metal .ch.acc { background-image: linear-gradient(180deg, #FBEBD4 14%, #EECFA6 44%, #D9A66C 74%, #B9874F 96%); }
+.silver .ch { color: var(--silver); }
+.soft .ch { color: var(--white); }
+
+.sheen {
+  position: absolute; left: 0; top: 0;
+  white-space: pre;
+  background-image: linear-gradient(104deg,
+      rgba(255,247,236,0) 0%, rgba(255,247,236,0) 43%,
+      rgba(255,236,212,.55) 47%, rgba(255,250,244,1) 50%, rgba(255,236,212,.55) 53%,
+      rgba(255,247,236,0) 57%, rgba(255,247,236,0) 100%);
+  background-size: 250% 100%;
+  background-position: var(--sx, 100%) 0;
+  opacity: 0;
+  filter: drop-shadow(0 0 14px rgba(255,214,170,.45));
+  pointer-events: none;
+}
+
+/* type roles */
+.label   { font-family: "Inter Text", system-ui, sans-serif; font-weight: 500; font-size: 30px; letter-spacing: .5em; }
+#w-tag   { font-size: 34px; letter-spacing: .42em; }
+.intel   { font-weight: 300; font-size: 64px; letter-spacing: .36em; }
+.title   { font-weight: 200; font-size: 196px; letter-spacing: -.012em; }
+.state   { font-weight: 300; font-size: 124px; letter-spacing: -.012em; --gap: .04em; }
+.verb    { font-weight: 400; font-size: 150px; letter-spacing: -.01em; }
+.quiet   { font-weight: 300; font-size: 70px;  letter-spacing: .02em; }
+
+#refl { transform: scaleY(-1); opacity: .13; filter: blur(1.6px);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 18%, rgba(0,0,0,1) 86%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,0) 18%, rgba(0,0,0,1) 86%); }
+
+.hair { position: absolute; height: 1px; left: 0; width: 1080px; transform-origin: 540px 50%; pointer-events: none; }
+.hair.silver-line { background: linear-gradient(90deg, rgba(191,197,206,0) 0%, rgba(191,197,206,.55) 18%, rgba(191,197,206,.55) 82%, rgba(191,197,206,0) 100%); }
+.hair.floor { background: linear-gradient(90deg, rgba(217,166,108,0) 6%, rgba(232,206,170,.55) 50%, rgba(217,166,108,0) 94%); }
+.hair.amber { background: linear-gradient(90deg, rgba(217,166,108,0), rgba(217,166,108,.95) 50%, rgba(217,166,108,0)); }
+.tick { position: absolute; width: 1px; height: 18px; background: rgba(191,197,206,.6); }
+
+/* ---------- Preview chrome (hidden in render mode) ---------- */
+#ui {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(16,17,20,.86); border: 1px solid rgba(191,197,206,.14);
+  font: 500 12px/1 "Inter Text", system-ui, sans-serif; letter-spacing: .04em; color: #BFC5CE;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  z-index: 10;
+}
+#ui button {
+  all: unset; cursor: pointer; padding: 6px 10px; border-radius: 999px;
+  color: #F5F5F5; background: rgba(255,255,255,.06);
+}
+#ui button:hover { background: rgba(255,255,255,.12); }
+#ui button:focus-visible { outline: 1px solid #D9A66C; outline-offset: 2px; }
+#ui input[type=range] { width: min(46vw, 360px); accent-color: #D9A66C; }
+#ui .tc { font-variant-numeric: tabular-nums; min-width: 92px; text-align: right; }
+html.render #ui { display: none; }
+html.render body { background: var(--black); }
+</style>
+</head>
+<body>
+<div id="stage" aria-label="Claude Opus 5.5 — motion film, 30 seconds">
+  <canvas id="bg" width="1080" height="1920"></canvas>
+
+  <div id="type">
+    <!-- Scene 01 -->
+    <div class="t intel metal" id="w-intel" data-cy="920" data-optical>INTELLIGENCE</div>
+
+    <!-- Scene 02 -->
+    <div class="grp" id="g-reveal">
+      <div class="t label silver" id="w-intro" data-cy="664" data-optical>INTRODUCING</div>
+      <div class="t title metal" id="w-claude" data-cy="852" data-sheen>CLAUDE</div>
+      <div class="t title metal" id="w-opus" data-cy="1062" data-sheen data-accent="5">OPUS 5.5</div>
+      <div class="t title metal" id="refl" data-mirror-of="w-opus" data-accent="5">OPUS 5.5</div>
+      <div class="hair floor" id="floor"></div>
+    </div>
+
+    <!-- Scene 03 -->
+    <div class="grp" id="g-think">
+      <div class="t state metal" id="w-think" data-cy="920"><span class="line">THINK</span><span class="line">DEEPER.</span></div>
+    </div>
+    <div class="t state metal" id="w-solve" data-cy="920"><span class="line">SOLVE</span><span class="line">COMPLEX</span><span class="line">PROBLEMS.</span></div>
+    <div class="grp" id="g-build">
+      <div class="hair silver-line" id="guide-top"></div>
+      <div class="hair silver-line" id="guide-bot"></div>
+      <div class="t state metal" id="w-build" data-cy="920"><span class="line">BUILD WITH</span><span class="line">PRECISION.</span></div>
+    </div>
+
+    <!-- Scene 04 -->
+    <div class="t verb metal" id="w-reason" data-cy="920">REASON.</div>
+    <div class="t verb metal" id="w-create" data-cy="920">CREATE.</div>
+    <div class="t verb metal" id="w-execute" data-cy="920">EXECUTE.</div>
+
+    <!-- Scene 05 -->
+    <div class="t quiet soft" id="w-less" data-cy="790">LESS NOISE.</div>
+    <div class="t quiet soft" id="w-more" data-cy="940">MORE CLARITY.</div>
+    <div class="t quiet soft" id="w-better" data-cy="1090">BETTER WORKFLOWS.</div>
+
+    <!-- Scene 06 / 07 -->
+    <div class="grp" id="g-final">
+      <div class="t title metal" id="w-final" data-cy="914" data-sheen data-accent-line="1" data-accent="5"><span class="line">CLAUDE</span><span class="line">OPUS 5.5</span></div>
+      <div class="hair amber" id="tag-rule"></div>
+      <div class="t label silver" id="w-tag" data-cy="1236" data-optical>INTELLIGENCE IN MOTION.</div>
+    </div>
+  </div>
+
+  <canvas id="fg" width="1080" height="1920"></canvas>
+  <div id="vignette"></div>
+  <canvas id="grain" width="1080" height="1920"></canvas>
+  <div id="fade"></div>
+</div>
+
+<div id="ui" role="group" aria-label="Playback">
+  <button id="b-play" type="button" aria-label="Play or pause">Pause</button>
+  <button id="b-restart" type="button" aria-label="Restart">Restart</button>
+  <input id="scrub" type="range" min="0" max="1800" step="1" value="0" aria-label="Timeline">
+  <span class="tc" id="tc">00:00.00</span>
+</div>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/CustomEase.min.js"></script>
+<script src="film.js"></script>
+</body>
+</html>

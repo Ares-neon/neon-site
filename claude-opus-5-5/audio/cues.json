@@ -1,0 +1,155 @@
+{
+ "duration": 30,
+ "fps": 60,
+ "cues": [
+  {
+   "t": 0.15,
+   "kind": "drone"
+  },
+  {
+   "t": 0.45,
+   "kind": "lightOn"
+  },
+  {
+   "t": 1.1,
+   "kind": "beam",
+   "dur": 2.3
+  },
+  {
+   "t": 1.65,
+   "kind": "word",
+   "dur": 1.2
+  },
+  {
+   "t": 3.1,
+   "kind": "sweep",
+   "dur": 0.78
+  },
+  {
+   "t": 4.25,
+   "kind": "pulse",
+   "note": 0
+  },
+  {
+   "t": 4.9,
+   "kind": "pulse",
+   "note": 1
+  },
+  {
+   "t": 5.95,
+   "kind": "impact"
+  },
+  {
+   "t": 6.95,
+   "kind": "riser",
+   "dur": 0.85
+  },
+  {
+   "t": 7.55,
+   "kind": "through"
+  },
+  {
+   "t": 8.2,
+   "kind": "pulse",
+   "note": 2
+  },
+  {
+   "t": 9.45,
+   "kind": "recede"
+  },
+  {
+   "t": 9.76,
+   "kind": "assemble",
+   "dur": 0.5
+  },
+  {
+   "t": 11,
+   "kind": "scatter"
+  },
+  {
+   "t": 11.3,
+   "kind": "guides"
+  },
+  {
+   "t": 11.38,
+   "kind": "pulse",
+   "note": 3
+  },
+  {
+   "t": 12.75,
+   "kind": "gather",
+   "dur": 1.6
+  },
+  {
+   "t": 13.35,
+   "kind": "pulse",
+   "note": 4
+  },
+  {
+   "t": 14.45,
+   "kind": "build",
+   "dur": 1.75
+  },
+  {
+   "t": 14.85,
+   "kind": "pulse",
+   "note": 5
+  },
+  {
+   "t": 16.05,
+   "kind": "scan",
+   "dur": 1.3
+  },
+  {
+   "t": 16.803,
+   "kind": "pulse",
+   "note": 6
+  },
+  {
+   "t": 17.55,
+   "kind": "settle"
+  },
+  {
+   "t": 18.99,
+   "kind": "quiet",
+   "note": 0
+  },
+  {
+   "t": 19.776,
+   "kind": "quiet",
+   "note": 1
+  },
+  {
+   "t": 20.45,
+   "kind": "quiet",
+   "note": 2
+  },
+  {
+   "t": 22.45,
+   "kind": "contract"
+  },
+  {
+   "t": 23,
+   "kind": "converge",
+   "dur": 1.42
+  },
+  {
+   "t": 24.42,
+   "kind": "reveal"
+  },
+  {
+   "t": 25.25,
+   "kind": "sheen",
+   "dur": 1.35
+  },
+  {
+   "t": 27.7,
+   "kind": "tag"
+  },
+  {
+   "t": 29.35,
+   "kind": "end",
+   "dur": 0.6
+  }
+ ]
+}
