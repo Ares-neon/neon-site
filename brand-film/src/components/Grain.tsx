@@ -2,8 +2,10 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {ShaderCanvas} from './ShaderCanvas';
 
-// Two-scale film grain (fine pixel grain + ~2px clumps), new pattern every
-// frame, seeded by the frame number. Blended with `overlay`.
+// Two-scale film grain (fine pixel grain + ~2px clumps), seeded by the frame
+// number. The pattern changes at 30 Hz (every second frame), like film grain
+// at 24-30 fps, which also keeps the H.264 bitrate in check. Blended with
+// `overlay`.
 const FRAG = `
 uniform float uSeed;
 uniform float uAmount;
@@ -27,11 +29,11 @@ void main() {
 	outColor = vec4(vec3(0.5 + n * uAmount), 1.0);
 }`;
 
-export const Grain: React.FC<{amount?: number; opacity?: number}> = ({amount = 0.5, opacity = 0.22}) => {
+export const Grain: React.FC<{amount?: number; opacity?: number}> = ({amount = 0.5, opacity = 0.17}) => {
 	const frame = useCurrentFrame();
 	return (
 		<AbsoluteFill style={{mixBlendMode: 'overlay', opacity, pointerEvents: 'none', zIndex: 101}}>
-			<ShaderCanvas frag={FRAG} uniforms={{uSeed: (frame % 997) + 1.0, uAmount: amount}} />
+			<ShaderCanvas frag={FRAG} uniforms={{uSeed: (Math.floor(frame / 2) % 997) + 1.0, uAmount: amount}} />
 		</AbsoluteFill>
 	);
 };

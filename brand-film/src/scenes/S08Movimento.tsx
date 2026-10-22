@@ -134,6 +134,16 @@ export const S08Movimento: React.FC<SceneProps> = ({f}) => {
 					</g>
 					<g opacity={light}>
 						<Body phase={phase} samples={samples} x={runnerX} fill="#030303" />
+						{/* rim light from a high back light: the silhouette minus itself shifted down-forward */}
+						<mask id="s08-rim" maskUnits="userSpaceOnUse" x="-200" y="0" width="1480" height="1920">
+							<Body phase={phase} samples={[0]} x={runnerX} fill="white" />
+							<g transform="translate(2.5 3.5)">
+								<Body phase={phase} samples={[0]} x={runnerX} fill="black" />
+							</g>
+						</mask>
+						<g mask="url(#s08-rim)" opacity={0.55}>
+							<Body phase={phase} samples={[0]} x={runnerX} fill="#d9d9d9" />
+						</g>
 					</g>
 					{pillars.map((x, i) =>
 						x > -400 && x < 1500 ? <rect key={i} x={x} y={-100} width={240} height={2200} fill="#020202" filter="url(#s08-fg)" opacity={light} /> : null,

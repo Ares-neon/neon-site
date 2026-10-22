@@ -125,9 +125,9 @@ const legPaths = (lg: Leg) => {
 		-footAngle,
 	);
 	return [
-		capsule(hip, knee, 0.066, 0.042),
-		capsule(knee, calf, 0.041, 0.044),
-		capsule(calf, ankle, 0.043, 0.024),
+		capsule(hip, knee, 0.056, 0.036),
+		capsule(knee, calf, 0.034, 0.037),
+		capsule(calf, ankle, 0.036, 0.02),
 		smoothClosed(foot),
 	];
 };
@@ -139,7 +139,7 @@ const armPaths = (shoulder: Pt, p: number) => {
 	const elbow = along(shoulder, a, L.upperArm);
 	const wrist = along(elbow, a + e, L.forearm);
 	const hand = along(wrist, a + e + 10, 0.03);
-	return [capsule(shoulder, elbow, 0.036, 0.027), capsule(elbow, wrist, 0.027, 0.02), capsule(wrist, hand, 0.022, 0.024)];
+	return [capsule(shoulder, elbow, 0.029, 0.022), capsule(elbow, wrist, 0.022, 0.016), capsule(wrist, hand, 0.018, 0.02)];
 };
 
 /** All body parts for a phase of the gait cycle (0..1, right foot contact at 0). */
@@ -168,20 +168,20 @@ export const runnerPaths = (p: number): string[] => {
 	const shoulder = along(hip, 180 - lean, L.torso);
 	// Torso outline in torso space (u up the spine, v forward), then placed.
 	const torsoLocal: Pt[] = [
-		[0.0, 0.075],
-		[0.12, 0.062],
-		[0.3, 0.058],
-		[0.55, 0.078],
-		[0.78, 0.074],
-		[0.97, 0.05],
+		[0.0, 0.062],
+		[0.12, 0.054],
+		[0.3, 0.05],
+		[0.55, 0.068],
+		[0.78, 0.064],
+		[0.97, 0.042],
 		[1.04, 0.0],
-		[0.97, -0.052],
-		[0.72, -0.07],
-		[0.42, -0.058],
-		[0.18, -0.07],
-		[0.02, -0.088],
-		[-0.06, -0.04],
-		[-0.06, 0.04],
+		[0.97, -0.046],
+		[0.72, -0.06],
+		[0.42, -0.05],
+		[0.18, -0.06],
+		[0.02, -0.074],
+		[-0.06, -0.034],
+		[-0.06, 0.034],
 	];
 	const ux = shoulder[0] - hip[0];
 	const uy = shoulder[1] - hip[1];
@@ -215,7 +215,7 @@ export const runnerPaths = (p: number): string[] => {
 		...armPaths(shoulder, p + 0.5), // far arm
 		...legPaths(left),
 		smoothClosed(torso),
-		capsule(neckBase, headC, 0.034, 0.03),
+		capsule(neckBase, headC, 0.028, 0.026),
 		smoothClosed(head),
 		...legPaths(right),
 		...armPaths(shoulder, p), // near arm

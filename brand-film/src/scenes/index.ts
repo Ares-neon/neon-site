@@ -1,6 +1,5 @@
 import type React from 'react';
 import {SCENE_META, type SceneMeta} from '../timeline';
-import {makePlaceholder} from './Placeholder';
 import {S01Abertura} from './S01Abertura';
 import {S02NovoOlhar} from './S02NovoOlhar';
 import {S03Ideias} from './S03Ideias';
@@ -23,7 +22,7 @@ import {S19Manifesto} from './S19Manifesto';
 import {S20Encerramento} from './S20Encerramento';
 import type {SceneProps} from './types';
 
-const IMPLEMENTED: Record<string, React.FC<SceneProps>> = {
+const COMPONENTS: Record<string, React.FC<SceneProps>> = {
 	S01: S01Abertura,
 	S02: S02NovoOlhar,
 	S03: S03Ideias,
@@ -48,7 +47,10 @@ const IMPLEMENTED: Record<string, React.FC<SceneProps>> = {
 
 export type SceneEntry = SceneMeta & {Component: React.FC<SceneProps>};
 
-export const SCENES: SceneEntry[] = SCENE_META.map((m) => ({
-	...m,
-	Component: IMPLEMENTED[m.id] ?? makePlaceholder(m),
-}));
+export const SCENES: SceneEntry[] = SCENE_META.map((m) => {
+	const Component = COMPONENTS[m.id];
+	if (!Component) {
+		throw new Error(`No component for scene ${m.id}`);
+	}
+	return {...m, Component};
+});
