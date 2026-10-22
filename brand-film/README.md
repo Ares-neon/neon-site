@@ -9,8 +9,8 @@ renderizado isoladamente e duas renderizações produzem o mesmo resultado.
 | --- | --- |
 | Formato | 9:16, 1080 × 1920 |
 | Duração | 60,000 s · 3.600 frames · 60 fps |
-| Vídeo | MP4 H.264 (yuv420p, CRF 17, preset slow) |
-| Áudio | AAC 320 kbps, trilha original sintetizada (−16 LUFS, pico −1,2 dBTP) |
+| Vídeo | MP4 H.264 High@4.2, yuv420p BT.709 faixa limitada, CRF 17 (~14,5 Mbps) |
+| Áudio | AAC 48 kHz estéreo 320 kbps, trilha original sintetizada (−16 LUFS, pico −1,2 dBTP) |
 | Cores | Preto `#050505` · Branco `#FFFFFF` · Verde `#00E63B` |
 | Tipografia | Inter Variable (eixo `opsz` em 32 = Inter Display), pesos 100–900 |
 
@@ -25,13 +25,21 @@ npm install
 npm run studio          # pré-visualização interativa no navegador (Remotion Studio)
 npm run render:preview  # prévia 540 × 960 → out/neon-brand-film-preview.mp4
 npm run render          # versão final 1080 × 1920 · 60 fps → out/neon-brand-film.mp4
+npm run deliver         # arquivo de entrega → out/NEON-BrandFilm-1080x1920-60fps.mp4
 ```
+
+O passo `deliver` (ffmpeg) existe porque o Remotion grava o H.264 em faixa completa
+BT.601 (`yuvj420p`), que várias plataformas e players interpretam como BT.709
+limitado, deslocando pretos e verdes. Ele converte para BT.709 faixa limitada com
+tags corretas, codifica o áudio direto do WAV mestre e fixa o contêiner em 60,000 s.
+Verificação do arquivo entregue: 3600 frames, 60,000 s em vídeo, áudio e contêiner;
+verde do símbolo decodificado como `rgb(1, 229, 58)` para o alvo `#00E63B`.
 
 - A configuração (codec, CRF, áudio, renderizador WebGL) está em `remotion.config.ts`.
 - O WebGL usa SwiftShader (`--gl=swangle`): funciona em qualquer máquina, sem GPU.
   Num Mac com GPU, `npx remotion render NeonBrandFilm out/neon-brand-film.mp4 --gl=angle` é mais rápido.
 - Para usar um Chrome já instalado: `REMOTION_BROWSER_EXECUTABLE=/caminho/headless_shell npm run render`.
-- Tempo de referência (4 vCPUs, sem GPU): ~0,9 s por frame nas cenas 3D, ~40 min para o filme inteiro.
+- Tempo de referência (4 vCPUs, sem GPU): ~0,25 s/frame nas cenas em shader, ~0,7–1 s nas cenas 3D, até ~3 s nas cenas SVG com máscaras (06 e 08); ~1 h para o filme inteiro. O timeout por frame foi elevado para 5 min em `remotion.config.ts`.
 
 No Studio, a pasta **Cenas** tem uma composição por cena (com as sobreposições de
 transição), útil para revisar cada uma isoladamente.
