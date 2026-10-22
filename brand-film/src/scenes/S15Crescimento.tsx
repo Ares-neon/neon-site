@@ -30,7 +30,7 @@ export const S15Crescimento: React.FC<SceneProps> = ({f}) => {
 	const m = meta('S15');
 	const mats = useMemo(() => {
 		return {
-			stone: new THREE.MeshStandardMaterial({color: '#2b2b2b', roughness: 0.8}),
+			stone: new THREE.MeshStandardMaterial({color: '#363636', roughness: 0.82}),
 			line: new THREE.MeshBasicMaterial({color: COLORS.green, toneMapped: false}),
 		};
 	}, []);
@@ -54,10 +54,11 @@ export const S15Crescimento: React.FC<SceneProps> = ({f}) => {
 				<CameraRig position={camPos} target={target} fov={44} />
 				<Exposure value={1.35} />
 				<StudioEnv intensity={0.35} panels={[{position: [0, 10, 0], size: [10, 4], intensity: 1.4}]} />
-				<ReflectiveFloor color="#070707" roughness={0.34} reflectivity={0.45} blur={0.008} />
+				<ReflectiveFloor color="#070707" roughness={0.3} reflectivity={0.5} blur={0.011} distortion={0.35} />
 				<rectAreaLight position={[-2, 14, 2]} rotation={[-Math.PI / 2.1, -0.3, 0]} width={10} height={4} intensity={1.6} />
 				<rectAreaLight position={[4, 9, -20]} rotation={[0, Math.PI, 0]} width={18} height={6} intensity={0.55} />
-				<directionalLight position={[-7, 8, 10]} intensity={1.5} />
+				<directionalLight position={[-7, 8, 10]} intensity={1.9} />
+				<directionalLight position={[8, 3, -4]} intensity={0.5} />
 				{PILLARS.map((p, i) => {
 					const k = ramp(f, p.at, p.at + 50, ease.outExpo);
 					const h = Math.max(p.h * k, 0.001);

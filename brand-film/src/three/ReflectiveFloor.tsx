@@ -15,6 +15,8 @@ type Props = {
 	resolution?: number;
 	/** Repeat of the concrete noise used for roughness / distortion. */
 	textureRepeat?: number;
+	/** Scale of the noise distortion of the reflected image (0 = clean mirror). */
+	distortion?: number;
 };
 
 /**
@@ -31,6 +33,7 @@ export const ReflectiveFloor: React.FC<Props> = ({
 	blur = 0.006,
 	resolution = 0.5,
 	textureRepeat = 18,
+	distortion = 1,
 }) => {
 	const gl = useThree((s) => s.gl);
 	const canvasSize = useThree((s) => s.size);
@@ -54,6 +57,7 @@ export const ReflectiveFloor: React.FC<Props> = ({
 			uBlur: {value: blur},
 			uNoise: {value: tex},
 			uRepeat: {value: textureRepeat},
+			uDistort: {value: distortion},
 		};
 		material.onBeforeCompile = (shader) => {
 			Object.assign(shader.uniforms, uniforms);
@@ -69,6 +73,7 @@ uniform sampler2D uNoise;
 uniform float uReflectivity;
 uniform float uBlur;
 uniform float uRepeat;
+uniform float uDistort;
 varying vec4 vReflUv;
 varying vec2 vFloorUv;
 vec3 sampleRefl(vec2 uv, float r) {
@@ -87,11 +92,11 @@ vec3 sampleRefl(vec2 uv, float r) {
 					`{
 	vec2 ruv = vReflUv.xy / vReflUv.w;
 	float n = texture2D(uNoise, vFloorUv * uRepeat).r;
-	ruv += (n - 0.5) * vec2(0.002, 0.006);
+	ruv += (n - 0.5) * vec2(0.002, 0.006) * uDistort;
 	vec3 refl = sampleRefl(ruv, uBlur * (0.6 + n));
 	vec3 V = normalize(vViewPosition);
 	float fres = 0.25 + 0.75 * pow(1.0 - abs(dot(normalize(normal), -V)), 4.0);
-	outgoingLight += refl * uReflectivity * fres * (0.85 + 0.3 * n);
+	outgoingLight += refl * uReflectivity * fres * (1.0 + (0.3 * n - 0.15) * uDistort);
 }
 #include <opaque_fragment>`,
 				);

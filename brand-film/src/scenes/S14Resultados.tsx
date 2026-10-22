@@ -21,10 +21,10 @@ const folds = (i: number, enter: number): SilkMotion => ({
 		0.9 * Math.sin(1.1 * PI * s + 0.35 * t + i * 1.7) - 0.35 * s * (i - 1) + (i - 1) * 1.15 + (1 - enter) * 2,
 		0.8 * Math.sin(1.9 * PI * s - 0.3 * t + i * 2.3) - i * 0.6,
 	],
-	twist: (s, t) => 0.4 + i * 0.5 + 1.1 * Math.sin(1.4 * PI * s - 0.5 * t + i * 0.9) + 0.25 * Math.sin(3.1 * PI * s + 0.3 * t),
+	twist: (s, t) => 0.4 + i * 0.5 + 0.9 * Math.sin(1.3 * PI * s - 0.5 * t + i * 0.9) + 0.18 * Math.sin(2.9 * PI * s + 0.3 * t),
 	width: (s) => (2.2 - i * 0.3) * (1 - 0.18 * Math.cos(2 * PI * s)),
-	cup: (s, t) => 0.6 * Math.sin(2.2 * PI * s - 0.45 * t + i) + 0.1 * Math.sin(5.6 * PI * s + 0.4 * t + i * 1.3),
-	flutter: {amp: 0.03, freq: 3.0, speed: 0.3, seed: 3 + i},
+	cup: (s, t) => 0.5 * Math.sin(2.0 * PI * s - 0.45 * t + i) + 0.05 * Math.sin(5.2 * PI * s + 0.4 * t + i * 1.3),
+	flutter: {amp: 0.015, freq: 2.6, speed: 0.3, seed: 3 + i},
 });
 
 export const S14Resultados: React.FC<SceneProps> = ({f}) => {
@@ -89,7 +89,7 @@ export const S14Resultados: React.FC<SceneProps> = ({f}) => {
 				/>
 				<directionalLight position={[6, 1, -6]} intensity={mix(3.5, 5.0, sculpt)} color={new THREE.Color('#ffffff').lerp(new THREE.Color(COLORS.green), sculpt)} />
 				{[0, 1, 2].map((i) => (
-					<Silk key={i} t={tEff + i * 0.7} motion={folds(i, enter)} castShadow receiveShadow segU={300} segV={40}>
+					<Silk key={i} t={tEff + i * 0.7} motion={folds(i, enter)} castShadow receiveShadow segU={380} segV={48}>
 						<primitive object={mats[i]} attach="material" />
 					</Silk>
 				))}

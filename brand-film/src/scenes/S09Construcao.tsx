@@ -56,7 +56,7 @@ export const S09Construcao: React.FC<SceneProps> = ({f}) => {
 			green: new THREE.MeshPhysicalMaterial({
 				color: '#062a12',
 				emissive: new THREE.Color(COLORS.green),
-				emissiveIntensity: 0.32,
+				emissiveIntensity: 0.13,
 				roughness: 0.35,
 				transparent: true,
 				opacity: 0.9,
@@ -69,9 +69,9 @@ export const S09Construcao: React.FC<SceneProps> = ({f}) => {
 	const cam = ramp(f, -10, 150, ease.inOut);
 	const orbit = ramp(f, -10, 188, ease.inOutSine);
 	const camPos: [number, number, number] = [
-		Math.sin(mix(0, 0.55, orbit)) * mix(9, 8.6, cam),
-		mix(0, 4.4, cam),
-		Math.cos(mix(0, 0.55, orbit)) * mix(9, 8.6, cam),
+		Math.sin(mix(0, 0.5, orbit)) * mix(9, 9.8, cam),
+		mix(0, 4.6, cam),
+		Math.cos(mix(0, 0.5, orbit)) * mix(9, 9.8, cam),
 	];
 	const target: [number, number, number] = [0, mix(1.29, 0.45, cam), 0];
 	const beam = ramp(f, 150, 180, ease.inCubic);
@@ -107,8 +107,8 @@ export const S09Construcao: React.FC<SceneProps> = ({f}) => {
 				/>
 				<directionalLight position={[4, 2, -6]} intensity={1.4} />
 				{/* green light spilling from the green layer onto its neighbours */}
-				<rectAreaLight position={[0, 2 * GAP + 0.04, 0]} rotation={[Math.PI / 2, 0, 0]} width={W * 0.9} height={D * 0.9} intensity={1.4 * ramp(f, 66, 96)} color={COLORS.green} />
-				<rectAreaLight position={[0, 2 * GAP - 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]} width={W * 0.9} height={D * 0.9} intensity={1.4 * ramp(f, 66, 96)} color={COLORS.green} />
+				<rectAreaLight position={[0, 2 * GAP + 0.04, 0]} rotation={[Math.PI / 2, 0, 0]} width={W * 0.9} height={D * 0.9} intensity={0.45 * ramp(f, 66, 96)} color={COLORS.green} />
+				<rectAreaLight position={[0, 2 * GAP - 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]} width={W * 0.9} height={D * 0.9} intensity={0.45 * ramp(f, 66, 96)} color={COLORS.green} />
 				{PLATES.map((p, i) => {
 					const k = ramp(f, p.at, p.at + 44, ease.outExpo);
 					const settle = ramp(f, p.at + 20, p.at + 60, ease.outCubic);
@@ -137,7 +137,7 @@ export const S09Construcao: React.FC<SceneProps> = ({f}) => {
 									<mesh position={[-W / 2 - 0.004, 0, 0]} material={mats.edge}>
 										<boxGeometry args={[0.008, T * 0.5, D]} />
 									</mesh>
-									<GlowLine from={[-W / 2, 0, D / 2 + 0.01]} to={[W / 2, 0, D / 2 + 0.01]} width={0.22} core={0.012} color={COLORS.green} intensity={0.8} fadeEnds={0.02} />
+									<GlowLine from={[-W / 2, 0, D / 2 + 0.01]} to={[W / 2, 0, D / 2 + 0.01]} width={0.22} core={0.012} color={COLORS.green} intensity={0.6} fadeEnds={0.02} />
 								</>
 							) : null}
 						</group>
