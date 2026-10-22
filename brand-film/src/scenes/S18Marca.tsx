@@ -51,9 +51,12 @@ export const S18Marca: React.FC<SceneProps> = ({f}) => {
 					<filter id="s18-glow" x="-60%" y="-60%" width="220%" height="220%">
 						<feGaussianBlur stdDeviation="22" />
 					</filter>
-					<filter id="s18-glow2" x="-100%" y="-100%" width="300%" height="300%">
-						<feGaussianBlur stdDeviation="70" />
-					</filter>
+					<radialGradient id="s18-atmo">
+						<stop offset="0" stopColor={COLORS.green} stopOpacity="1" />
+						<stop offset="0.4" stopColor={COLORS.green} stopOpacity="0.6" />
+						<stop offset="0.75" stopColor={COLORS.green} stopOpacity="0.15" />
+						<stop offset="1" stopColor={COLORS.green} stopOpacity="0" />
+					</radialGradient>
 					<filter id="s18-soft" x="-20%" y="-20%" width="140%" height="140%">
 						<feGaussianBlur stdDeviation="3" />
 					</filter>
@@ -80,7 +83,7 @@ export const S18Marca: React.FC<SceneProps> = ({f}) => {
 				</defs>
 				<g transform={`translate(540 960) scale(${push}) translate(-540 -960)`}>
 					{/* faint green atmosphere behind the symbol */}
-					<ellipse cx={540} cy={cy} rx={300} ry={360} fill={COLORS.green} opacity={0.10 * glow} filter="url(#s18-glow2)" />
+					<ellipse cx={540} cy={cy} rx={440} ry={520} fill="url(#s18-atmo)" opacity={0.10 * glow} />
 					<g mask="url(#s18-hex)">
 						<g transform={`translate(${SYM_X} ${SYM_Y}) scale(${S})`}>
 							<g opacity={0.5 * glow} filter="url(#s18-glow)">

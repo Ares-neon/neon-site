@@ -37,20 +37,25 @@ export const S06Pessoas: React.FC<SceneProps> = ({f}) => {
 			<svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>
 				<defs>
 					<path id="s06-head" d={HEAD} />
-					<filter id="s06-soft" x="-20%" y="-20%" width="140%" height="140%">
+					{/* Filters and masks are limited to the lit side of the face: full-frame
+					    blur regions are the most expensive thing in a software render. */}
+					<filter id="s06-soft" filterUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
 						<feGaussianBlur stdDeviation="1.1" />
 					</filter>
-					<filter id="s06-glow" x="-50%" y="-50%" width="200%" height="200%">
+					<filter id="s06-glow" filterUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
 						<feGaussianBlur stdDeviation="16" />
 					</filter>
-					<filter id="s06-wide" x="-80%" y="-80%" width="260%" height="260%">
-						<feGaussianBlur stdDeviation="60" />
-					</filter>
-					<mask id="s06-rim" maskUnits="userSpaceOnUse" x="-400" y="-200" width="1800" height="2000">
+					<radialGradient id="s06-greenGlow">
+						<stop offset="0" stopColor={COLORS.green} stopOpacity="1" />
+						<stop offset="0.35" stopColor={COLORS.green} stopOpacity="0.72" />
+						<stop offset="0.7" stopColor={COLORS.green} stopOpacity="0.22" />
+						<stop offset="1" stopColor={COLORS.green} stopOpacity="0" />
+					</radialGradient>
+					<mask id="s06-rim" maskUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
 						<use href="#s06-head" fill="white" />
 						<use href="#s06-head" fill="black" transform="translate(-4 2.5)" />
 					</mask>
-					<mask id="s06-rimWide" maskUnits="userSpaceOnUse" x="-400" y="-200" width="1800" height="2000">
+					<mask id="s06-rimWide" maskUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
 						<use href="#s06-head" fill="white" />
 						<use href="#s06-head" fill="black" transform="translate(-16 8)" />
 					</mask>
@@ -61,10 +66,10 @@ export const S06Pessoas: React.FC<SceneProps> = ({f}) => {
 						<stop offset="0.65" stopColor="white" stopOpacity="0.55" />
 						<stop offset="1" stopColor="white" stopOpacity="1" />
 					</linearGradient>
-					<mask id="s06-falloffMask" maskUnits="userSpaceOnUse" x="-400" y="-200" width="1800" height="2000">
-						<rect x="-400" y="-200" width="1800" height="2000" fill="url(#s06-falloff)" />
+					<mask id="s06-falloffMask" maskUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
+						<rect x="420" y="0" width="520" height="1560" fill="url(#s06-falloff)" />
 					</mask>
-					<mask id="s06-rimNeck" maskUnits="userSpaceOnUse" x="-400" y="-200" width="1800" height="2000">
+					<mask id="s06-rimNeck" maskUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
 						<use href="#s06-head" fill="white" />
 						<use href="#s06-head" fill="black" transform="translate(-9 -3)" />
 					</mask>
@@ -78,11 +83,11 @@ export const S06Pessoas: React.FC<SceneProps> = ({f}) => {
 						<stop offset="0.6" stopColor="white" stopOpacity="0.85" />
 						<stop offset="1" stopColor="white" stopOpacity="0" />
 					</linearGradient>
-					<mask id="s06-sweepMask" maskUnits="userSpaceOnUse" x="-400" y="-200" width="1800" height="2000">
-						<rect x="-400" y="-200" width="1800" height="2000" fill="url(#s06-sweep)" />
+					<mask id="s06-sweepMask" maskUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
+						<rect x="420" y="0" width="520" height="1560" fill="url(#s06-sweep)" />
 					</mask>
-					<mask id="s06-neckMask" maskUnits="userSpaceOnUse" x="-400" y="-200" width="1800" height="2000">
-						<rect x="-400" y="-200" width="1800" height="2000" fill="url(#s06-neck)" />
+					<mask id="s06-neckMask" maskUnits="userSpaceOnUse" x="420" y="0" width="520" height="1560">
+						<rect x="420" y="0" width="520" height="1560" fill="url(#s06-neck)" />
 					</mask>
 					<radialGradient id="s06-fill" cx="0.78" cy="0.36" r="0.42">
 						<stop offset="0" stopColor="#0c0c0c" />
@@ -91,9 +96,14 @@ export const S06Pessoas: React.FC<SceneProps> = ({f}) => {
 				</defs>
 				<g transform={`translate(${tx} ${ty}) rotate(${tilt} 600 700) scale(${scale})`}>
 					{/* green light from below-right, kissing the throat */}
-					<g opacity={0.24 * green * (1 + 3.4 * flood)}>
-						<ellipse cx={660} cy={1130} rx={170 + 420 * flood} ry={260 + 520 * flood} fill={COLORS.green} filter="url(#s06-wide)" />
-					</g>
+					<ellipse
+						cx={660}
+						cy={1130}
+						rx={290 + 520 * flood}
+						ry={380 + 640 * flood}
+						fill="url(#s06-greenGlow)"
+						opacity={0.24 * green * (1 + 3.4 * flood)}
+					/>
 					<use href="#s06-head" fill="url(#s06-fill)" />
 					<g mask="url(#s06-sweepMask)" opacity={rim}>
 						<g mask="url(#s06-falloffMask)">

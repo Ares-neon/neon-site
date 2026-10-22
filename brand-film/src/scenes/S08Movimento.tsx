@@ -21,9 +21,12 @@ const BlurDefs: React.FC = () => (
 		<filter id="s08-mb" x="-20%" y="-5%" width="140%" height="110%">
 			<feGaussianBlur stdDeviation="5 0" />
 		</filter>
-		<filter id="s08-fg" x="-50%" y="-5%" width="200%" height="110%">
-			<feGaussianBlur stdDeviation="28 0" />
-		</filter>
+		<linearGradient id="s08-fgGrad" x1="0" y1="0" x2="1" y2="0">
+			<stop offset="0" stopColor="#020202" stopOpacity="0" />
+			<stop offset="0.28" stopColor="#020202" stopOpacity="1" />
+			<stop offset="0.72" stopColor="#020202" stopOpacity="1" />
+			<stop offset="1" stopColor="#020202" stopOpacity="0" />
+		</linearGradient>
 		<filter id="s08-soft">
 			<feGaussianBlur stdDeviation="1.2" />
 		</filter>
@@ -146,7 +149,7 @@ export const S08Movimento: React.FC<SceneProps> = ({f}) => {
 						</g>
 					</g>
 					{pillars.map((x, i) =>
-						x > -400 && x < 1500 ? <rect key={i} x={x} y={-100} width={240} height={2200} fill="#020202" filter="url(#s08-fg)" opacity={light} /> : null,
+						x > -400 && x < 1500 ? <rect key={i} x={x - 60} y={-100} width={360} height={2200} fill="url(#s08-fgGrad)" opacity={light} /> : null,
 					)}
 				</g>
 			</svg>

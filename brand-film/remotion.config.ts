@@ -12,6 +12,8 @@ Config.setX264Preset('slow');
 Config.setAudioCodec('aac');
 Config.setAudioBitrate('320k');
 Config.setOverwriteOutput(true);
+// Software WebGL + heavy frames: allow up to 5 min per frame before failing.
+Config.setDelayRenderTimeoutInMilliseconds(300000);
 
 // Optional: point Remotion at an already-installed Chrome Headless Shell
 // instead of letting it download one (used in CI / sandboxed containers).
