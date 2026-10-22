@@ -1,0 +1,31 @@
+{
+  "symbol": {
+    "iou_vs_source": 0.9942,
+    "mean_edge_deviation_px": 0.153,
+    "p99_edge_deviation_px": 0.5,
+    "contours": 8
+  },
+  "bolt": {
+    "iou_vs_source": 0.9932,
+    "mean_edge_deviation_px": 0.152,
+    "p99_edge_deviation_px": 0.5,
+    "contours": 1
+  },
+  "wordmark": {
+    "iou_vs_source": 0.9967,
+    "mean_edge_deviation_px": 0.133,
+    "p99_edge_deviation_px": 0.5,
+    "contours": 5
+  },
+  "reference_jpg": {
+    "scale": 0.83333,
+    "iou_symbol": 0.9225,
+    "iou_white": 0.9559,
+    "note": "JPEG artefacts and a 1px glow/separator ring at this scale bound the attainable IoU"
+  },
+  "sdf": {
+    "size": 1024,
+    "range_px": 24.0,
+    "symbol_scale": 1.5662
+  }
+}
