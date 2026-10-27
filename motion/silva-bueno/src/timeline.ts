@@ -35,7 +35,8 @@ export const T = {
 	imoveis: [616, 676] as Range,
 
 	// 05 — THE FINAL REVEAL (11–15 s): one metallic reflection, handle, static hold
-	reflection: [694, 782] as Range,
-	handle: [780, 826] as Range,
+	reflection: [686, 780] as Range,
+	handle: [780, 828] as Range, // 12 px rise
+	handleFade: [780, 804] as Range, // opacity leads the rise so the 12 px are actually seen
 	holdFrom: 832, // camera stops here: 68 frames (1.13 s) fully static
 } as const;

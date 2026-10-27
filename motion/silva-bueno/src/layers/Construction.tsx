@@ -37,10 +37,26 @@ export const Construction: React.FC<{frame: number}> = ({frame}) => {
 	const lines = (w: number) => (
 		<>
 			{edgeAlpha > 0 && (
-				<polyline points={pts(edge)} stroke={LINE_GOLD} strokeWidth={w} strokeLinejoin="miter" opacity={appear * edgeAlpha} style={hair} />
+				<polyline
+					points={pts(edge)}
+					stroke={LINE_GOLD}
+					strokeWidth={w}
+					strokeLinejoin="miter"
+					opacity={appear * edgeAlpha}
+					style={hair}
+				/>
 			)}
 			{axisGrow > 0 && axisAlpha > 0 && (
-				<line x1={apex[0]} y1={apex[1]} x2={apex[0]} y2={Math.min(axisTop, apex[1])} stroke={LINE_GOLD} strokeWidth={w * 0.85} opacity={axisAlpha} style={hair} />
+				<line
+					x1={apex[0]}
+					y1={apex[1]}
+					x2={apex[0]}
+					y2={Math.min(axisTop, apex[1])}
+					stroke={LINE_GOLD}
+					strokeWidth={w * 0.85}
+					opacity={axisAlpha}
+					style={hair}
+				/>
 			)}
 		</>
 	);
@@ -59,7 +75,16 @@ export const Construction: React.FC<{frame: number}> = ({frame}) => {
 				</g>
 			)}
 			{topTick > 0 && (
-				<line x1={apex[0] - 9} y1={AXIS_TOP} x2={apex[0] + 9} y2={AXIS_TOP} stroke={LINE_GOLD} strokeWidth={1.2} opacity={topTick * 0.75} style={hair} />
+				<line
+					x1={apex[0] - 9}
+					y1={AXIS_TOP}
+					x2={apex[0] + 9}
+					y2={AXIS_TOP}
+					stroke={LINE_GOLD}
+					strokeWidth={1.2}
+					opacity={topTick * 0.75}
+					style={hair}
+				/>
 			)}
 		</g>
 	);

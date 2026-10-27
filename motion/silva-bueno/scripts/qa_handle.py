@@ -24,8 +24,9 @@ to_sx = lambda x: (x - CX) * Z + W / 2
 to_sy = lambda y: (y - CY) * Z + H / 2
 
 # crop around the handle (reference y 990..1060) in final-frame coordinates
-y0, y1 = int(to_sy(990)), int(to_sy(1062))
-x0, x1 = int(to_sx(300)), int(to_sx(970))
+even = lambda v: int(v) // 2 * 2  # chroma-subsampled video: crop on even coordinates
+y0, y1 = even(to_sy(990)), even(to_sy(1062))
+x0, x1 = even(to_sx(300)), even(to_sx(970))
 raw = subprocess.run(["ffmpeg", "-v", "error", "-i", video, "-vf", f"crop={x1 - x0}:{y1 - y0}:{x0}:{y0},format=gray",
                       "-f", "rawvideo", "-"], capture_output=True, check=True).stdout
 fr = np.frombuffer(raw, np.uint8).reshape(-1, y1 - y0, x1 - x0).astype(np.float32)

@@ -94,7 +94,8 @@ export const SilvaBueno: React.FC<{format: Format}> = ({format}) => {
 						<feGaussianBlur stdDeviation={2.2} />
 					</filter>
 					<filter id="f-feather-wide" filterUnits="userSpaceOnUse" {...REGIONS.imoveis}>
-						<feGaussianBlur stdDeviation={16} />
+						{/* horizontal feather only: the reveal opens sideways, letters stay fully covered vertically */}
+						<feGaussianBlur stdDeviation="16 0" />
 					</filter>
 					<filter id="f-line-glow" filterUnits="userSpaceOnUse" {...REGIONS.lines}>
 						<feGaussianBlur stdDeviation={2.4} />
@@ -106,6 +107,10 @@ export const SilvaBueno: React.FC<{format: Format}> = ({format}) => {
 				</defs>
 				<g transform={cam}>
 					<g filter="url(#f-shadow)">
+						{/* Constant paint bounds for the filtered group. Without it Chrome re-snaps the group's
+						    raster grid (sub-pixel) whenever a child appears, drops its mask or disappears,
+						    which shows up as a one-frame shimmer of every edge. */}
+						<rect x={-200} y={-200} width={1654} height={1654} fill="transparent" />
 						<Construction frame={frame} />
 						<RoofAndWindow frame={frame} />
 						<Architecture frame={frame} />
@@ -113,6 +118,10 @@ export const SilvaBueno: React.FC<{format: Format}> = ({format}) => {
 						<Signature frame={frame} />
 						<Handle frame={frame} z={z} />
 					</g>
+					{/* Same idea for the light passes: constant bounds and a permanent (no-op) blend element,
+					    so a band appearing or leaving never switches the compositing path mid-shot. */}
+					<rect x={-2000} y={-2000} width={5254} height={5254} fill="transparent" />
+					<rect x={0} y={0} width={1} height={1} fill="#000" style={{mixBlendMode: 'screen'}} />
 					<Light frame={frame} />
 				</g>
 			</svg>

@@ -29,9 +29,7 @@ export const NAME_IDS = ['S', 'I', 'L', 'V', 'A', 'amp', 'B', 'U', 'E', 'N', 'O'
 export const IMV_IDS = ['I1', 'M', 'O', 'V', 'E', 'I2', 'S'].map((g) => `imv_${g}`);
 export const WINDOW_IDS = ['win1', 'win2', 'win3', 'win4'];
 export const BUILDING_IDS = ['bldL', 'bldR', 'bldFR'] as const;
-export const SYMBOL_IDS = [
-	'tower', 'bldL', 'innerL', 'bldR', 'lineR1', 'lineR2', 'bldFR', 'roof', 'arcL', 'arcR', ...WINDOW_IDS,
-];
+export const SYMBOL_IDS = ['tower', 'bldL', 'innerL', 'bldR', 'lineR1', 'lineR2', 'bldFR', 'roof', 'arcL', 'arcR', ...WINDOW_IDS];
 
 const R = G.roof as unknown as Record<string, Pt>;
 export const ROOF = R;
@@ -78,8 +76,16 @@ const OUTER: Pt[] = [R.tipL, R.kneeTopL, R.apex, R.kneeTopR, R.tipR];
 /** Region between the roof's outer edge and the same edge pushed down by `depth`. */
 export function pourPolygon(depth: number): string {
 	const lift = 6;
-	const top: Pt[] = [[R.tipL[0] - 10, R.tipL[1] - lift], ...OUTER.map(([x, y]) => [x, y - lift] as Pt), [R.tipR[0] + 10, R.tipR[1] - lift]];
-	const bottom: Pt[] = [[R.tipR[0] + 10, R.tipR[1] + depth], ...[...OUTER].reverse().map(([x, y]) => [x, y + depth] as Pt), [R.tipL[0] - 10, R.tipL[1] + depth]];
+	const top: Pt[] = [
+		[R.tipL[0] - 10, R.tipL[1] - lift],
+		...OUTER.map(([x, y]) => [x, y - lift] as Pt),
+		[R.tipR[0] + 10, R.tipR[1] - lift],
+	];
+	const bottom: Pt[] = [
+		[R.tipR[0] + 10, R.tipR[1] + depth],
+		...[...OUTER].reverse().map(([x, y]) => [x, y + depth] as Pt),
+		[R.tipL[0] - 10, R.tipL[1] + depth],
+	];
 	return pts([...top, ...bottom]);
 }
 

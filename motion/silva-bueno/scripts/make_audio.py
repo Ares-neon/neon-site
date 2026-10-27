@@ -296,7 +296,7 @@ bass = bell(82.41, t_name - 0.01, -23, decay=2.8, bright=0.35) + bell(41.2, t_na
 dry += pan(bass, 0)
 send += pan(bass * 0.4, 0)
 # ampersand glint
-amp = bell(1975.53, sec(612), -29, decay=0.6, bright=0.5)
+amp = bell(1975.53, sec(616), -29, decay=0.6, bright=0.5)  # band centre on the ampersand
 dry += pan(amp, -0.04)
 send += pan(amp * 1.5, -0.04)
 # IMÓVEIS: the warm third resolves the figure
@@ -317,11 +317,11 @@ dry += pad_st * db(-45)
 send += pad_st * db(-39)
 
 # 05 — reflection: shimmer travelling with the light band
-refl_p = progress(694, 782, EASE_GLIDE)
-refl = band(noise(), 4500, 12000) * swell(sec(694), sec(782), 0.5, 1.4)
+refl_p = progress(686, 780, EASE_GLIDE)
+refl = band(noise(), 4500, 12000) * swell(sec(686), sec(780), 0.5, 1.4)
 dry += pan(refl * db(-30), -0.7 + 1.4 * refl_p)
 send += pan(refl * db(-28), -0.7 + 1.4 * refl_p)
-glint = bell(2959.96, sec(738), -29, decay=0.9, bright=0.4)
+glint = bell(2959.96, sec(729), -29, decay=0.9, bright=0.4)  # band centre crosses the axis
 dry += pan(glint, 0.1)
 send += pan(glint * 1.5, 0.1)
 

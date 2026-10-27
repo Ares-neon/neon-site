@@ -11,6 +11,7 @@ export const ease = {
 	pour: Easing.bezier(0.45, 0, 0.12, 1),
 	soft: Easing.bezier(0.4, 0, 0.2, 1),
 	glide: Easing.bezier(0.42, 0, 0.58, 1), // light sweeps
+	fadeIn: Easing.bezier(0.2, 0, 0.4, 1),
 };
 
 export const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
@@ -45,10 +46,7 @@ export function monotone(keys: ReadonlyArray<readonly [number, number]>, x: numb
 			m.push(0);
 		} else {
 			const p = (d[i - 1] * h[i] + d[i] * h[i - 1]) / (h[i - 1] + h[i]);
-			m.push(
-				(Math.sign(d[i - 1]) + Math.sign(d[i])) *
-					Math.min(Math.abs(d[i - 1]), Math.abs(d[i]), 0.5 * Math.abs(p)),
-			);
+			m.push((Math.sign(d[i - 1]) + Math.sign(d[i])) * Math.min(Math.abs(d[i - 1]), Math.abs(d[i]), 0.5 * Math.abs(p)));
 		}
 	}
 	m.push(0);
@@ -64,3 +62,13 @@ export function monotone(keys: ReadonlyArray<readonly [number, number]>, x: numb
 		(t3 - t2) * h[i] * m[i + 1]
 	);
 }
+
+export type Phase = 'before' | 'during' | 'after';
+
+/**
+ * Where `frame` sits relative to a reveal. Masks and clips cost a full offscreen pass per frame
+ * in software rendering, so layers apply them only `during` the reveal: `before` it they are not
+ * painted, `after` it they are drawn plainly (the finished mask is white over the whole element).
+ */
+export const phase = (frame: number, range: Range): Phase =>
+	frame < range[0] ? 'before' : frame >= range[1] ? 'after' : 'during';

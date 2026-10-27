@@ -20,17 +20,26 @@ type BandProps = {
 	fadeBelow?: [number, number];
 };
 
-const toHex = (v: number) => Math.round(Math.min(255, Math.max(0, v * 255))).toString(16).padStart(2, '0');
+const toHex = (v: number) =>
+	Math.round(Math.min(255, Math.max(0, v * 255)))
+		.toString(16)
+		.padStart(2, '0');
 const grey = (v: number) => `#${toHex(v)}${toHex(v)}${toHex(v)}`;
 
 // A reflection on polished metal is a bright streak of the light source flanked by the darker
 // studio around it. Near-white silver has almost no headroom for brightening alone, so the band
 // combines a narrow `screen` core with soft `multiply` shoulders: contrast, not glare.
-const Band: React.FC<BandProps> = ({id, frame, range, from, to, yc, width, peak, shade, color, clip, fadeBelow}) => {
+const Band: React.FC<BandProps> = ({id, frame, range, from, to, yc, width, peak: peakIn, shade: shadeIn, color, clip, fadeBelow}) => {
 	if (frame <= range[0] || frame >= range[1]) {
 		return null;
 	}
+	// `from`/`to` keep the whole band (core + shoulders, along its 22° tilt) off the metal, so it
+	// enters and leaves without a cut; the envelope is a second guard at both ends.
+	const t = (frame - range[0]) / (range[1] - range[0]);
+	const envelope = Math.min(1, t / 0.12, (1 - t) / 0.12);
 	const x = lerp(from, to, prog(frame, range, ease.glide));
+	const peak = peakIn * envelope;
+	const shade = shadeIn * envelope;
 	const core: Array<[number, number]> = [
 		[0, 0],
 		[0.3, 0.06],
@@ -103,10 +112,47 @@ const NAME = ['S', 'I', 'L', 'V', 'A', 'amp', 'B', 'U', 'E', 'N', 'O'].map((g) =
 export const Light: React.FC<{frame: number}> = ({frame}) => (
 	<>
 		{/* 03 — studio light grazing the metal once the towers stand */}
-		<Band id="studio" frame={frame} range={T.studioLight} from={300} to={1000} yc={470} width={300} peak={0.22} shade={0.07} color="#FFFFFF" clip={ARCHITECTURE} />
+		<Band
+			id="studio"
+			frame={frame}
+			range={T.studioLight}
+			from={-20}
+			to={1480}
+			yc={470}
+			width={300}
+			peak={0.22}
+			shade={0.07}
+			color="#FFFFFF"
+			clip={ARCHITECTURE}
+		/>
 		{/* 04 — a discreet golden glint on the ampersand */}
-		<Band id="amp" frame={frame} range={T.ampGlint} from={520} to={710} yc={808} width={46} peak={0.7} shade={0.06} color="#FFE9B8" clip={['name_amp']} />
+		<Band
+			id="amp"
+			frame={frame}
+			range={T.ampGlint}
+			from={460}
+			to={760}
+			yc={808}
+			width={46}
+			peak={0.7}
+			shade={0.06}
+			color="#FFE9B8"
+			clip={['name_amp']}
+		/>
 		{/* 05 — the single metallic reflection across the mark and the top of the name */}
-		<Band id="reflection" frame={frame} range={T.reflection} from={200} to={1100} yc={560} width={120} peak={0.62} shade={0.16} color="#FFF9F0" clip={[...SYMBOL, ...NAME]} fadeBelow={[790, 880]} />
+		<Band
+			id="reflection"
+			frame={frame}
+			range={T.reflection}
+			from={-20}
+			to={1450}
+			yc={560}
+			width={120}
+			peak={0.62}
+			shade={0.16}
+			color="#FFF9F0"
+			clip={[...SYMBOL, ...NAME]}
+			fadeBelow={[790, 880]}
+		/>
 	</>
 );

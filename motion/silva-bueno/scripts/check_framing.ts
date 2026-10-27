@@ -3,7 +3,10 @@ import {camera, type Format} from '../src/camera';
 import {E, G, NAME_IDS} from '../src/lib/geometry';
 import {T} from '../src/timeline';
 
-const formats: Array<[Format, number, number]> = [['9x16', 1080, 1920], ['1x1', 1080, 1080]];
+const formats: Array<[Format, number, number]> = [
+	['9x16', 1080, 1920],
+	['1x1', 1080, 1080],
+];
 const MARGIN = 36;
 for (const [fmt, W, H] of formats) {
 	let worst = Infinity;

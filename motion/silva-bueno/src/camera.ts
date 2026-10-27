@@ -35,9 +35,20 @@ const KEYS: Record<Format, Key[]> = {
 
 export function camera(format: Format, frame: number) {
 	const keys = KEYS[format];
-	const cx = monotone(keys.map((k) => [k[0], k[1]] as const), frame);
-	const cy = monotone(keys.map((k) => [k[0], k[2]] as const), frame);
+	const cx = monotone(
+		keys.map((k) => [k[0], k[1]] as const),
+		frame,
+	);
+	const cy = monotone(
+		keys.map((k) => [k[0], k[2]] as const),
+		frame,
+	);
 	// zoom is interpolated in log space so scale changes feel uniform
-	const z = Math.exp(monotone(keys.map((k) => [k[0], Math.log(k[3])] as const), frame));
+	const z = Math.exp(
+		monotone(
+			keys.map((k) => [k[0], Math.log(k[3])] as const),
+			frame,
+		),
+	);
 	return {cx, cy, z};
 }

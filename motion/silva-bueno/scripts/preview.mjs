@@ -20,7 +20,9 @@ const scale = parseFloat(opt('scale', '0.3'));
 const cols = parseInt(opt('cols', '6'), 10);
 const compId = opt('comp', 'SilvaBueno-9x16');
 const outDir = opt('out', 'renders/previews');
-const only = opt('frames', null)?.split(',').map((n) => parseInt(n, 10));
+const only = opt('frames', null)
+	?.split(',')
+	.map((n) => parseInt(n, 10));
 const browserExecutable = process.env.REMOTION_BROWSER ?? null;
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
