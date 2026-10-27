@@ -52,12 +52,27 @@ Por isso **nada foi redesenhado nem substituído por fonte**:
 
 Easing único (curvas bezier em `src/lib/motion.ts`), câmera por interpolação monotônica C1 (sem micro-paradas).
 
+## Verificação (medida nos MP4 finais — `scripts/qa_video.py`, `scripts/qa_handle.py`, `scripts/check_framing.ts`)
+
+| Item | 9:16 | 1:1 |
+|---|---|---|
+| Saltos isolados entre frames (900 frames) | nenhum | nenhum |
+| Fidelidade do último frame vs. referência (110 mil px da marca) | Δ médio 2,4/255 | Δ médio 2,5/255 |
+| @: deslocamento ainda por percorrer quando a opacidade chega a ~14 % | +12,0 px | +11,9 px |
+| @: centro vs. letras de “IMÓVEIS” | −1,7 px | −1,6 px |
+| Hold final (render idêntico frame a frame) | 13,87–15,0 s | 13,87–15,0 s |
+| Resíduo do encoder H.264 no hold | ≤ 4 níveis em ≤ 4 px | ≤ 5 níveis em ≤ 21 px |
+| Menor margem da marca até a borda (todos os frames) | 72 px | 121 px |
+
+Cada troca de máscara e cada início/fim de passagem de luz também foi conferido em PNG sem perdas.
+
 ## Som (`scripts/make_audio.py` → `scripts/master_audio.sh`)
 
 Sintetizado do zero (sem samples): pulso sub-grave no primeiro ponto de luz, textura de ar que alarga com a linha,
 respiração grave na dobra, brilho metálico no preenchimento, whooshes filtrados panoramizados por prédio, swoosh
 que percorre o anel (pan acompanha o ângulo), assinatura E5–B5–E6 abrindo com o nome + terça (G#5) em “IMÓVEIS”,
-cama Emaj9 discreta e cauda de reverb sintética. Master linear: −15 LUFS integrado, true peak −1,9 dBTP.
+cama Emaj9 discreta e cauda de reverb sintética. Master linear: −15 LUFS integrado, true peak −2,2 dBTP.
+Validado por análise (espectrograma, LUFS, true peak, sincronia com os frames), não por audição.
 
 ## Estrutura
 
