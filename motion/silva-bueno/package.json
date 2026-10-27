@@ -1,0 +1,29 @@
+{
+  "name": "silva-bueno-signature",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Silva & Bueno Imóveis — premium architectural brand motion (Remotion)",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:9x16": "remotion render SilvaBueno-9x16 out/silva-bueno-9x16.mp4",
+    "render:1x1": "remotion render SilvaBueno-1x1 out/silva-bueno-1x1.mp4",
+    "still:9x16": "remotion still SilvaBueno-9x16 out/silva-bueno-9x16-last.png --frame=899",
+    "still:1x1": "remotion still SilvaBueno-1x1 out/silva-bueno-1x1-last.png --frame=899",
+    "preview": "node scripts/preview.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.535",
+    "@remotion/cli": "4.0.535",
+    "@remotion/fonts": "4.0.535",
+    "@remotion/renderer": "4.0.535",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.535"
+  },
+  "devDependencies": {
+    "@fontsource/montserrat": "5.2.8",
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}
